@@ -1,0 +1,27 @@
+<?php include('header.php'); ?>
+<?php include('sidebar.php'); ?>
+<div class="content">
+    <!--Call View -->
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <?php
+            $sucess = $this->message->__isset('sucess');
+            $error = $this->message->__isset('error');
+            ?>
+            <?php if ($sucess || $error) { ?>
+                <div class="alert <?php echo $sucess == true ? 'alert-info' : '' ?>">
+                    <button type="button" class="close" data-dismiss="alert">×</button>
+                    <strong>Note:</strong> <?php echo $error == true ? $this->message->error : $this->message->sucess; ?>
+                </div>
+            <?php } ?>
+            <?php $this->view(); ?>
+        </div>
+    </div>
+
+</div>
+<?php include('footer.php'); ?>
+
+
+
+
+
