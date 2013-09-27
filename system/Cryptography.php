@@ -11,10 +11,73 @@ class Cryptography {
             $this->data['document'][] = $document;
             $this->data['php'][] = $php;
             $this->data['json'][] = $this->__convertJSON($php);
-            $this->data['array'][] = $this->__convertArray($php);
+            $this->data['array'][] = $this->highlight($this->arrayToString($document));
         }
 
         return $this->data;
+    }
+
+    public function highlight($string) {
+        $string = highlight_string("<?php " . $string, true);
+        $string = preg_replace("/" . preg_quote('<span style="color: #0000BB">&lt;?php&nbsp;</span>', "/") . "/", '', $string, 1);
+        return $string;
+    }
+
+    public function arrayToString($array,$tab="\t") {
+        $string = 'array(';
+        foreach ($array as $key => $value) {
+            $string.="\n".$tab;
+            if (gettype($value) === 'array') {
+                $string.="\"$key\"" . '=>' . $this->arrayToString($value,"$tab\t");
+            } else if (is_object($value)) {
+                $string.="\"$key\"" . '=>' . $this->objectToString($value);
+            } else {
+
+                $string.="\"$key\"" . '=>' . $value;
+            }
+            $string.=',';
+        }
+        $string.="\n".$tab.')';
+        return str_replace(',)', ')', $string);
+        echo $data;
+        die;
+    }
+
+    public function objectToString($object) {
+        switch (get_class($object)) {
+            case "MongoId":
+                $string = 'new MongoId("' . $object->__toString() . '")';
+                break;
+            case "MongoInt32":
+                $string = 'new MongoInt32(' . $object->__toString() . ')';
+                break;
+            case "MongoInt64":
+                $string = 'new MongoInt64(' . $object->__toString() . ')';
+                break;
+            case "MongoDate":
+                $string = 'new MongoDate(' . $object->sec . ', ' . $object->usec . ')';
+                break;
+            case "MongoRegex":
+                $string = 'new MongoRegex(\'/' . $object->regex . '/' . $object->flags . '\')';
+                break;
+            case "MongoTimestamp":
+                $string = 'new MongoTimestamp(' . $object->sec . ', ' . $object->inc . ')';
+                break;
+            case "MongoMinKey":
+                $string = 'new MongoMinKey()';
+                break;
+            case "MongoMaxKey":
+                $string = 'new MongoMaxKey()';
+                break;
+            case "MongoCode":
+                //$string = 'new MongoCode("' . addcslashes($object->code, '"') . '", ' . var_export($object->scope, true) . ')';
+                break;
+            default:
+                if (method_exists($object, "__toString")) {
+                    return $object->__toString();
+                }
+        }
+        return $string;
     }
 
     protected function __convertJSON($array) {
