@@ -18,7 +18,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach ($this->_data['dbList']['databases'] as $db) { ?>
+                    <?php foreach ($this->data['dbList']['databases'] as $db) { ?>
 
                         <tr>
                             <td><a href="<?php echo Theme::URL('Collection/Index', array('db' => $db['name'])); ?>"><?php echo $db['name']; ?></i></td>

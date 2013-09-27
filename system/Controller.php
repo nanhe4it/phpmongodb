@@ -2,23 +2,22 @@
 
 class Controller {
 
-    protected $_view;
-    protected $__layout;
-    protected $_data;
-    public $message;
+    protected $data = array();
+    protected $message;
+    protected $application;
 
-    public function __construct() {
-        
-        $this->message = new Message();
+    public function setProperties($application, $message) {
+        $this->application = $application;
+        $this->message = $message;
     }
 
     protected function display($layout = '', $data = array()) {
-        $this->_layout = $layout;
-        $this->_data = $data;
-        $this->__callTheme();
+        $this->application->layout = $layout;
+        $this->data = $data;
+        $this->callTheme();
     }
 
-    public function __callTheme() {
+    public function callTheme() {
         try {
             $theme = getcwd() . '/application/themes/default/index.php';
             if (!file_exists($theme)) {
@@ -31,9 +30,9 @@ class Controller {
         }
     }
 
-    private function __callView() {
+    private function callView() {
         try {
-            $view = getcwd() . '/application/views/' . $this->_view . '/' . $this->_layout . '.php';
+            $view = getcwd() . '/application/views/' . $this->_view . '/' . $this->application->layout . '.php';
             if (!file_exists($view)) {
                 throw new Exception('Controller cannot find the view file ' . $view);
             } else {
@@ -45,26 +44,28 @@ class Controller {
     }
 
     protected function view() {
-        $this->__callView();
+        $this->callView();
     }
+
     public function isValidName($name) {
         return !preg_match('/[\/\. "*<>:|?\\\\]/', $name);
     }
+
     public function getModel() {
-     return new Model();
+        return new Model();
     }
+
     protected function debug($array) {
         echo "<pre>";
         print_r($array);
         echo "<pre>";
     }
-    
-    protected function getInclude(){
+
+    protected function getInclude() {
         $included_files = get_included_files();
 
         $this->debug($included_files);
     }
-    
 
 }
 

@@ -3,7 +3,9 @@
  * @author : Nanhe Kumar
  * and open the template in the editor.
  */
-require(dirname(__FILE__).'/system/engine.php');
+error_reporting(E_ALL);
+ini_set('display_errors',1);
+require(dirname(__FILE__).'/system/Engine.php');
 $application=new Engine();
 $application->start();
 ?>

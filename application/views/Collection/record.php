@@ -78,8 +78,8 @@
 <div class="well">
     <?php
     $showTab=true;
-    foreach ($this->_data['format'] as $format) {
-        if (!isset($this->_data['record'][$format]))
+    foreach ($this->data['format'] as $format) {
+        if (!isset($this->data['record'][$format]))
             continue;
         ?>
     <?php 
@@ -97,7 +97,7 @@
         ?>
         <div id="record-<?php echo $format; ?>" style="display: <?php echo $format === 'json' ? 'block' : 'none'; ?>">
             <?php
-            foreach ($this->_data['record'][$format] as $cursor) {
+            foreach ($this->data['record'][$format] as $cursor) {
 
                 echo "<pre>";
                 print_r($cursor);
