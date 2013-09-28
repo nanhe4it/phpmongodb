@@ -7,10 +7,10 @@ class Cryptography {
     public function decode($cursor) {
         while ($cursor->hasNext()) {
             $document = $cursor->getNext();
-            $php = $this->__convertPHP($document);
+          
             $this->data['document'][] = $document;
-            $this->data['php'][] = $php;
-            $this->data['json'][] = $this->__convertJSON($php);
+            
+            $this->data['json'][] =$this->highlight($this->arrayToJSON($document));
             $this->data['array'][] = $this->highlight($this->arrayToString($document));
         }
 
@@ -19,16 +19,16 @@ class Cryptography {
 
     public function highlight($string) {
         $string = highlight_string("<?php " . $string, true);
-        $string = preg_replace("/" . preg_quote('<span style="color: #0000BB">&lt;?php&nbsp;</span>', "/") . "/", '', $string, 1);
+        $string = str_replace('<span style="color: #0000BB">&lt;?php&nbsp;</span>', '', $string);
         return $string;
     }
 
-    public function arrayToString($array,$tab="\t") {
+    public function arrayToString($array, $tab = "\t") {
         $string = 'array(';
         foreach ($array as $key => $value) {
-            $string.="\n".$tab;
+            $string.="\n" . $tab;
             if (gettype($value) === 'array') {
-                $string.="\"$key\"" . '=>' . $this->arrayToString($value,"$tab\t");
+                $string.="\"$key\"" . '=>' . $this->arrayToString($value, "$tab\t");
             } else if (is_object($value)) {
                 $string.="\"$key\"" . '=>' . $this->objectToString($value);
             } else {
@@ -37,7 +37,7 @@ class Cryptography {
             }
             $string.=',';
         }
-        $string.="\n".$tab.')';
+        $string.="\n" . $tab . ')';
         return str_replace(',)', ')', $string);
         echo $data;
         die;
@@ -80,45 +80,99 @@ class Cryptography {
         return $string;
     }
 
-    protected function __convertJSON($array) {
-
-        return str_replace(array('[{', '}]', '\""', '\"'), array('{', '}', '"'), json_encode($array));
-        return json_encode($array);
-    }
-
-    protected function __convertArray($array) {
-
-        $data = 'array(';
-        foreach ($array as $key => $value) {
-
-            if (gettype($value) === 'array') {
-                $data.="\"$key\"" . '=>' . $this->__convertArray($value);
-            } else {
-                $data.="\"$key\"" . '=>' . $value;
-            }
-            $data.=',';
+    function arrayToJSON($array,$tab="\t") {
+        if (!is_array($array)) {
+            return false;
         }
-        $data.=')';
-        return str_replace(',)', ')', $data);
-    }
+        $associative = count(array_diff(array_keys($array), array_keys(array_keys($array))));
+        if ($associative) {
 
-    protected function __convertPHP($array) {
-        $data = array();
-        foreach ($array as $key => $value) {
+            $construct = array();
+            foreach ($array as $key => $value) {
 
-            if (gettype($value) === 'array') {
-                $data[$key] = $this->__convertPHP($value);
-            } else if (gettype($value) === 'object') {
-                $data[$key] = get_class($value) . '("' . $value . '")';
-            } else if (gettype($value) === 'integer' || gettype($value) === 'double') {
-                $data[$key] = $value;
-            } else {
-                $data[$key] = '"' . $value . '"';
+                if (is_numeric($key)) {
+                    $key = "key_$key";
+                }
+                $key = "'" . addslashes($key) . "'";
+
+                if (is_array($value)) {
+                    $value = $this->arrayToJSON($value,"$tab\t");
+                } else if (is_object ($value)) {
+                    $value =  $this->objectToJSON($value);
+                }else if (!is_numeric($value) || is_string($value)) {
+                    $value = "'" . addslashes($value) . "'";
+                }
+
+                
+                $construct[] ="\n$tab"."$key: $value";
             }
+
+            
+            $result = "{" . implode(",", $construct) ."\n$tab}";
+        } else { // If the array is a vector (not associative):
+            $construct = array();
+            foreach ($array as $value) {
+
+                if (is_array($value)) {
+                     $value = $this->arrayToJSON($value,"$tab\t");
+                } else if (is_object ($value)) {
+                    $value =  $this->objectToJSON($value);
+                }else if (!is_numeric($value) || is_string($value)) {
+                    $value = "'" . addslashes($value) . "'";
+                }
+
+                
+                $construct[] = $value;
+            }
+
+            
+            $result = "[ " . implode(", ", $construct) . " ]";
         }
 
-        return $data;
+        return $result;
     }
+
+    public function objectToJSON($object) {
+        switch (get_class($object)) {
+            case "MongoId":
+                $json = 'ObjectId("' . $object->__toString() . '")';
+                break;
+            case "MongoInt32":
+                $json = 'NumberInt(' . $object->__toString() . ')';
+                break;
+            case "MongoInt64":
+                $json = 'NumberLong(' . $object->__toString() . ')';
+                break;
+            case "MongoDate":
+                $timezone = @date_default_timezone_get();
+                date_default_timezone_set("UTC");
+                $json = "ISODate(\"" . date("Y-m-d", $object->sec) . "T" . date("H:i:s.", $object->sec) . ($object->usec / 1000) . "Z\")";
+                date_default_timezone_set($timezone);
+                break;
+            case "MongoTimestamp":
+                $json = call_user_func($jsonService, array(
+                    "t" => $object->inc * 1000,
+                    "i" => $object->sec
+                ));
+                break;
+            case "MongoMinKey":
+                $json = call_user_func($jsonService, array('$minKey' => 1));
+                break;
+            case "MongoMaxKey":
+                $json = call_user_func($jsonService, array('$minKey' => 1));
+                break;
+            case "MongoCode":
+                $json = $object->__toString();
+                break;
+            default:
+                if (method_exists($object, "__toString")) {
+                    return $object->__toString();
+                }
+        }
+        return $json;
+    }
+
+    
 
     protected function stringToArray($string) {
         $string = "return " . $string . ";";
