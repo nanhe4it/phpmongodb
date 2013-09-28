@@ -5,7 +5,13 @@ class PHPMongoDB {
     public $mongo;
 
     public function __construct() {
-        $this->mongo = new Mongo();
+        $server='127.0.0.1:27017';
+        $options=array('username'=>'','password'=>'','db'=>'');
+        if (class_exists("MongoClient")) {
+            $this->mongo = new MongoClient();
+        } else {
+            $this->mongo = new Mongo();
+        }
     }
 
     public function listDatabases() {
@@ -29,13 +35,12 @@ class PHPMongoDB {
         }
     }
 
-    public function copyDatabase($fromdb,$todb,$fromhost='localhost') {
+    public function copyDatabase($fromdb, $todb, $fromhost = 'localhost') {
 
-        $response = $this->mongo->admin->command(array('copydb' => 1,'fromhost' => $fromhost,'fromdb' => $fromdb,'todb' => $todb));
+        $response = $this->mongo->admin->command(array('copydb' => 1, 'fromhost' => $fromhost, 'fromdb' => $fromdb, 'todb' => $todb));
         return $response;
     }
 
 }
-
 
 ?>
