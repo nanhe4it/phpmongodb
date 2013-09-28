@@ -23,10 +23,10 @@ class Cryptography {
         return $string;
     }
 
-    public function arrayToString($array, $tab = "\t") {
+    public function arrayToString($array, $tab = "") {
         $string = 'array(';
         foreach ($array as $key => $value) {
-            $string.="\n" . $tab;
+            $string.="\n\t" . $tab;
             if (gettype($value) === 'array') {
                 $string.="\"$key\"" . '=>' . $this->arrayToString($value, "$tab\t");
             } else if (is_object($value)) {
@@ -37,10 +37,9 @@ class Cryptography {
             }
             $string.=',';
         }
-        $string.="\n" . $tab . ')';
-        return str_replace(',)', ')', $string);
-        echo $data;
-        die;
+        return $string.="\n".$tab . ')';
+        
+        
     }
 
     public function objectToString($object) {
@@ -80,7 +79,7 @@ class Cryptography {
         return $string;
     }
 
-    function arrayToJSON($array,$tab="\t") {
+    function arrayToJSON($array,$tab="") {
         if (!is_array($array)) {
             return false;
         }
@@ -104,7 +103,7 @@ class Cryptography {
                 }
 
                 
-                $construct[] ="\n$tab"."$key: $value";
+                $construct[] ="\n\t$tab"."$key: $value";
             }
 
             
@@ -174,7 +173,7 @@ class Cryptography {
 
     
 
-    protected function stringToArray($string) {
+    public function stringToArray($string) {
         $string = "return " . $string . ";";
         if (function_exists("token_get_all")) {
             $php = "<?php\n" . $string . "\n?>";

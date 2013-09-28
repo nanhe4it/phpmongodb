@@ -22,7 +22,7 @@
                         <tr>
                             <td><p><i class="icon-user"></i> <a href="<?php echo Theme::URL('Collection/Record', array('db' =>$this->db,'collection'=>$collection)); ?>"><?php echo $collection; ?></a></p></td>
 
-                            <td><?php echo $this->data['model']->mongo->{$this->db}->{$collection}->count(); ?></td>
+                            <td><?php echo $this->data['model']->count($this->db,$collection); ?></td>
                             <td>
                                 <a href="#myModal" data-edit-collection="<?php echo addslashes($collection); ?>" role="button" data-toggle="modal"><i class="icon-pencil"></i></a>
                                 <a href="#myModal" data-delete-collection="<?php echo addslashes($collection); ?>"role="button" data-toggle="modal"><i class="icon-remove"></i></a>
