@@ -16,7 +16,7 @@ class CollectionController extends Controller {
     }
 
     public function Index() {
-
+        
         $this->db = isset($_REQUEST['db']) ? $_REQUEST['db'] : NULL;
         if ($this->isValidDB($this->db)) {
             $model = $this->getModel();
@@ -146,10 +146,18 @@ class CollectionController extends Controller {
     }
 
     public function Save() {
-        $this->db = isset($_POST['db']) ? $_POST['db'] : NULL;
-        $this->collection = isset($_POST['collection']) ? $_POST['collection'] : NULL;
+        
+        $this->db =$this->request->getPost('db');
+        $this->collection =$this->request->getPost('collection');
+        $capped=$this->request->getPost('capped');
+        $capped=!empty($capped)?TRUE:FALSE;
+        $size=$this->request->getPost('size');
+        $size=!empty($size)?$size:0;
+        $max=$this->request->getPost('max');
+        $max=!empty($max)?$max:0;
+        
         if (!empty($this->db) && !empty($this->collection)) {
-            $collection = $this->getModel()->createCollection($this->db, $this->collection);
+            $this->getModel()->createCollection($this->db, $this->collection,$capped,$size,$max);
             $this->message->sucess = $this->collection . " collection created.";
             $this->url = "index.php?load=Collection/Index&db=" . $this->db;
         }

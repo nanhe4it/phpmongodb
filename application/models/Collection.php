@@ -4,9 +4,11 @@ class Collection extends Model {
 
     public function createCollection($db, $collection, $capped = false, $size = 0, $max = 0) {
         try {
-            $collection = $this->mongo->{$db}->createCollection($collection, $capped, $size, $max);
-            $this->mongo->{$db}->selectCollection($collection)->ensureIndex(array("_id" => 1));
-            ;
+             $this->mongo->{$db}->createCollection($collection, $capped, $size, $max);
+             if(!$capped){
+                $this->mongo->{$db}->selectCollection($collection)->ensureIndex(array("_id" => 1));
+             }
+            return TRUE;
         } catch (Exception $e) {
             exit($e->getMessage());
         }

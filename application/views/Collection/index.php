@@ -20,7 +20,7 @@
                 <tbody>
                     <?php foreach ($this->data['collectionList'] as $collection) { ?>
                         <tr>
-                            <td><p><i class="icon-user"></i> <a href="<?php echo Theme::URL('Collection/Record', array('db' =>$this->db,'collection'=>$collection['name'])); ?>"><?php echo $collection['name']; ?></a></p></td>
+                            <td><p><i class="icon-user"></i> <a href="<?php echo Theme::URL('Collection/Record', array('db' => $this->db, 'collection' => $collection['name'])); ?>"><?php echo $collection['name']; ?></a></p></td>
 
                             <td><?php echo $collection['count']; ?></td>
                             <td>
@@ -39,13 +39,19 @@
         <p class="block-heading" id="block-heading">Create Collection</p>
         <div class="block-body">
             <form id="form-create-collection" method="post" class="form-inline">
-                <label>Name</label>
-                <input type="text" value="" id="collection" name="collection" class="input-xlarge">
+                <label style="width:70px;">Name</label>
+                <input type="text" value="" id="collection_name" name="collection" class="input-xlarge"><br><br>
+                <label style="width:70px;">Is Capped</label>
+                <input type="checkbox" value="1" id="collection_capped" name="capped"><br><br>
+                <label style="width:70px;">Size</label>
+                <input type="text" value="" id="collection_size" name="size" class="input-xlarge "><br><br>
+                <label style="width:70px;">Max</label>
+                <input type="text" value="" id="collection_max" name="max" class="input-xlarge"><br><br>
                 <input type="hidden" id="load-create" name="load" value="Collection/Save" />
                 <input type="hidden" name="db" value="<?php echo $this->db; ?>" />
-                
+                <label style="width:70px;">&nbsp;</label>
 
-                <button class="btn " name="save"><i class="icon-save" ></i> Save</button>
+                <button class="btn " name="save"><i class="icon-save" ></i> Create</button>
 
             </form>
         </div>
@@ -55,7 +61,7 @@
 </div>
 
 <form method="post" name="form-delete-collection" id="form-delete-collection" >
-    
+
     <div class="modal small hide fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
@@ -63,7 +69,7 @@
         </div>
         <div class="modal-body">
             <input type="text" value="" id="pop-up-collection" name="collection" class="input-xlarge">
-            
+
             <p class="error-text" id="pop-up-error-text"><i class="icon-warning-sign modal-icon"></i>Are you sure you want to delete collection ?</p>
         </div>
         <div class="modal-footer">
@@ -81,10 +87,10 @@
 
 <script type="text/javascript">
     $(document).ready(function() {
-        
-        
+
+
         $("a[data-edit-collection]").click(function() {
-            
+
             $("#pop-up-collection").val($(this).attr("data-edit-collection"));
             $("#pop-up-old_collection").val($(this).attr("data-edit-collection"));
             $("#pop-up-load").val("Collection/Update");
@@ -93,9 +99,9 @@
             $("#pop-up-collection").show();
             $('#pop-up-error-text').hide();
             $("#myModalLabel").text('Edit Collection');
-            
+
         });
-        
+
         $("a[data-delete-collection]").click(function() {
             $("#pop-up-collection").val($(this).attr("data-delete-collection"));
             $("#pop-up-load").val("Collection/Drop");

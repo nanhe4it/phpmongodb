@@ -5,10 +5,12 @@ class Controller {
     protected $data = array();
     protected $message;
     protected $application;
+    protected $request;
 
     public function setProperties($application, $message) {
         $this->application = $application;
         $this->message = $message;
+        $this->request=new CHttp();
     }
 
     protected function display($layout = '', $data = array()) {
