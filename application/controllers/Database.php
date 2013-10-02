@@ -27,7 +27,7 @@ class DatabaseController extends Controller {
         $this->display('create');
     }
     public function Update(){
-        if (!empty($_POST['db']) || !empty($_POST['old_db']) || $this->isValidName($_POST['db']) || $this->isValidName($_POST['old_db'])) {
+        if (!empty($_POST['db']) || !empty($_POST['old_db'])) {
             $this->getModel()->renamdDatabase($_POST['old_db'],$_POST['db']);
             $this->message->sucess = "database rename successfully";
         }else{
@@ -39,12 +39,8 @@ class DatabaseController extends Controller {
     public function Save() {
 
         if (!empty($_POST['db'])) {
-            if (!$this->isValidName($_POST['db'])) {
-                $this->getModel()->createDB($_POST['db']);
-                $this->message->sucess = $_POST['db'] . " database created.";
-            } else {
-                $this->message->error = 'You can not use characters /\. "*<>:|? for databse name';
-            }
+            $this->getModel()->createDB($_POST['db']);
+            $this->message->sucess = $_POST['db'] . " database created.";
         } else {
             $this->message->error = "Enter Database Name";
         }
@@ -56,7 +52,7 @@ class DatabaseController extends Controller {
 
     public function Drop() {
 
-        if (!empty($_POST['db']) && $this->isValidName($_POST['db'])) {
+        if (!empty($_POST['db'])) {
             $res = $this->getModel()->dropDatabase($_POST['db']);
 
             $this->message->sucess = $_POST['db'] . " database droped.";

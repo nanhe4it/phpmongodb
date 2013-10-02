@@ -34,12 +34,12 @@ class Model  {
         return $response;
     }
 
-    public function listCollections($db) {
-        return $this->mongo->{$db}->listCollections();
+    public function listCollections($db,$includeSystemCollections = false ) {
+        return $this->mongo->{$db}->listCollections($includeSystemCollections);
     }
 
-    public function getCollectionNames($db) {
-        return $this->mongo->{$db}->getCollectionNames();
+    public function getCollectionNames($db,$includeSystemCollections = false ) {
+        return $this->mongo->{$db}->getCollectionNames($includeSystemCollections);
     }
     public function count($db,$collection){
         return $this->mongo->{$db}->{$collection}->count();;

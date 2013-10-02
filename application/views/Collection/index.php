@@ -20,12 +20,12 @@
                 <tbody>
                     <?php foreach ($this->data['collectionList'] as $collection) { ?>
                         <tr>
-                            <td><p><i class="icon-user"></i> <a href="<?php echo Theme::URL('Collection/Record', array('db' =>$this->db,'collection'=>$collection)); ?>"><?php echo $collection; ?></a></p></td>
+                            <td><p><i class="icon-user"></i> <a href="<?php echo Theme::URL('Collection/Record', array('db' =>$this->db,'collection'=>$collection['name'])); ?>"><?php echo $collection['name']; ?></a></p></td>
 
-                            <td><?php echo $this->data['model']->count($this->db,$collection); ?></td>
+                            <td><?php echo $collection['count']; ?></td>
                             <td>
-                                <a href="#myModal" data-edit-collection="<?php echo addslashes($collection); ?>" role="button" data-toggle="modal"><i class="icon-pencil"></i></a>
-                                <a href="#myModal" data-delete-collection="<?php echo addslashes($collection); ?>"role="button" data-toggle="modal"><i class="icon-remove"></i></a>
+                                <a href="#myModal" data-edit-collection="<?php echo addslashes($collection['name']); ?>" role="button" data-toggle="modal"><i class="icon-pencil"></i></a>
+                                <a href="#myModal" data-delete-collection="<?php echo addslashes($collection['name']); ?>"role="button" data-toggle="modal"><i class="icon-remove"></i></a>
                             </td>
                         </tr>
                     <?php } ?>

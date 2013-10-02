@@ -12,11 +12,11 @@ class System {
     protected function getObject($class) {
         return new $class;
     }
-    protected function getProperties(){
+
+    protected function getProperties() {
         return array(
-            'message'=>new Message,
-            'application'=>$this->application,
-            
+            'application' => $this->application,
+            'message' => new Message,
         );
     }
 
@@ -24,11 +24,10 @@ class System {
 
         try {
             $controller = $this->getObject($this->application->controller . 'Controller');
-            
+
             if (method_exists($controller, 'setProperties')) {
 
-                call_user_func_array(array($controller,'setProperties'),$this->getProperties());
-                
+                call_user_func_array(array($controller, 'setProperties'), $this->getProperties());
             }
             if (method_exists($controller, $this->application->action)) {
 

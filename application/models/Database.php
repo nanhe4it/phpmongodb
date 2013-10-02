@@ -6,7 +6,7 @@ class Database extends Model{
             return $this->mongo->selectDB($name)->execute("function(){}");
         } catch (MongoConnectionException $e) {
 
-            exit($e);
+            exit($e->getMessage());
         }
     }
     public function dropDatabase($db) {

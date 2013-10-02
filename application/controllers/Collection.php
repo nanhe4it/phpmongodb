@@ -20,7 +20,12 @@ class CollectionController extends Controller {
         $this->db = isset($_REQUEST['db']) ? $_REQUEST['db'] : NULL;
         if ($this->isValidDB($this->db)) {
             $model = $this->getModel();
-            $collectionList = $model->getCollectionNames($this->db);
+            $collections = $model->listCollections($this->db,TRUE);
+            $collectionList=array();
+            foreach ($collections as $collection){
+                $collectionList[]=array('name'=>$collection->getName(),'count'=>$collection->count());
+            }
+            //$this->debug($collectionList);
             $data = array(
                 'collectionList' => $collectionList,
                 'model' => $model,
@@ -28,7 +33,7 @@ class CollectionController extends Controller {
             $this->_view = 'Collection';
             $this->display('index', $data);
         } else {
-            // header("Location:index.php?load=Database/Index");
+             header("Location:index.php?load=Database/Index");
         }
     }
 
@@ -143,7 +148,7 @@ class CollectionController extends Controller {
     public function Save() {
         $this->db = isset($_POST['db']) ? $_POST['db'] : NULL;
         $this->collection = isset($_POST['collection']) ? $_POST['collection'] : NULL;
-        if ($this->validation($this->db, $this->collection)) {
+        if (!empty($this->db) && !empty($this->collection)) {
             $collection = $this->getModel()->createCollection($this->db, $this->collection);
             $this->message->sucess = $this->collection . " collection created.";
             $this->url = "index.php?load=Collection/Index&db=" . $this->db;

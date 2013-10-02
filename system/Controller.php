@@ -48,7 +48,8 @@ class Controller {
     }
 
     public function isValidName($name) {
-        return !preg_match('/[\/\. "*<>:|?\\\\]/', $name);
+        return TRUE;
+        //return !preg_match('/[\/\. "*<>:|?\\\\]/', $name);
     }
 
     public function getModel() {
