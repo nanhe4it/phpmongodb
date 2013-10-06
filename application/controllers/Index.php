@@ -1,3 +1,4 @@
+<?php defined('PMDDA') or die('Restricted access'); ?>
 <?php
 class IndexController extends Controller{
     public function Index(){
@@ -7,7 +8,7 @@ class IndexController extends Controller{
             'webserver'=>$_SERVER['SERVER_SOFTWARE'],
             'mongoinfo'=>  $this->getModel()->getMongoInfo(),
         );
-        $this->_view='Index';
+        $this->application->view='Index';
         $this->display('index',$data);
     }
     

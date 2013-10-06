@@ -9,9 +9,9 @@
         if ($showTab) {
             ?>    
             <ul class="nav nav-tabs">
-                <li id="li-json"class="active"><a href="#json" data-list-record="json">JSON</a></li>
-                <li id="li-array"><a href="#array" data-list-record="array">Array</a></li>
-                <li id="li-document"><a href="#document" data-list-record="document">Find</a></li>
+                <li id="li-json"class="active"><a href="javascript:void(0)" data-list-record="json">JSON</a></li>
+                <li id="li-array"><a href="javascript:void(0)" data-list-record="array">Array</a></li>
+                <li id="li-document"><a href="javascript:void(0)" data-list-record="document">Find</a></li>
             </ul>
             <?php
             $showTab = false;

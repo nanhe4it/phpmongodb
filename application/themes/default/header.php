@@ -1,4 +1,4 @@
-
+<?php defined('PMDDA') or die('Restricted access'); ?>
 <!DOCTYPE html>
 <html lang="en">
     <head>

@@ -1,3 +1,4 @@
+<?php defined('PMDDA') or die('Restricted access'); ?>
 <?php
 
 class Controller {
@@ -6,13 +7,15 @@ class Controller {
     protected $message;
     protected $application;
     protected $request;
+    
+    
 
     public function setProperties($application, $message) {
         $this->application = $application;
         $this->message = $message;
         $this->request=new CHttp();
     }
-
+    
     protected function display($layout = '', $data = array()) {
         $this->application->layout = $layout;
         $this->data = $data;
@@ -34,7 +37,7 @@ class Controller {
 
     private function callView() {
         try {
-            $view = getcwd() . '/application/views/' . $this->_view . '/' . $this->application->layout . '.php';
+            $view = getcwd() . '/application/views/' . $this->application->view . '/' . $this->application->layout . '.php';
             if (!file_exists($view)) {
                 throw new Exception('Controller cannot find the view file ' . $view);
             } else {

@@ -1,7 +1,7 @@
 <?php
 
 session_start();
-
+define('PMDDA', TRUE);
 class Engine {
 
     protected $system;

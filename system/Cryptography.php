@@ -98,10 +98,11 @@ class Cryptography {
                     $value = $this->arrayToJSON($value,"$tab\t");
                 } else if (is_object ($value)) {
                     $value =  $this->objectToJSON($value);
+                }else if (is_double($value)) {
+                    $value = "NumberLong(" . addslashes($value) . ")";
                 }else if (!is_numeric($value) || is_string($value)) {
                     $value = "'" . addslashes($value) . "'";
                 }
-
                 
                 $construct[] ="\n\t$tab"."$key: $value";
             }
@@ -132,6 +133,7 @@ class Cryptography {
     }
 
     public function objectToJSON($object) {
+        
         switch (get_class($object)) {
             case "MongoId":
                 $json = 'ObjectId("' . $object->__toString() . '")';

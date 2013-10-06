@@ -2,6 +2,8 @@
 
 class CHttp {
 
+    private $_hostInfo;
+
     /**
 
      * @return string request type, such as GET, POST, HEAD.
@@ -48,7 +50,7 @@ class CHttp {
      * @param string $name the GET parameter name
      * @param mixed $value the default parameter value if the GET parameter does not exist.
      * @return mixed the GET parameter value
-    
+
      */
     public function getQuery($name, $value = null) {
         return isset($_GET[$name]) ? $_GET[$name] : $value;
@@ -60,10 +62,53 @@ class CHttp {
      * @param string $name the POST parameter name
      * @param mixed $value the default parameter value if the POST parameter does not exist.
      * @return mixed the POST parameter value
-     
+
      */
     public function getPost($name, $value = null) {
         return isset($_POST[$name]) ? $_POST[$name] : $value;
+    }
+
+    
+
+    /**
+     * Return if the request is sent via secure channel (https).
+     * @return boolean if the request is sent via secure channel (https)
+     */
+    public function isSecureConnection() {
+        return isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == 'on' || $_SERVER['HTTPS'] == 1) || isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https';
+    }
+
+    public function getHost($schema = '') {
+        if ($this->_hostInfo === null) {
+            if ($secure = $this->isSecureConnection())
+                $http = 'https';
+            else
+                $http = 'http';
+            if (isset($_SERVER['HTTP_HOST']))
+                $this->_hostInfo = $http . '://' . $_SERVER['HTTP_HOST'];
+            else {
+                $this->_hostInfo = $http . '://' . $_SERVER['SERVER_NAME'];
+                $port = $secure ? $this->getSecurePort() : $this->getPort();
+                if (($port !== 80 && !$secure) || ($port !== 443 && $secure))
+                    $this->_hostInfo.=':' . $port;
+            }
+        }
+        if ($schema !== '') {
+            $secure = $this->getIsSecureConnection();
+            if ($secure && $schema === 'https' || !$secure && $schema === 'http')
+                return $this->_hostInfo;
+
+            $port = $schema === 'https' ? $this->getSecurePort() : $this->getPort();
+            if ($port !== 80 && $schema === 'http' || $port !== 443 && $schema === 'https')
+                $port = ':' . $port;
+            else
+                $port = '';
+
+            $pos = strpos($this->_hostInfo, ':');
+            return $schema . substr($this->_hostInfo, $pos, strcspn($this->_hostInfo, ':', $pos + 1) + 1) . $port;
+        }
+        else
+            return $this->_hostInfo;
     }
 
 }

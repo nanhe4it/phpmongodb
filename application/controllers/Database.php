@@ -1,3 +1,4 @@
+<?php defined('PMDDA') or die('Restricted access'); ?>
 <?php
 
 class DatabaseController extends Controller {
@@ -18,12 +19,12 @@ class DatabaseController extends Controller {
             'dbList' => $dbList
         );
 
-        $this->_view = 'Database';
+        $this->application->view = 'Database';
         $this->display('index', $data);
     }
 
     public function Create() {
-        $this->_view = 'Database';
+        $this->application->view = 'Database';
         $this->display('create');
     }
     public function Update(){

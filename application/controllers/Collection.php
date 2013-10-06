@@ -1,4 +1,9 @@
+<?php defined('PMDDA') or die('Restricted access'); ?>
 <?php
+
+/*
+ * Controller
+ */
 
 class CollectionController extends Controller {
 
@@ -16,25 +21,81 @@ class CollectionController extends Controller {
     }
 
     public function Index() {
-        
+
         $this->db = isset($_REQUEST['db']) ? $_REQUEST['db'] : NULL;
         if ($this->isValidDB($this->db)) {
             $model = $this->getModel();
-            $collections = $model->listCollections($this->db,TRUE);
-            $collectionList=array();
-            foreach ($collections as $collection){
-                $collectionList[]=array('name'=>$collection->getName(),'count'=>$collection->count());
+            $collections = $model->listCollections($this->db, TRUE);
+            $collectionList = array();
+            foreach ($collections as $collection) {
+                $collectionList[] = array('name' => $collection->getName(), 'count' => $collection->count());
             }
             //$this->debug($collectionList);
             $data = array(
                 'collectionList' => $collectionList,
                 'model' => $model,
             );
-            $this->_view = 'Collection';
+            $this->application->view = 'Collection';
             $this->display('index', $data);
         } else {
-             header("Location:index.php?load=Database/Index");
+            header("Location:index.php?load=Database/Index");
         }
+    }
+
+    public function Indexes() {
+        $this->db = $this->request->getParam('db');
+        $this->collection = $this->request->getParam('collection');
+        if (empty($this->db) || empty($this->collection)) {
+            header("Location:index.php?load=Database/Index");
+        }
+        $this->application->view = 'Collection';
+        $data = $this->getModel()->getIndexInfo($this->db, $this->collection);
+        $this->display('indexes', $data);
+    }
+
+    public function DeleteIndexes() {
+        $this->db = $this->request->getParam('db');
+        $this->collection = $this->request->getParam('collection');
+        $name = trim($this->request->getParam('name'));
+        if (empty($this->db) || empty($this->collection) || empty($name)) {
+            header("Location:index.php?load=Database/Index");
+        }
+        $model = $this->getModel();
+        $indexes = $model->getIndexInfo($this->db, $this->collection);
+        foreach ($indexes as $index) {
+            if ($index['name'] === $name) {
+                $response = $model->deleteIndex($this->db, $this->collection, $index['key']);
+                $this->message->sucess = 'Index deleted';
+                break;
+            }
+        }
+
+        $url = Theme::URL('Collection/Indexes', array('db' => $this->db, 'collection' => $this->collection));
+        header("Location:$url");
+    }
+
+    public function CreateIndexes() {
+        $this->db=$this->request->getParam('db');
+        $this->collection=$this->request->getParam('collection');
+        $fields=$this->request->getParam('fields');
+        $orders=$this->request->getParam('orders');
+        $name=$this->request->getParam('name');
+        $unique=$this->request->getParam('unique');
+        $options = array();
+        for($i=0;$i<count($orders);$i++){
+            $key[$fields[$i]]=(int)$orders[$i];
+        }
+        if(!empty($name)){
+            $options['name']=$name;
+        }
+        if(!empty($unique)){
+             $options['unique']=true;
+        }
+        $response=$this->getModel()->createIndex($this->db, $this->collection,$key,$options);
+        
+        //$this->debug($response);
+        $url = Theme::URL('Collection/Indexes', array('db' => $this->db, 'collection' => $this->collection));
+        header("Location:$url");
     }
 
     public function Record() {
@@ -48,7 +109,7 @@ class CollectionController extends Controller {
             $cursor = $this->getModel()->find($this->db, $this->collection, $query, $fields, $limit, $skip);
             $cryptography = new Cryptography();
             $record = $cryptography->decode($cursor);
-            $this->_view = 'Collection';
+            $this->application->view = 'Collection';
             $format = array('json', 'document', 'php', 'array');
             $this->display('record', array('record' => $record, 'format' => $format));
         } else {
@@ -77,7 +138,6 @@ class CollectionController extends Controller {
                     $a = json_decode($_POST['data'], true);
                     $this->insertRecord($a);
                     break;
-                
             }
         }
 
@@ -146,18 +206,18 @@ class CollectionController extends Controller {
     }
 
     public function Save() {
-        
-        $this->db =$this->request->getPost('db');
-        $this->collection =$this->request->getPost('collection');
-        $capped=$this->request->getPost('capped');
-        $capped=!empty($capped)?TRUE:FALSE;
-        $size=$this->request->getPost('size');
-        $size=!empty($size)?$size:0;
-        $max=$this->request->getPost('max');
-        $max=!empty($max)?$max:0;
-        
+
+        $this->db = $this->request->getPost('db');
+        $this->collection = $this->request->getPost('collection');
+        $capped = $this->request->getPost('capped');
+        $capped = !empty($capped) ? TRUE : FALSE;
+        $size = $this->request->getPost('size');
+        $size = !empty($size) ? $size : 0;
+        $max = $this->request->getPost('max');
+        $max = !empty($max) ? $max : 0;
+
         if (!empty($this->db) && !empty($this->collection)) {
-            $this->getModel()->createCollection($this->db, $this->collection,$capped,$size,$max);
+            $this->getModel()->createCollection($this->db, $this->collection, $capped, $size, $max);
             $this->message->sucess = $this->collection . " collection created.";
             $this->url = "index.php?load=Collection/Index&db=" . $this->db;
         }

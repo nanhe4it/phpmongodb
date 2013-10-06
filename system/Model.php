@@ -1,10 +1,11 @@
 <?php
 
-class Model  {
+class Model {
+
     protected $mongo;
 
     public function __construct() {
-        $this->mongo=PHPMongoDB::getInstance()->getConnection();
+        $this->mongo = PHPMongoDB::getInstance()->getConnection();
     }
 
     public function listDatabases() {
@@ -34,16 +35,22 @@ class Model  {
         return $response;
     }
 
-    public function listCollections($db,$includeSystemCollections = false ) {
-        return $this->mongo->{$db}->listCollections($includeSystemCollections);
+    public function __call($name, $arguments) {
+        try {
+            return $this->mongo->{$arguments[0]}->$name($arguments[1]);
+        } catch (Exception $e) {
+            exit($e->getMessage());
+        }
     }
 
-    public function getCollectionNames($db,$includeSystemCollections = false ) {
-        return $this->mongo->{$db}->getCollectionNames($includeSystemCollections);
-    }
-    public function count($db,$collection){
-        return $this->mongo->{$db}->{$collection}->count();;
-    }
+//    public function listCollections($db,$includeSystemCollections = false ) {
+//        return $this->mongo->{$db}->listCollections($includeSystemCollections);
+//    }
+//
+//    public function getCollectionNames($db,$includeSystemCollections = false ) {
+//        return $this->mongo->{$db}->getCollectionNames($includeSystemCollections);
+//    }
+
 
     public function find($db, $collection, $query = array(), $fields = array(), $limit = 10, $skip = 0) {
 
@@ -55,3 +62,4 @@ class Model  {
     }
 
 }
+?>

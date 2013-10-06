@@ -1,3 +1,4 @@
+<?php defined('PMDDA') or die('Restricted access'); ?>
 <?php
 class Database extends Model{
     public function createDB($name) {
