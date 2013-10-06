@@ -41,7 +41,16 @@ class CollectionController extends Controller {
             header("Location:index.php?load=Database/Index");
         }
     }
-
+    public function Insert(){
+        $this->db = $this->request->getParam('db');
+        $this->collection = $this->request->getParam('collection');
+        if (empty($this->db) || empty($this->collection)) {
+            header("Location:index.php?load=Database/Index");
+        }
+        $this->application->view = 'Collection';
+        $this->display('insert', array());
+        
+    }
     public function Indexes() {
         $this->db = $this->request->getParam('db');
         $this->collection = $this->request->getParam('collection');
