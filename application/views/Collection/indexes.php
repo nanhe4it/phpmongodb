@@ -1,7 +1,7 @@
 <?php 
-    //$this->debug($this->data,true);
+    
     $cryptography = new Cryptography();
-    //$data=$cryptography->arrayToJSON($data);
+    
 ?>
 <?php require_once '_menu.php'; ?>
 <div class="well" id="container-indexes">
@@ -61,7 +61,7 @@
                     </tr>
                     <tr>
                         <td>Unique</td>
-                        <td colspan="2"><input type="checkbox"  value="1" name="is_unique"></td>
+                        <td colspan="2"><input type="checkbox"  value="1" name="unique"></td>
                     </tr>
                     <tr>
                         <td colspan="3">&nbsp;</td>
