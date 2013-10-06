@@ -75,24 +75,29 @@ class CollectionController extends Controller {
     }
 
     public function CreateIndexes() {
-        $this->db=$this->request->getParam('db');
-        $this->collection=$this->request->getParam('collection');
-        $fields=$this->request->getParam('fields');
-        $orders=$this->request->getParam('orders');
-        $name=$this->request->getParam('name');
-        $unique=$this->request->getParam('unique');
+        $this->db = $this->request->getParam('db');
+        $this->collection = $this->request->getParam('collection');
+        $fields = $this->request->getParam('fields');
+        $orders = $this->request->getParam('orders');
+        $name = $this->request->getParam('name');
+        $unique = $this->request->getParam('unique');
+        $drop = $this->request->getParam('drop');
         $options = array();
-        for($i=0;$i<count($orders);$i++){
-            $key[$fields[$i]]=(int)$orders[$i];
+        for ($i = 0; $i < count($orders); $i++) {
+            $key[$fields[$i]] = (int) $orders[$i];
         }
-        if(!empty($name)){
-            $options['name']=$name;
+        if (!empty($name)) {
+            $options['name'] = $name;
         }
-        if(!empty($unique)){
-             $options['unique']=true;
+        if (!empty($unique)) {
+            $options['unique'] = TRUE;
         }
-        $response=$this->getModel()->createIndex($this->db, $this->collection,$key,$options);
-        
+        if (!empty($drop)) {
+
+            $options['dropDups'] = TRUE;
+        }
+        $response = $this->getModel()->createIndex($this->db, $this->collection, $key, $options);
+
         //$this->debug($response);
         $url = Theme::URL('Collection/Indexes', array('db' => $this->db, 'collection' => $this->collection));
         header("Location:$url");
