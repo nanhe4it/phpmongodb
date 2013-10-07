@@ -39,15 +39,13 @@ $cryptography = new Cryptography();
         </div>            
         <div class="tab-pane fade" id="IndexesCreate">
             <form id="tab1" method="post" action="index.php">
-                <table id="tbl-fiedl-value">
+                <table id="tbl-create-indexes">
                     <tr>
                         <td style="width:160px;">Name</td>
                         <td colspan="2"><input type="text" class="input-xlarge" name="name"></td>
-
                     </tr>
                     <tr>
                         <td>Fields</td>
-
                         <td><input type="text" class="input-xlarge" name="fields[]"></td>
                         <td>
                             <select name="orders[]" style="width:auto;">
@@ -55,10 +53,13 @@ $cryptography = new Cryptography();
                                 <option value="-1">DESC</option>
                             </select>
                         </td>
-                        <td><i class="icon-plus"></i>&nbsp;<i class="icon-minus"></i></td>
+                        <td>&nbsp;<a href="javascript:void(0)" onclick="appendTR();" class="btn-primary"><i class="icon-plus"></i></a>&nbsp;</td>
                     </tr>
+
+                </table>
+                <table>
                     <tr>
-                        <td>Unique</td>
+                        <td style="width:160px;">Unique</td>
                         <td colspan="2"><input type="checkbox"  value="1" name="unique" id="index_unique"></td>
                     </tr>
                     <tr id="drop_duplicates" style="display: none">
@@ -70,11 +71,9 @@ $cryptography = new Cryptography();
                     </tr>
                 </table>
                 <div>
-
                     <button class="btn btn-primary">Create</button>
                 </div>
                 <input type="hidden"  name="load" value="Collection/CreateIndexes"/>
-
                 <input type="hidden" name="db" value="<?php echo $this->db; ?>" />
                 <input type="hidden" name="collection" value="<?php echo $this->collection; ?>" />
             </form>
@@ -83,15 +82,43 @@ $cryptography = new Cryptography();
     </div>
 </div>
 <script>
-    $(document).ready(function() {
-        $("#index_unique").click(function() {
-            var checked = $(this).is(':checked');
-            if (checked) {
-                $('#drop_duplicates').show();
-            } else {
-                $('#drop_duplicates').hide();
-            }
-        });
-    });
+                            function appendTR() {
+                                
+                                var trID='tr-indexes'+$('#tbl-create-indexes tr').length;
+                                var tr = '<tr id="'+trID+'">';
+                                tr = tr + '<td>&nbsp;</td>';
+                                tr = tr + '<td><input type="text" class="input-xlarge" name="fields[]"></td>';
+                                tr = tr + '<td>';
+                                tr = tr + '<select name="orders[]" style="width:auto;">';
+                                tr = tr + '<option value="1">ASC</option>';
+                                tr = tr + '<option value="-1">DESC</option>';
+                                tr = tr + '</select>';
+                                tr = tr + '</td>';
+                                tr = tr + '<td>';
+                                tr = tr + '&nbsp;<a href="javascript:void(0)" onclick="appendTR();" class="btn-primary"><i class="icon-plus"></i></a>&nbsp;';
+                                tr = tr + "<a href=\"javascript:void(0)\" onclick=\"removeTR('"+trID+"');\" class=\"btn-primary\"><i class=\"icon-minus\"></i></a>";
+                                tr = tr + '</td>';
+                             // tr = tr + '<td><a href="javascript:void(0)" onclick="add();"><i class="icon-plus"></i></a>&nbsp;<a href="javascript:void(0)" onclick="remove();"><i class="icon-minus"></i></a></td>';
+                                tr = tr + '</tr>';
+                                $("#tbl-create-indexes").append(tr);
+
+                                return false;
+
+                            }
+                            function removeTR(trID){
+                                
+                                $("table#tbl-create-indexes tr#"+trID).remove();
+                                 return false;
+                            }
+                            $(document).ready(function() {
+                                $("#index_unique").click(function() {
+                                    var checked = $(this).is(':checked');
+                                    if (checked) {
+                                        $('#drop_duplicates').show();
+                                    } else {
+                                        $('#drop_duplicates').hide();
+                                    }
+                                });
+                            });
 
 </script>    

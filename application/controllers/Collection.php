@@ -41,7 +41,8 @@ class CollectionController extends Controller {
             header("Location:index.php?load=Database/Index");
         }
     }
-    public function Insert(){
+
+    public function Insert() {
         $this->db = $this->request->getParam('db');
         $this->collection = $this->request->getParam('collection');
         if (empty($this->db) || empty($this->collection)) {
@@ -49,8 +50,8 @@ class CollectionController extends Controller {
         }
         $this->application->view = 'Collection';
         $this->display('insert', array());
-        
     }
+
     public function Indexes() {
         $this->db = $this->request->getParam('db');
         $this->collection = $this->request->getParam('collection');
@@ -113,8 +114,8 @@ class CollectionController extends Controller {
     }
 
     public function Record() {
-        $this->db = isset($_REQUEST['db']) ? $_REQUEST['db'] : NULL;
-        $this->collection = isset($_REQUEST['collection']) ? $_REQUEST['collection'] : NULL;
+        $this->db = $this->request->getParam('db');
+        $this->collection = $this->request->getParam('collection');
         if ($this->validation($this->db, $this->collection)) {
             $skip = (isset($_GET['start']) ? $_GET['start'] : 0);
             $limit = (isset($_GET['limit']) ? $_GET['limit'] : 10);
@@ -134,8 +135,8 @@ class CollectionController extends Controller {
 
     public function SaveRecord() {
 
-        $this->db = isset($_REQUEST['db']) ? $_REQUEST['db'] : NULL;
-        $this->collection = isset($_REQUEST['collection']) ? $_REQUEST['collection'] : NULL;
+        $this->db = $this->request->getParam('db');
+        $this->collection = $this->request->getParam('collection');
         if ($this->validation($this->db, $this->collection)) {
             $type = isset($_REQUEST['type']) ? strtolower($_REQUEST['type']) : NULL;
             switch ($type) {
@@ -239,8 +240,8 @@ class CollectionController extends Controller {
     }
 
     public function Update() {
-        $this->db = isset($_POST['db']) ? $_POST['db'] : NULL;
-        $this->collection = isset($_POST['collection']) ? $_POST['collection'] : NULL;
+        $this->db = $this->request->getParam('db');
+        $this->collection = $this->request->getParam('collection');
         if ($this->validation($this->db, $this->collection)) {
             if ($this->isValidCollection($_POST['old_collection'])) {
                 $response = $this->getModel()->renameCollection($this->collection, $_POST['old_collection'], $this->db);
@@ -257,8 +258,8 @@ class CollectionController extends Controller {
     }
 
     public function Drop() {
-        $this->db = isset($_POST['db']) ? $_POST['db'] : NULL;
-        $this->collection = isset($_POST['collection']) ? $_POST['collection'] : NULL;
+        $this->db = $this->request->getParam('db');
+        $this->collection = $this->request->getParam('collection');
         if ($this->validation($this->db, $this->collection)) {
             $response = $this->getModel()->dropCollection($this->db, $this->collection);
             if ($response['ok'] == '1') {
@@ -274,8 +275,8 @@ class CollectionController extends Controller {
 
     public function Remove() {
 
-        $this->db = isset($_POST['db']) ? $_POST['db'] : NULL;
-        $this->collection = isset($_POST['collection']) ? $_POST['collection'] : NULL;
+        $this->db = $this->request->getParam('db');
+        $this->collection = $this->request->getParam('collection');
         if ($this->validation($this->db, $this->collection)) {
             $response = $this->getModel()->removeCollection($this->db, $this->collection);
             $this->message->sucess = $this->collection . " collection removed.";
@@ -285,10 +286,11 @@ class CollectionController extends Controller {
     }
 
     public function Export() {
-        $this->db = isset($_POST['db']) ? $_POST['db'] : NULL;
-        $this->collection = isset($_POST['collection']) ? $_POST['collection'] : NULL;
-        if ($this->validation($this->db, $this->collection)) {
-            $collection = $this->getModel()->find($this->db, $this->collection);
+        $this->db = $this->request->getParam('db');
+        $this->collection = $this->request->getParam('collection');
+        if (!empty($this->db) || !empty($this->collection)) {
+            $this->application->view = 'Collection';
+            $this->display('export');
         } else {
             header("Location:index.php?load=Collection/Index");
         }
