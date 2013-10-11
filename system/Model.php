@@ -52,7 +52,7 @@ class Model {
 //    }
 
 
-    public function find($db, $collection, $query = array(), $fields = array(), $limit = 10, $skip = 0) {
+    public function find($db, $collection, $query = array(), $fields = array(), $limit =false, $skip =false) {
 
         return $this->mongo->{$db}->{$collection}->find($query, $fields)->limit($limit)->skip($skip);
     }

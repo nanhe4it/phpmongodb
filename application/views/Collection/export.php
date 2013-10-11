@@ -54,7 +54,9 @@
                 <input type="radio" id="mongo_export" value="custom" name="json_or_mongo">&nbsp;Mongo Statement
             </div>
         </div>
-
+        <input type="hidden" name="db" id="db-export" value="<?php echo $this->db;?>" />
+        <input type="hidden" name="collection" id="collection_export" value="<?php echo $this->collection;?>" />
+        <input type="hidden" name="load" value="Collection/Export" />
         <input class="btn btn-primary btn-large" type="submit" name="btnExport" Value="Export" />
     </div>
 </form>    

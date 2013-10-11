@@ -285,9 +285,42 @@ class CollectionController extends Controller {
         header("Location:" . $this->url);
     }
 
+    protected function quickExport() {
+        $cursor = $this->getModel()->find($this->db, $this->collection);
+        $file=new File('/tmp/','nanhe-kumar.json');
+        $file->delete();
+        $cryptography=new Cryptography();
+        while ($cursor->hasNext()) {
+            $document = $cursor->getNext();
+            $this->debug($document);
+            $file->write($cryptography->arrayToJSON($document)."\n");
+        }
+        if($file->success){
+            //$this->message->sucess=$file->message;
+            $file->download();
+        }else{
+           $this->message->error=$file->message; 
+        }
+    }
+
+    protected function customExport() {
+        
+    }
+
     public function Export() {
         $this->db = $this->request->getParam('db');
         $this->collection = $this->request->getParam('collection');
+        
+        if ($this->request->isPost()) {
+            switch ($this->request->getParam('quick_or_custom')) {
+                case 'quick':
+                    $this->quickExport();
+                    break;
+                case 'custom':
+                    $this->customExport();
+                    break;
+            }
+        }
         if (!empty($this->db) || !empty($this->collection)) {
             $this->application->view = 'Collection';
             $this->display('export');
