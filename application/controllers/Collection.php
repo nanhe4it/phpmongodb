@@ -1,6 +1,6 @@
-<?php defined('PMDDA') or die('Restricted access'); ?>
 <?php
 
+defined('PMDDA') or die('Restricted access');
 /*
  * Controller
  */
@@ -146,16 +146,20 @@ class CollectionController extends Controller {
                     break;
                 case 'array':
                     $cryptography = new Cryptography();
-                    $a = $cryptography->stringToArray($_POST['data']);
+                    $a = $cryptography->stringToArray($this->request->getParam('data'));
                     $this->insertRecord($a);
                     break;
                 case 'json':
-                    $a = json_decode($_POST['data'], true);
-                    $this->insertRecord($a);
+                    $response = $this->getModel()->insertJSON($this->db, $this->collection, $this->request->getParam('data'));
+                    if ($response['ok'] == 1) {
+                        $this->message->sucess = " row inserted";
+                    }else{
+                        $this->message->error='invalid json';
+                    }
                     break;
             }
         }
-
+        $this->url = "index.php?load=Collection/Record&db=" . $this->db . "&collection=" . $this->collection;
         header("Location:" . $this->url);
     }
 
@@ -167,7 +171,6 @@ class CollectionController extends Controller {
         } else {
             $this->message->error = "Enter Field Name and Value";
         }
-        $this->url = "index.php?load=Collection/Record&db=" . $this->db . "&collection=" . $this->collection;
     }
 
     private function validation($db = NULL, $collection = NULL) {
@@ -287,46 +290,127 @@ class CollectionController extends Controller {
 
     protected function quickExport() {
         $cursor = $this->getModel()->find($this->db, $this->collection);
-        $file=new File('/tmp/','nanhe-kumar.json');
+        $file = new File('/tmp/', $this->collection . '.json');
         $file->delete();
-        $cryptography=new Cryptography();
+        $cryptography = new Cryptography();
         while ($cursor->hasNext()) {
             $document = $cursor->getNext();
             $this->debug($document);
-            $file->write($cryptography->arrayToJSON($document)."\n");
+            $file->write($cryptography->arrayToJSON($document) . "\n");
         }
-        if($file->success){
-            //$this->message->sucess=$file->message;
+        if ($file->success) {
+
             $file->download();
-        }else{
-           $this->message->error=$file->message; 
+        } else {
+            $this->message->error = $file->message;
+        }
+    }
+
+    protected function zip() {
+
+        $cursor = $this->getModel()->find($this->db, $this->collection);
+        $file = new File('/tmp/', $this->collection . '.json');
+        $file->delete();
+        $cryptography = new Cryptography();
+        while ($cursor->hasNext()) {
+            $document = $cursor->getNext();
+            $file->write($cryptography->arrayToJSON($document) . "\n");
+        }
+        if ($file->success) {
+            $response = $file->createZip(array($this->collection . '.json'), $this->collection . '.zip', TRUE);
+            if ($response) {
+                $file->download($this->collection . '.zip');
+            } else {
+                $this->message->error = $file->message;
+            }
+        } else {
+            $this->message->error = $file->message;
         }
     }
 
     protected function customExport() {
-        
+        $fields = array();
+        $query = array();
+        $limit = $this->request->getParam('limit');
+        $skip = $this->request->getParam('skip');
+        $limit = empty($limit) ? false : $limit;
+        $skip = empty($skip) ? false : $skip;
+        $path = '/tmp/';
+        $fileName = $this->request->getParam('file_name');
+        $fileName = (empty($fileName) ? $this->collection : $fileName) . '.json';
+        $cursor = $this->getModel()->find($this->db, $this->collection, $query, $fields, $limit, $skip);
+        $file = new File($path, $fileName);
+        $file->delete();
+        $cryptography = new Cryptography();
+        while ($cursor->hasNext()) {
+            $document = $cursor->getNext();
+            $file->write($cryptography->arrayToJSON($document) . "\n");
+        }
+        if ($this->request->getParam('text_or_save') == 'save') {
+            if ($file->success) {
+                if ($this->request->getParam('compression') == 'none') {
+                    $file->download();
+                } else {
+                    $compressFile = $this->createCompress($fileName, $file);
+                    if ($compressFile) {
+                        $file->download($compressFile);
+                    } else {
+                        $this->message->error = $file->message;
+                        return false;
+                    }
+                }
+            } else {
+                $this->message->error = $file->message;
+                return false;
+            }
+        } else {
+            return file_get_contents($path . $fileName);
+        }
+    }
+
+    protected function createCompress($fileName, File $file) {
+        if ($this->request->getParam('compression') == 'zip') {
+            $response = $file->createZip(array($fileName), $this->collection . '.zip', TRUE);
+            if ($response) {
+                return $this->collection . '.zip';
+            } else {
+                return false;
+            }
+        }
     }
 
     public function Export() {
         $this->db = $this->request->getParam('db');
         $this->collection = $this->request->getParam('collection');
-        
+        $record = false;
         if ($this->request->isPost()) {
             switch ($this->request->getParam('quick_or_custom')) {
                 case 'quick':
                     $this->quickExport();
                     break;
                 case 'custom':
-                    $this->customExport();
+                    $record = $this->customExport();
                     break;
             }
         }
         if (!empty($this->db) || !empty($this->collection)) {
             $this->application->view = 'Collection';
-            $this->display('export');
+            $this->display('export', array('record' => $record));
         } else {
             header("Location:index.php?load=Collection/Index");
         }
+    }
+
+    public function Import() {
+        $this->db = $this->request->getParam('db');
+        $this->collection = $this->request->getParam('collection');
+        if ($this->request->isPost()) {
+            if ($_FILES['import_file']['error'] == UPLOAD_ERR_OK && is_uploaded_file($_FILES['import_file']['tmp_name'])) { //checks that file is uploaded
+                echo file_get_contents($_FILES['import_file']['tmp_name']);
+            }
+        }
+        $this->application->view = 'Collection';
+        $this->display('import');
     }
 
 }

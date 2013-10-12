@@ -30,7 +30,7 @@
         </div>
         <div class="tab-pane fade" id="Array">
             <form id="tab2" method="post" action="index.php">
-                <textarea name="data" rows="3" class="input-xlarge">array (
+                <textarea name="data" rows="3" class="input-xlarge" style="width:1000px;">array (
 )</textarea>
                 <div>
                     <button class="btn btn-primary">Save</button>
@@ -43,7 +43,7 @@
         </div>
         <div class="tab-pane fade" id="JSON">
             <form id="tab3" method="post" action="index.php">
-                <textarea name="data" rows="3" class="input-xlarge">{
+                <textarea name="data" rows="3" class="input-xlarge" style="width:1000px;">{
   
 }</textarea>
                 <div>

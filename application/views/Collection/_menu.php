@@ -9,7 +9,7 @@
     <a class="btn <?php echo $this->application->layout==='insert'?'active':'';?>" href="<?php echo Theme::URL('Collection/Insert',array('db'=>$this->db,'collection'=>$this->collection)); ?>">Insert</a>
     <?php }?>
     <a class="btn <?php echo $this->application->layout==='export'?'active':'';?>" href="<?php echo Theme::URL('Collection/Export',array('db'=>$this->db,'collection'=>$this->collection)); ?>">Export</a>
-    <button class="btn" id="btn-import">Import</button>
+    <a class="btn <?php echo $this->application->layout==='import'?'active':'';?>" href="<?php echo Theme::URL('Collection/Import',array('db'=>$this->db,'collection'=>$this->collection)); ?>">Import</a>
     <a class="btn <?php echo $this->application->layout==='indexes'?'active':'';?>" href="<?php echo Theme::URL('Collection/Indexes',array('db'=>$this->db,'collection'=>$this->collection)); ?>">Indexes</a>
 
 </div>

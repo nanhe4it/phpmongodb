@@ -1,6 +1,5 @@
-<?php defined('PMDDA') or die('Restricted access'); ?>
 <?php
-
+defined('PMDDA') or die('Restricted access');
 /*
  * Model
  */
@@ -60,10 +59,19 @@ class Collection extends Model {
         }
     }
 
-    public function createIndex($db, $collection, $key,$options = array() ) {
-        print_r($key);
+    public function createIndex($db, $collection, $key, $options = array()) {
+
         try {
-            return $this->mongo->{$db}->{$collection}->ensureIndex($key,$options);
+            return $this->mongo->{$db}->{$collection}->ensureIndex($key, $options);
+        } catch (Exception $e) {
+            exit($e->getMessage());
+        }
+    }
+
+    public function insertJSON($db, $collection, $json) {
+        try {
+            $code = "db.getCollection('" . $collection . "').insert(" . $json . ");";
+            return $this->mongo->{$db}->execute($code);
         } catch (Exception $e) {
             exit($e->getMessage());
         }

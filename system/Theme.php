@@ -33,7 +33,7 @@ class Theme {
         } else {
             self::$homeUri .= $_SERVER["SERVER_NAME"];
         }
-        self::$homeUri.= str_replace('/index.php', '', $_SERVER['PHP_SELF']);
+        self::$homeUri.= str_replace('index.php', '', $_SERVER['PHP_SELF']);
     }
 
     public static function getPath() {
