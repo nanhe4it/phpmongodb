@@ -76,6 +76,22 @@ class Collection extends Model {
             exit($e->getMessage());
         }
     }
+    public function removeById($db, $collection, $id) {
+        try {
+            
+            return $this->mongo->{$db}->{$collection}->remove(array('_id' => new MongoId($id)),  array("justOne" => true));
+        } catch (Exception $e) {
+            exit($e->getMessage());
+        }
+    }
+    public function findById($db, $collection, $id) {
+        try {
+            
+            return $this->mongo->{$db}->{$collection}->findOne(array('_id' => new MongoId($id)));
+        } catch (Exception $e) {
+            exit($e->getMessage());
+        }
+    }
 
 }
 

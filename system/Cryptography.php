@@ -9,7 +9,6 @@ class Cryptography {
             $document = $cursor->getNext();
           
             $this->data['document'][] = $document;
-            
             $this->data['json'][] =$this->highlight($this->arrayToJSON($document));
             $this->data['array'][] = $this->highlight($this->arrayToString($document));
         }

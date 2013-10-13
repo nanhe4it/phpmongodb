@@ -125,12 +125,47 @@ class CollectionController extends Controller {
             $cryptography = new Cryptography();
             $record = $cryptography->decode($cursor);
             $this->application->view = 'Collection';
-            $format = array('json', 'document', 'php', 'array');
+            $format = array('json', 'array', 'document');
             $this->display('record', array('record' => $record, 'format' => $format));
         } else {
 
             header("Location:" . $this->url);
         }
+    }
+    public function EditRecord(){
+       $this->db = $this->request->getParam('db');
+        $this->collection = $this->request->getParam('collection');
+        $id = $this->request->getParam('id');
+        $format=$this->request->getParam('format');
+        if (!empty($this->db) && !empty($this->collection) && !empty($this->db)) {   
+            $cursor = $this->getModel()->findById($this->db, $this->collection, $id);
+            unset($cursor['_id']);
+            $cryptography = new Cryptography();
+            $record['json'] = $cryptography->arrayToJSON($cursor);
+            $record['array'] = $cryptography->arrayToString($cursor);
+             $this->application->view = 'Collection';
+            $this->display('edit', array('record' => $record, 'format' => $format,'id'=>$id));
+        }else{
+            $this->url="index.php";
+            header("Location:" . $this->url); 
+        }
+        
+    }
+
+    public function DeleteRecord() {
+        $this->db = $this->request->getParam('db');
+        $this->collection = $this->request->getParam('collection');
+        $id = $this->request->getParam('id');
+        if (!empty($this->db) && !empty($this->collection) && !empty($this->db)) {
+            $response = $this->getModel()->removeById($this->db, $this->collection, $id);
+            if ($response['n'] == 1 && $response['ok'] == 1) {
+                $this->message->sucess = "Record successfully deleted";
+            }
+            $this->url = "index.php?load=Collection/Record&db=" . $this->db . "&collection=" . $this->collection;
+        }else{
+            $this->url="index.php";
+        }
+        header("Location:" . $this->url);
     }
 
     public function SaveRecord() {
@@ -153,8 +188,8 @@ class CollectionController extends Controller {
                     $response = $this->getModel()->insertJSON($this->db, $this->collection, $this->request->getParam('data'));
                     if ($response['ok'] == 1) {
                         $this->message->sucess = " row inserted";
-                    }else{
-                        $this->message->error='invalid json';
+                    } else {
+                        $this->message->error = 'invalid json';
                     }
                     break;
             }
@@ -295,34 +330,13 @@ class CollectionController extends Controller {
         $cryptography = new Cryptography();
         while ($cursor->hasNext()) {
             $document = $cursor->getNext();
-            $this->debug($document);
-            $file->write($cryptography->arrayToJSON($document) . "\n");
+            $json = $cryptography->arrayToJSON($document);
+            $json = str_replace(array("\n", "\t"), '', $json);
+            $file->write($json . "\n");
         }
         if ($file->success) {
 
             $file->download();
-        } else {
-            $this->message->error = $file->message;
-        }
-    }
-
-    protected function zip() {
-
-        $cursor = $this->getModel()->find($this->db, $this->collection);
-        $file = new File('/tmp/', $this->collection . '.json');
-        $file->delete();
-        $cryptography = new Cryptography();
-        while ($cursor->hasNext()) {
-            $document = $cursor->getNext();
-            $file->write($cryptography->arrayToJSON($document) . "\n");
-        }
-        if ($file->success) {
-            $response = $file->createZip(array($this->collection . '.json'), $this->collection . '.zip', TRUE);
-            if ($response) {
-                $file->download($this->collection . '.zip');
-            } else {
-                $this->message->error = $file->message;
-            }
         } else {
             $this->message->error = $file->message;
         }
@@ -406,7 +420,22 @@ class CollectionController extends Controller {
         $this->collection = $this->request->getParam('collection');
         if ($this->request->isPost()) {
             if ($_FILES['import_file']['error'] == UPLOAD_ERR_OK && is_uploaded_file($_FILES['import_file']['tmp_name'])) { //checks that file is uploaded
-                echo file_get_contents($_FILES['import_file']['tmp_name']);
+                //echo $fileContent = file_get_contents($_FILES['import_file']['tmp_name']);
+                $handle = @fopen($_FILES['import_file']['tmp_name'], "r");
+                if ($handle) {
+                    while (($buffer = fgets($handle, 4096)) !== false) {
+                        $response = $this->getModel()->insertJSON($this->db, $this->collection, $buffer);
+                        if ($response['ok'] == 1) {
+                            $this->message->sucess = "All data import successfully.";
+                        } else {
+                            $this->message->error = $response['errmsg'];
+                        }
+                    }
+                    if (!feof($handle)) {
+                        $this->message->error = "Error: unexpected fgets() fail\n";
+                    }
+                    fclose($handle);
+                }
             }
         }
         $this->application->view = 'Collection';
