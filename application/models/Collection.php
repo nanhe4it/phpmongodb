@@ -29,7 +29,7 @@ class Collection extends Model {
 
     public function dropCollection($db, $collection) {
         try {
-            $x= $this->mongo->{$db}->{$collection}->drop();
+            $x = $this->mongo->{$db}->{$collection}->drop();
         } catch (Exception $e) {
             exit($e->getMessage());
         }
@@ -69,34 +69,50 @@ class Collection extends Model {
         }
     }
 
-    
+    protected function getQueryForId($id, $idType = 'object', $fromat = 'array') {
+        if ($fromat == 'json') {
+           
+            if ($idType == 'object') {
+                return '{"_id" : ObjectId("' . $id . '")}';
+            } else {
+                return '{"_id" : "' . $id . '"}';
+            }
+        } else {
+            if ($idType == 'object') {
+                return array('_id' => new MongoId($id));
+            } else {
+                return array('_id' => $id);
+            }
+        }
+    }
 
-    public function removeById($db, $collection, $id) {
+    public function removeById($db, $collection,$id,$idType = 'object') {
         try {
-
-            return $this->mongo->{$db}->{$collection}->remove(array('_id' => new MongoId($id)), array("justOne" => true));
+            $query = $this->getQueryForId($id, $idType);
+            return $this->mongo->{$db}->{$collection}->remove($query, array("justOne" => true));
         } catch (Exception $e) {
             exit($e->getMessage());
         }
     }
 
-    public function findById($db, $collection, $id) {
+    public function findById($db, $collection, $id, $idType = 'object') {
         try {
-
-            return $this->mongo->{$db}->{$collection}->findOne(array('_id' => new MongoId($id)));
+            $query = $this->getQueryForId($id, $idType);
+            return $this->mongo->{$db}->{$collection}->findOne($query);
         } catch (Exception $e) {
             exit($e->getMessage());
         }
     }
 
-    public function updateById($db, $collection, $id, $data, $fromat = 'array') {
+    public function updateById($db, $collection, $id, $data, $fromat = 'array', $idType = 'object') {
         try {
+             $query = $this->getQueryForId($id, $idType,$fromat);
             if ($fromat == 'json') {
-                $query = '{"_id" : ObjectId("'.$id.'")}';
                 $code = "db.getCollection('" . $collection . "').update(" . $query . "," . $data . ");";
                 return $this->mongo->{$db}->execute($code);
             } else {
-                return $this->mongo->{$db}->{$collection}->update(array('_id' => new MongoId($id)), $data);
+               
+                return $this->mongo->{$db}->{$collection}->update($query, $data);
             }
         } catch (Exception $e) {
             exit($e->getMessage());

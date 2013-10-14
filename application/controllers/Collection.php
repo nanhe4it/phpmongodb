@@ -138,23 +138,25 @@ class CollectionController extends Controller {
         $this->db = $this->request->getParam('db');
         $this->collection = $this->request->getParam('collection');
         $id = $this->request->getParam('id');
+        $idType=$this->request->getParam('id_type');
         $format = $this->request->getParam('format');
         $cryptography = new Cryptography();
         $model = $this->getModel();
         if ($this->request->isPost()) {
-
+            
             if ($this->request->getParam('format') == 'array') {
                 $data = $cryptography->stringToArray($this->request->getParam('data'));
-                $response = $model->updateById($this->db, $this->collection, $id, $data);
+                $response = $model->updateById($this->db, $this->collection, $id, $data,'array',$idType);
             } else if ($this->request->getParam('format') == 'json') {
-                $response = $model->updateById($this->db, $this->collection, $id, $this->request->getParam('data'), 'json');
+                $response = $model->updateById($this->db, $this->collection, $id, $this->request->getParam('data'), 'json',$idType);
             }
             if (isset($response) && $response['ok'] == 1) {
                 $this->message->sucess = "Updated successfully.";
             }
         }
-        if (!empty($this->db) && !empty($this->collection) && !empty($this->db)) {
-            $cursor = $model->findById($this->db, $this->collection, $id);
+        
+        if (!empty($this->db) && !empty($this->collection) && !empty($id) && !empty($idType)) {
+            $cursor = $model->findById($this->db, $this->collection, $id,$idType);
             unset($cursor['_id']);
 
             $record['json'] = $cryptography->arrayToJSON($cursor);
@@ -171,8 +173,9 @@ class CollectionController extends Controller {
         $this->db = $this->request->getParam('db');
         $this->collection = $this->request->getParam('collection');
         $id = $this->request->getParam('id');
-        if (!empty($this->db) && !empty($this->collection) && !empty($this->db)) {
-            $response = $this->getModel()->removeById($this->db, $this->collection, $id);
+        $idType=$this->request->getParam('id_type');
+        if (!empty($this->db) && !empty($this->collection) && !empty($id)) {
+            $response = $this->getModel()->removeById($this->db, $this->collection, $id,$idType);
             if ($response['n'] == 1 && $response['ok'] == 1) {
                 $this->message->sucess = "Record successfully deleted";
             }

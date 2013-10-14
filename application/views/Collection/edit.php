@@ -16,6 +16,7 @@
                 <div>
                     <button class="btn btn-primary">Save</button>
                 </div>
+                <input type="hidden" name="id_type" value="<?php echo $this->request->getParam('id_type');?>" />
                 <input type="hidden"  name="load" value="Collection/EditRecord"/>
                 <input type="hidden" name="format" value="array" />
                 <input type="hidden" name="db" value="<?php echo $this->db; ?>" />
@@ -32,6 +33,7 @@
                 <div>
                     <button class="btn btn-primary">Save</button>
                 </div>
+                <input type="hidden" name="id_type" value="<?php echo $this->request->getParam('id_type');?>" />
                 <input type="hidden"  name="load" value="Collection/EditRecord"/>
                 <input type="hidden" name="format" value="json" />
                 <input type="hidden" name="db" value="<?php echo $this->db; ?>" />
