@@ -33,8 +33,9 @@ class CollectionController extends Controller {
             //$this->debug($collectionList);
             $data = array(
                 'collectionList' => $collectionList,
-                'model' => $model,
+              
             );
+            //$this->debug($data);
             $this->application->view = 'Collection';
             $this->display('index', $data);
         } else {
@@ -132,24 +133,38 @@ class CollectionController extends Controller {
             header("Location:" . $this->url);
         }
     }
-    public function EditRecord(){
-       $this->db = $this->request->getParam('db');
+
+    public function EditRecord() {
+        $this->db = $this->request->getParam('db');
         $this->collection = $this->request->getParam('collection');
         $id = $this->request->getParam('id');
-        $format=$this->request->getParam('format');
-        if (!empty($this->db) && !empty($this->collection) && !empty($this->db)) {   
-            $cursor = $this->getModel()->findById($this->db, $this->collection, $id);
+        $format = $this->request->getParam('format');
+        $cryptography = new Cryptography();
+        $model = $this->getModel();
+        if ($this->request->isPost()) {
+
+            if ($this->request->getParam('format') == 'array') {
+                $data = $cryptography->stringToArray($this->request->getParam('data'));
+                $response = $model->updateById($this->db, $this->collection, $id, $data);
+            } else if ($this->request->getParam('format') == 'json') {
+                $response = $model->updateById($this->db, $this->collection, $id, $this->request->getParam('data'), 'json');
+            }
+            if (isset($response) && $response['ok'] == 1) {
+                $this->message->sucess = "Updated successfully.";
+            }
+        }
+        if (!empty($this->db) && !empty($this->collection) && !empty($this->db)) {
+            $cursor = $model->findById($this->db, $this->collection, $id);
             unset($cursor['_id']);
-            $cryptography = new Cryptography();
+
             $record['json'] = $cryptography->arrayToJSON($cursor);
             $record['array'] = $cryptography->arrayToString($cursor);
-             $this->application->view = 'Collection';
-            $this->display('edit', array('record' => $record, 'format' => $format,'id'=>$id));
-        }else{
-            $this->url="index.php";
-            header("Location:" . $this->url); 
+            $this->application->view = 'Collection';
+            $this->display('edit', array('record' => $record, 'format' => $format, 'id' => $id));
+        } else {
+            $this->url = "index.php";
+            header("Location:" . $this->url);
         }
-        
     }
 
     public function DeleteRecord() {
@@ -162,8 +177,8 @@ class CollectionController extends Controller {
                 $this->message->sucess = "Record successfully deleted";
             }
             $this->url = "index.php?load=Collection/Record&db=" . $this->db . "&collection=" . $this->collection;
-        }else{
-            $this->url="index.php";
+        } else {
+            $this->url = "index.php";
         }
         header("Location:" . $this->url);
     }
@@ -185,7 +200,7 @@ class CollectionController extends Controller {
                     $this->insertRecord($a);
                     break;
                 case 'json':
-                    $response = $this->getModel()->insertJSON($this->db, $this->collection, $this->request->getParam('data'));
+                    $response = $this->getModel()->insert($this->db, $this->collection, $this->request->getParam('data'),'json');
                     if ($response['ok'] == 1) {
                         $this->message->sucess = " row inserted";
                     } else {
@@ -280,9 +295,10 @@ class CollectionController extends Controller {
     public function Update() {
         $this->db = $this->request->getParam('db');
         $this->collection = $this->request->getParam('collection');
+        
         if ($this->validation($this->db, $this->collection)) {
-            if ($this->isValidCollection($_POST['old_collection'])) {
-                $response = $this->getModel()->renameCollection($this->collection, $_POST['old_collection'], $this->db);
+            if ($this->isValidCollection($this->request->getParam('old_collection'))) {
+                $response = $this->getModel()->renameCollection($this->collection,$this->request->getParam('old_collection'), $this->db);
 
                 if ($response['ok'] == '1') {
                     $this->message->sucess = " collection rename successfully";
@@ -423,8 +439,8 @@ class CollectionController extends Controller {
                 //echo $fileContent = file_get_contents($_FILES['import_file']['tmp_name']);
                 $handle = @fopen($_FILES['import_file']['tmp_name'], "r");
                 if ($handle) {
-                    while (($buffer = fgets($handle, 4096)) !== false) {
-                        $response = $this->getModel()->insertJSON($this->db, $this->collection, $buffer);
+                    while (($record = fgets($handle)) !== false) {
+                        $response = $this->getModel()->insert($this->db, $this->collection, $record,'json');
                         if ($response['ok'] == 1) {
                             $this->message->sucess = "All data import successfully.";
                         } else {

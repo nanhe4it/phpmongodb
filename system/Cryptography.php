@@ -30,9 +30,10 @@ class Cryptography {
                 $string.="\"$key\"" . '=>' . $this->arrayToString($value, "$tab\t");
             } else if (is_object($value)) {
                 $string.="\"$key\"" . '=>' . $this->objectToString($value);
-            } else {
-
-                $string.="\"$key\"" . '=>' . $value;
+            }else if(is_numeric($value)){ 
+                                $string.="\"$key\"" . '=>' . $value;
+            }else {
+                $string.="\"$key\"" . '=>'."\"$value\"";
             }
             $string.=',';
         }

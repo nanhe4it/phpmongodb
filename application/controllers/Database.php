@@ -27,40 +27,38 @@ class DatabaseController extends Controller {
         $this->application->view = 'Database';
         $this->display('create');
     }
-    public function Update(){
-        if (!empty($_POST['db']) || !empty($_POST['old_db'])) {
-            $this->getModel()->renamdDatabase($_POST['old_db'],$_POST['db']);
+
+    public function Update() {
+        $db=$this->request->getParam('db');
+        $oldDb=$this->request->getParam('db');
+        if (!empty($db) || !empty($oldDb)) {
+            $this->getModel()->renamdDatabase($oldDb, $db);
             $this->message->sucess = "database rename successfully";
-        }else{
-             $this->message->error="Invalid database name";
+        } else {
+            $this->message->error = "Invalid database name";
         }
-         header("Location:index.php?load=Database/Index");
+        header("Location:index.php?load=Database/Index");
     }
 
     public function Save() {
-
+        $db=$this->request->getParam('db');
         if (!empty($_POST['db'])) {
-            $this->getModel()->createDB($_POST['db']);
-            $this->message->sucess = $_POST['db'] . " database created.";
+            $this->getModel()->createDB($db);
+            $this->message->sucess = $db . " database created.";
         } else {
             $this->message->error = "Enter Database Name";
         }
-
-
-
         header("Location:index.php?load=Database/Index");
     }
 
     public function Drop() {
+        $db = $this->request->getParam('db');
+        if (!empty($db)) {
+            $response = $this->getModel()->dropDatabase($db);
 
-        if (!empty($_POST['db'])) {
-            $res = $this->getModel()->dropDatabase($_POST['db']);
-
-            $this->message->sucess = $_POST['db'] . " database droped.";
+            $this->message->sucess = $db . " database droped.";
         }
         header("Location:index.php?load=Database/Index");
     }
-
-    
 
 }

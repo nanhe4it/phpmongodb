@@ -50,7 +50,7 @@ class Theme {
         $url = self::__setThemeUri() . 'index.php?load=' . $load;
         if (is_array($queryString)) {
             foreach ($queryString as $k => $v) {
-                $url.= "&$k=$v";
+                $url.= '&'.$k.'='.urlencode($v);
             }
         }
         return $url;

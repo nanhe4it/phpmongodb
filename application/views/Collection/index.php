@@ -24,8 +24,8 @@
 
                             <td><?php echo $collection['count']; ?></td>
                             <td>
-                                <a href="#myModal" data-edit-collection="<?php echo addslashes($collection['name']); ?>" role="button" data-toggle="modal"><i class="icon-pencil"></i></a>
-                                <a href="#myModal" data-delete-collection="<?php echo addslashes($collection['name']); ?>"role="button" data-toggle="modal"><i class="icon-remove"></i></a>
+                                <a href="#myModal" data-edit-collection="<?php echo urlencode($collection['name']); ?>" role="button" data-toggle="modal"><i class="icon-pencil"></i></a>
+                                <a href="#myModal" data-delete-collection="<?php echo urlencode($collection['name']); ?>"role="button" data-toggle="modal"><i class="icon-remove"></i></a>
                             </td>
                         </tr>
                     <?php } ?>
@@ -91,7 +91,7 @@
 
         $("a[data-edit-collection]").click(function() {
 
-            $("#pop-up-collection").val($(this).attr("data-edit-collection"));
+            $("#pop-up-collection").val(decodeURIComponent($(this).attr("data-edit-collection")));
             $("#pop-up-old_collection").val($(this).attr("data-edit-collection"));
             $("#pop-up-load").val("Collection/Update");
             $('#button-delete-collection').hide();
@@ -103,7 +103,7 @@
         });
 
         $("a[data-delete-collection]").click(function() {
-            $("#pop-up-collection").val($(this).attr("data-delete-collection"));
+            $("#pop-up-collection").val(decodeURIComponent($(this).attr("data-delete-collection")));
             $("#pop-up-load").val("Collection/Drop");
             $('#button-delete-collection').show();
             $('#button-create-collection').hide();

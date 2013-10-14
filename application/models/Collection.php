@@ -1,4 +1,5 @@
 <?php
+
 defined('PMDDA') or die('Restricted access');
 /*
  * Model
@@ -28,7 +29,7 @@ class Collection extends Model {
 
     public function dropCollection($db, $collection) {
         try {
-            return $this->mongo->{$db}->{$collection}->drop();
+            $x= $this->mongo->{$db}->{$collection}->drop();
         } catch (Exception $e) {
             exit($e->getMessage());
         }
@@ -68,26 +69,35 @@ class Collection extends Model {
         }
     }
 
-    public function insertJSON($db, $collection, $json) {
-        try {
-            $code = "db.getCollection('" . $collection . "').insert(" . $json . ");";
-            return $this->mongo->{$db}->execute($code);
-        } catch (Exception $e) {
-            exit($e->getMessage());
-        }
-    }
+    
+
     public function removeById($db, $collection, $id) {
         try {
-            
-            return $this->mongo->{$db}->{$collection}->remove(array('_id' => new MongoId($id)),  array("justOne" => true));
+
+            return $this->mongo->{$db}->{$collection}->remove(array('_id' => new MongoId($id)), array("justOne" => true));
         } catch (Exception $e) {
             exit($e->getMessage());
         }
     }
+
     public function findById($db, $collection, $id) {
         try {
-            
+
             return $this->mongo->{$db}->{$collection}->findOne(array('_id' => new MongoId($id)));
+        } catch (Exception $e) {
+            exit($e->getMessage());
+        }
+    }
+
+    public function updateById($db, $collection, $id, $data, $fromat = 'array') {
+        try {
+            if ($fromat == 'json') {
+                $query = '{"_id" : ObjectId("'.$id.'")}';
+                $code = "db.getCollection('" . $collection . "').update(" . $query . "," . $data . ");";
+                return $this->mongo->{$db}->execute($code);
+            } else {
+                return $this->mongo->{$db}->{$collection}->update(array('_id' => new MongoId($id)), $data);
+            }
         } catch (Exception $e) {
             exit($e->getMessage());
         }

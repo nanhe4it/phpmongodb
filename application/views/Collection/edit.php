@@ -16,8 +16,8 @@
                 <div>
                     <button class="btn btn-primary">Save</button>
                 </div>
-                <input type="hidden"  name="load" value="Collection/SaveRecord"/>
-                <input type="hidden" name="type" value="Array" />
+                <input type="hidden"  name="load" value="Collection/EditRecord"/>
+                <input type="hidden" name="format" value="array" />
                 <input type="hidden" name="db" value="<?php echo $this->db; ?>" />
                 <input type="hidden" name="collection" value="<?php echo $this->collection; ?>" />
             </form>
@@ -33,7 +33,7 @@
                     <button class="btn btn-primary">Save</button>
                 </div>
                 <input type="hidden"  name="load" value="Collection/EditRecord"/>
-                <input type="hidden" name="type" value="JSON" />
+                <input type="hidden" name="format" value="json" />
                 <input type="hidden" name="db" value="<?php echo $this->db; ?>" />
                 <input type="hidden" name="collection" value="<?php echo $this->collection; ?>" />
             </form>

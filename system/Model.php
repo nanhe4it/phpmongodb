@@ -52,14 +52,24 @@ class Model {
 //    }
 
 
-    public function find($db, $collection, $query = array(), $fields = array(), $limit =false, $skip =false) {
+    public function find($db, $collection, $query = array(), $fields = array(), $limit = false, $skip = false) {
 
         return $this->mongo->{$db}->{$collection}->find($query, $fields)->limit($limit)->skip($skip);
     }
 
-    public function insert($db, $collection, $a = array(), $options = array()) {
-        return $this->mongo->{$db}->{$collection}->insert($a);
+    public function insert($db, $collection, $a , $fromat = 'array', $options = array()) {
+        try {
+            if ($fromat == 'json') {
+                $code = "db.getCollection('" . $collection . "').insert(" . $a . ");";
+                return $this->mongo->{$db}->execute($code);
+            } else {
+                return $this->mongo->{$db}->{$collection}->insert($a);
+            }
+        } catch (Exception $e) {
+            exit($e->getMessage());
+        }
     }
 
 }
+
 ?>

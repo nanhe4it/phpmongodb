@@ -41,7 +41,7 @@ class CHttp {
 
      */
     public function getParam($name, $value = null) {
-        return isset($_GET[$name]) ? $_GET[$name] : (isset($_POST[$name]) ? $_POST[$name] : $value);
+        return urldecode(isset($_GET[$name]) ? $_GET[$name] : (isset($_POST[$name]) ? $_POST[$name] : $value));
     }
 
     /**

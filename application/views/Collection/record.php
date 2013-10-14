@@ -43,11 +43,7 @@
 
         });
         
-        $("#btn-export").click(function() {
-            var url="index.php?load=Collection/Export&db="+"<?php echo $this->db;?>"+"&collection="+"<?php echo $this->collection;?>";
-            window.location=url;
-            $('#btn-export').addClass('btn active');
-        });
+        
 
     });
     
