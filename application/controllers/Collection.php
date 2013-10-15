@@ -22,7 +22,7 @@ class CollectionController extends Controller {
 
     public function Index() {
 
-        $this->db = isset($_REQUEST['db']) ? $_REQUEST['db'] : NULL;
+        $this->db =  $this->request->getParam('db');
         if ($this->isValidDB($this->db)) {
             $model = $this->getModel();
             $collections = $model->listCollections($this->db, TRUE);
@@ -76,7 +76,7 @@ class CollectionController extends Controller {
         foreach ($indexes as $index) {
             if ($index['name'] === $name) {
                 $response = $model->deleteIndex($this->db, $this->collection, $index['key']);
-                $this->message->sucess = 'Index deleted';
+                $this->message->sucess =I18n::t('I_D');
                 break;
             }
         }
@@ -129,7 +129,6 @@ class CollectionController extends Controller {
             $format = array('json', 'array', 'document');
             $this->display('record', array('record' => $record, 'format' => $format));
         } else {
-
             header("Location:" . $this->url);
         }
     }
@@ -151,7 +150,7 @@ class CollectionController extends Controller {
                 $response = $model->updateById($this->db, $this->collection, $id, $this->request->getParam('data'), 'json',$idType);
             }
             if (isset($response) && $response['ok'] == 1) {
-                $this->message->sucess = "Updated successfully.";
+                $this->message->sucess =I18n::t('U_S');
             }
         }
         
@@ -177,7 +176,7 @@ class CollectionController extends Controller {
         if (!empty($this->db) && !empty($this->collection) && !empty($id)) {
             $response = $this->getModel()->removeById($this->db, $this->collection, $id,$idType);
             if ($response['n'] == 1 && $response['ok'] == 1) {
-                $this->message->sucess = "Record successfully deleted";
+                $this->message->sucess =I18n::t('R_S_D'); 
             }
             $this->url = "index.php?load=Collection/Record&db=" . $this->db . "&collection=" . $this->collection;
         } else {
@@ -187,7 +186,6 @@ class CollectionController extends Controller {
     }
 
     public function SaveRecord() {
-
         $this->db = $this->request->getParam('db');
         $this->collection = $this->request->getParam('collection');
         if ($this->validation($this->db, $this->collection)) {
@@ -205,9 +203,9 @@ class CollectionController extends Controller {
                 case 'json':
                     $response = $this->getModel()->insert($this->db, $this->collection, $this->request->getParam('data'),'json');
                     if ($response['ok'] == 1) {
-                        $this->message->sucess = " row inserted";
+                        $this->message->sucess =I18n::t('R_I');
                     } else {
-                        $this->message->error = 'invalid json';
+                        $this->message->error =I18n::t('I_J');
                     }
                     break;
             }
@@ -219,10 +217,10 @@ class CollectionController extends Controller {
     private function insertRecord($a) {
         unset($a['']);
         if (count($a) > 0) {
-            $this->message->sucess = count($a) . " row inserted";
+            $this->message->sucess = count($a) . I18n::t('R_I');
             $this->getModel()->insert($this->db, $this->collection, $a);
         } else {
-            $this->message->error = "Enter Field Name and Value";
+            $this->message->error =I18n::t('E_F_N_A_V'); 
         }
     }
 
@@ -238,22 +236,20 @@ class CollectionController extends Controller {
 
     private function isValidDB($db = NULL) {
         if (empty($db) || !isset($db) || !$this->isValidName($db)) {
-
-            $this->message->error = 'Invalid databse';
+            $this->message->error =  I18n::t('I_D_N');
             $this->setURL('db');
             return false;
         }
-
         return true;
     }
 
     private function isValidCollection($collection = NULL) {
         if (empty($collection) || !isset($collection)) {
-            $this->message->error = "Enter Collection name";
+            $this->message->error =I18n::t('E_C_N');
             $this->setURL('collection');
             return false;
         } else if (!$this->isValidName($collection)) {
-            $this->message->error = 'You can not use characters /\. "*<>:|? for collection name';
+            $this->message->error =I18n::t('Y_C_N_U_C_F_C_N');
             $this->setURL('collection');
             return false;
         } else {
@@ -277,7 +273,6 @@ class CollectionController extends Controller {
     }
 
     public function Save() {
-
         $this->db = $this->request->getPost('db');
         $this->collection = $this->request->getPost('collection');
         $capped = $this->request->getPost('capped');
@@ -286,10 +281,9 @@ class CollectionController extends Controller {
         $size = !empty($size) ? $size : 0;
         $max = $this->request->getPost('max');
         $max = !empty($max) ? $max : 0;
-
         if (!empty($this->db) && !empty($this->collection)) {
             $this->getModel()->createCollection($this->db, $this->collection, $capped, $size, $max);
-            $this->message->sucess = $this->collection . " collection created.";
+            $this->message->sucess =I18n::t('C_C',$this->collection);
             $this->url = "index.php?load=Collection/Index&db=" . $this->db;
         }
         header("Location:" . $this->url);
@@ -298,13 +292,11 @@ class CollectionController extends Controller {
     public function Update() {
         $this->db = $this->request->getParam('db');
         $this->collection = $this->request->getParam('collection');
-        
         if ($this->validation($this->db, $this->collection)) {
             if ($this->isValidCollection($this->request->getParam('old_collection'))) {
                 $response = $this->getModel()->renameCollection($this->collection,$this->request->getParam('old_collection'), $this->db);
-
                 if ($response['ok'] == '1') {
-                    $this->message->sucess = " collection rename successfully";
+                    $this->message->sucess =  I18n::t('C_R_S');
                 } else {
                     $this->message->error = $response['errmsg'];
                 }
@@ -320,23 +312,21 @@ class CollectionController extends Controller {
         if ($this->validation($this->db, $this->collection)) {
             $response = $this->getModel()->dropCollection($this->db, $this->collection);
             if ($response['ok'] == '1') {
-                $this->message->sucess = $this->collection . " collection droped.";
+                $this->message->sucess =I18n::t('C_D',$this->collection);
             } else {
                 $this->message->error = $response['errmsg'];
             }
-
             $this->url = "index.php?load=Collection/Index&db=" . $this->db;
         }
         header("Location:" . $this->url);
     }
 
     public function Remove() {
-
         $this->db = $this->request->getParam('db');
         $this->collection = $this->request->getParam('collection');
         if ($this->validation($this->db, $this->collection)) {
             $response = $this->getModel()->removeCollection($this->db, $this->collection);
-            $this->message->sucess = $this->collection . " collection removed.";
+            $this->message->sucess = I18n::t('C_R',$this->collection);
             $this->url = "index.php?load=Collection/Index&db=" . $this->db;
         }
         header("Location:" . $this->url);
@@ -354,7 +344,6 @@ class CollectionController extends Controller {
             $file->write($json . "\n");
         }
         if ($file->success) {
-
             $file->download();
         } else {
             $this->message->error = $file->message;
@@ -439,19 +428,18 @@ class CollectionController extends Controller {
         $this->collection = $this->request->getParam('collection');
         if ($this->request->isPost()) {
             if ($_FILES['import_file']['error'] == UPLOAD_ERR_OK && is_uploaded_file($_FILES['import_file']['tmp_name'])) { //checks that file is uploaded
-                //echo $fileContent = file_get_contents($_FILES['import_file']['tmp_name']);
                 $handle = @fopen($_FILES['import_file']['tmp_name'], "r");
                 if ($handle) {
                     while (($record = fgets($handle)) !== false) {
                         $response = $this->getModel()->insert($this->db, $this->collection, $record,'json');
                         if ($response['ok'] == 1) {
-                            $this->message->sucess = "All data import successfully.";
+                            $this->message->sucess =I18n::t('A_D_I_S');
                         } else {
                             $this->message->error = $response['errmsg'];
                         }
                     }
                     if (!feof($handle)) {
-                        $this->message->error = "Error: unexpected fgets() fail\n";
+                        $this->message->error =I18n::t('E_U_F');
                     }
                     fclose($handle);
                 }

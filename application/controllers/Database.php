@@ -33,20 +33,20 @@ class DatabaseController extends Controller {
         $oldDb=$this->request->getParam('db');
         if (!empty($db) || !empty($oldDb)) {
             $this->getModel()->renamdDatabase($oldDb, $db);
-            $this->message->sucess = "database rename successfully";
+            $this->message->sucess =  I18n::t('D_R_S');
         } else {
-            $this->message->error = "Invalid database name";
+            $this->message->error = I18n::t('I_D_N'); 
         }
         header("Location:index.php?load=Database/Index");
     }
 
     public function Save() {
         $db=$this->request->getParam('db');
-        if (!empty($_POST['db'])) {
+        if (!empty($db)) {
             $this->getModel()->createDB($db);
-            $this->message->sucess = $db . " database created.";
+            $this->message->sucess =I18n::t('D_C',$db);
         } else {
-            $this->message->error = "Enter Database Name";
+            $this->message->error =I18n::t('E_D_N');
         }
         header("Location:index.php?load=Database/Index");
     }
@@ -56,7 +56,7 @@ class DatabaseController extends Controller {
         if (!empty($db)) {
             $response = $this->getModel()->dropDatabase($db);
 
-            $this->message->sucess = $db . " database droped.";
+            $this->message->sucess =I18n::t('D_D',$db);
         }
         header("Location:index.php?load=Database/Index");
     }

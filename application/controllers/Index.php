@@ -1,8 +1,7 @@
-<?php defined('PMDDA') or die('Restricted access'); ?>
 <?php
+defined('PMDDA') or die('Restricted access');
 class IndexController extends Controller{
     public function Index(){
-        
         $data=array(
             'phpversion'=>phpversion(),
             'webserver'=>$_SERVER['SERVER_SOFTWARE'],

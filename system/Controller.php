@@ -38,7 +38,7 @@ class Controller {
     private function callView() {
         try {
             $view = getcwd() . '/application/views/' . $this->application->view . '/' . $this->application->layout . '.php';
-            if (!file_exists($view)) {
+            if (!is_readable($view)) {
                 throw new Exception('Controller cannot find the view file ' . $view);
             } else {
                 require_once ($view);

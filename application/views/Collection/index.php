@@ -4,17 +4,15 @@
 <div class="row-fluid">
     <div class="block span6">
         <div class="block-heading">
-
-
-            <a href="#widget2container" data-toggle="collapse">Collection</a>
+            <a href="#widget2container" data-toggle="collapse"><?php I18n::p('COLLECTION');?></a>
         </div>
         <div id="widget2container" class="block-body collapse in">
             <table class="table list">
                 <thead>
                     <tr>
-                        <th>Name</th>
-                        <th>Total Record</th>
-                        <th ></th>
+                        <th><?php I18n::p('NAME');?></th>
+                        <th><?php I18n::p('T_C');?></th>
+                        <th >&nbsp;</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -29,8 +27,6 @@
                             </td>
                         </tr>
                     <?php } ?>
-
-
                 </tbody>
             </table>
         </div>
@@ -39,27 +35,24 @@
         <p class="block-heading" id="block-heading">Create Collection</p>
         <div class="block-body">
             <form id="form-create-collection" method="post" class="form-inline">
-                <label style="width:70px;">Name</label>
+                <label style="width:70px;"><?php I18n::p('NAME');?></label>
                 <input type="text" value="" id="collection_name" name="collection" class="input-xlarge"><br><br>
-                <label style="width:70px;">Is Capped</label>
+                <label style="width:70px;"><?php I18n::p('IS_CAPPED');?></label>
                 <input type="checkbox" value="1" id="collection_capped" name="capped"><br><br>
-                <label style="width:70px;">Size</label>
+                <label style="width:70px;"><?php I18n::p('SIZE');?></label>
                 <input type="text" value="" id="collection_size" name="size" class="input-xlarge "><br><br>
-                <label style="width:70px;">Max</label>
+                <label style="width:70px;"><?php I18n::p('Max');?></label>
                 <input type="text" value="" id="collection_max" name="max" class="input-xlarge"><br><br>
                 <input type="hidden" id="load-create" name="load" value="Collection/Save" />
                 <input type="hidden" name="db" value="<?php echo $this->db; ?>" />
                 <label style="width:70px;">&nbsp;</label>
 
-                <button class="btn " name="save"><i class="icon-save" ></i> Create</button>
+                <button class="btn " name="save"><i class="icon-save" ></i><?php I18n::p('CREATE');?> </button>
 
             </form>
         </div>
     </div>
-
-
 </div>
-
 <form method="post" name="form-delete-collection" id="form-delete-collection" >
 
     <div class="modal small hide fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">

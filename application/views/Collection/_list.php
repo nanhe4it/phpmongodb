@@ -9,24 +9,23 @@
         if ($showTab) {
             ?>    
             <ul class="nav nav-tabs">
-                <li id="li-json"class="active"><a href="javascript:void(0)" data-list-record="json">JSON</a></li>
-                <li id="li-array"><a href="javascript:void(0)" data-list-record="array">Array</a></li>
-                <li id="li-document"><a href="javascript:void(0)" data-list-record="document">Find</a></li>
+                <li id="li-json"class="active"><a href="javascript:void(0)" data-list-record="json"><?php I18n::p('JSON');?></a></li>
+                <li id="li-array"><a href="javascript:void(0)" data-list-record="array"><?php I18n::p('Array');?></a></li>
+                <li id="li-document"><a href="javascript:void(0)" data-list-record="document"><?php I18n::p('FIND');?></a></li>
             </ul>
             <?php
             $showTab = false;
         }
         ?>
-
         <div id="record-<?php echo $format; ?>" style="display: <?php echo $format === 'json' ? 'block' : 'none'; ?>">
             <?php
             foreach ($this->data['record'][$format] as $cursor) {
-                echo '&nbsp<a href="'.Theme::URL('Collection/EditRecord',array('db'=>$this->db,'collection'=>$this->collection,'id'=>$this->data['record']['document'][0]['_id'],'format'=>$format,'id_type'=>gettype($this->data['record']['document'][0]['_id']))).'" class="btn">Edit</a>';
-                echo '&nbsp<a href="'.Theme::URL('Collection/DeleteRecord',array('db'=>$this->db,'collection'=>$this->collection,'id'=>$this->data['record']['document'][0]['_id'],'id_type'=>gettype($this->data['record']['document'][0]['_id']))).'" class="btn">Delete</a>';
-                
+                if(isset($this->data['record']['document'][0]['_id'])){
+                echo '&nbsp<a href="'.Theme::URL('Collection/EditRecord',array('db'=>$this->db,'collection'=>$this->collection,'id'=>$this->data['record']['document'][0]['_id'],'format'=>$format,'id_type'=>gettype($this->data['record']['document'][0]['_id']))).'" class="btn"z>'.I18n::t('EDIT').'</a>';
+                echo '&nbsp<a href="'.Theme::URL('Collection/DeleteRecord',array('db'=>$this->db,'collection'=>$this->collection,'id'=>$this->data['record']['document'][0]['_id'],'id_type'=>gettype($this->data['record']['document'][0]['_id']))).'" class="btn">'.I18n::t('DELETE').'</a>';
+                }
                 echo "<pre>";
                 print_r($cursor);
-
                 echo "</pre>";
             }
             ?>
@@ -34,7 +33,5 @@
         <?php
     }
     ?>
-
 </div>
-
 <?php Theme::pagination($this->getModel()->totalRecord($this->db, $this->collection)); ?>
