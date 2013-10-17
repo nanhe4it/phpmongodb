@@ -10,5 +10,10 @@
 </script>
 
 
+
+<div class="navbar">
+    &copy; 2013 <a href="http://www.phpmongodb.org" target="_blank">PHPMongoDB.org</a>
+</div>
+
 </body>
 </html>

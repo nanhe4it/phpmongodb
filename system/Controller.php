@@ -16,32 +16,25 @@ class Controller {
         $this->request=new CHttp();
     }
     
-    protected function display($layout = '', $data = array()) {
-        $this->application->layout = $layout;
+    protected function display($view = '', $data = array()) {
+        $this->application->view = $view;
         $this->data = $data;
-        $this->callTheme();
+        $this->callView();
     }
 
-    public function callTheme() {
-        try {
-            $theme = getcwd() . '/application/themes/default/index.php';
-            if (!file_exists($theme)) {
-                throw new Exception('Controller cannot find the Theme file ' . $theme);
-            } else {
-                require_once $theme;
-            }
-        } catch (Exception $e) {
-            echo 'Caught exception: ', $e->getMessage(), "\n";
-        }
-    }
+    
 
     private function callView() {
         try {
-            $view = getcwd() . '/application/views/' . $this->application->view . '/' . $this->application->layout . '.php';
+            $view = getcwd() . '/application/views/' . $this->application->controller . '/' . $this->application->view . '.php';
             if (!is_readable($view)) {
                 throw new Exception('Controller cannot find the view file ' . $view);
             } else {
+                View::setMessage($this->message);
+                ob_start();
                 require_once ($view);
+                View::setContent(ob_get_clean());
+               
             }
         } catch (Exception $e) {
             echo 'Caught exception: ', $e->getMessage(), "\n";

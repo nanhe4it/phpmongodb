@@ -16,7 +16,9 @@ class Engine {
        $this->system = new System();
        $this->system->start();
     }
-    
+    public function callTheme(){
+         $this->system->callTheme();
+    }
 
     public function load() {
         spl_autoload_register('self::autoloadSystem');

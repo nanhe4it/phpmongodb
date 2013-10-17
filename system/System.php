@@ -35,9 +35,22 @@ class System {
             } else {
                 throw new Exception('Method  ' . $this->application->action . ' doe not exitst');
             }
+           
         } catch (Exception $e) {
             echo 'Caught exception: ', $e->getMessage(), "\n";
             return false;
+        }
+    }
+    public function callTheme() {
+        try {
+            $theme = getcwd() . '/application/themes/default/index.php';
+            if (!file_exists($theme)) {
+                throw new Exception('Controller cannot find the Theme file ' . $theme);
+            } else {
+                require_once $theme;
+            }
+        } catch (Exception $e) {
+            echo 'Caught exception: ', $e->getMessage(), "\n";
         }
     }
 
