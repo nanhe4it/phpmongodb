@@ -7,7 +7,7 @@ class IndexController extends Controller{
             'webserver'=>$_SERVER['SERVER_SOFTWARE'],
             'mongoinfo'=>  $this->getModel()->getMongoInfo(),
         );
-        $this->application->view='Index';
+       
         $this->display('index',$data);
     }
     

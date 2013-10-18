@@ -13,7 +13,7 @@ class Controller {
     public function setProperties($application, $message) {
         $this->application = $application;
         $this->message = $message;
-        $this->request=new CHttp();
+        $this->request=$this->application->request;
     }
     
     protected function display($view = '', $data = array()) {

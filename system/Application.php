@@ -3,8 +3,14 @@ class Application{
     private $data = array();
     
     public function __construct() {
-        if(isset($_REQUEST['load'])){
-            list($this->controller,$this->action)=  explode('/', $_REQUEST['load']);
+        
+        
+    }
+    public function init(){
+        $this->request=new CHttp();
+        $load=$this->request->getParam('load');
+        if(!empty($_REQUEST['load'])){
+            list($this->controller,$this->action)=  explode('/',$load);
         }
         if(!isset($this->controller)){
             $this->controller='Index';
@@ -12,8 +18,12 @@ class Application{
         if(!isset($this->action)){
             $this->action='Index';
         }
+        $this->theme=$this->request->getParam('theme');
+        $this->theme=(empty($this->theme)?TRUE:(strtolower($this->theme)=='false'?FALSE:TRUE));
         
     }
+    
+
     public function __get($name)
     {
      

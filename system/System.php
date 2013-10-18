@@ -6,7 +6,11 @@ class System {
 
     public function start() {
         $this->application = new Application();
+        $this->application->init();
         $this->application();
+    }
+    public function isTheme(){
+        return $this->application->theme;
     }
 
     protected function getObject($class) {
@@ -38,10 +42,10 @@ class System {
            
         } catch (Exception $e) {
             echo 'Caught exception: ', $e->getMessage(), "\n";
-            return false;
+            exit();
         }
     }
-    public function callTheme() {
+    public function getTheme() {
         try {
             $theme = getcwd() . '/application/themes/default/index.php';
             if (!file_exists($theme)) {
@@ -52,6 +56,9 @@ class System {
         } catch (Exception $e) {
             echo 'Caught exception: ', $e->getMessage(), "\n";
         }
+    }
+    function getView(){
+        echo View::getContent();
     }
 
 }

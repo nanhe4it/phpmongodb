@@ -19,12 +19,12 @@ class DatabaseController extends Controller {
             'dbList' => $dbList
         );
 
-        $this->application->view = 'Database';
+        
         $this->display('index', $data);
     }
 
     public function Create() {
-        $this->application->view = 'Database';
+        
         $this->display('create');
     }
 
@@ -59,6 +59,11 @@ class DatabaseController extends Controller {
             $this->message->sucess =I18n::t('D_D',$db);
         }
         header("Location:index.php?load=Database/Index");
+    }
+    public function ListDB(){
+        $model=new Model();      
+        $dbList = $model->listDatabases();
+        $this->display('list', $dbList);
     }
 
 }

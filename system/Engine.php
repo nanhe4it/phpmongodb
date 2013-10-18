@@ -16,8 +16,12 @@ class Engine {
        $this->system = new System();
        $this->system->start();
     }
-    public function callTheme(){
-         $this->system->callTheme();
+    public function stop(){
+         if($this->system->isTheme()){
+            $this->system->getTheme();
+         }else{
+             $this->system->getView();
+         }
     }
 
     public function load() {

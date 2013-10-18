@@ -1,6 +1,7 @@
 <?php defined('PMDDA') or die('Restricted access'); ?>
 <?php include('header.php'); ?>
 <?php include('sidebar.php'); ?>
+ 
 
 <div class="content">
     <!--Call View -->
