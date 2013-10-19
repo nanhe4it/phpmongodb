@@ -28,8 +28,8 @@ class DatabaseController extends Controller {
     }
 
     public function Update() {
-        $db=$this->request->getParam('db');
-        $oldDb=$this->request->getParam('db');
+        $db=urldecode($this->request->getParam('db'));
+        $oldDb=urldecode($this->request->getParam('old_db'));
         if (!empty($db) || !empty($oldDb)) {
             $this->getModel()->renamdDatabase($oldDb, $db);
             $this->message->sucess =  I18n::t('D_R_S');
@@ -40,7 +40,8 @@ class DatabaseController extends Controller {
     }
 
     public function Save() {
-        $db=$this->request->getParam('db');
+        
+        $db=urldecode($this->request->getParam('db'));
         if (!empty($db)) {
             $this->getModel()->createDB($db);
             $this->message->sucess =I18n::t('D_C',$db);
@@ -51,7 +52,7 @@ class DatabaseController extends Controller {
     }
 
     public function Drop() {
-        $db = $this->request->getParam('db');
+        $db = urldecode($this->request->getParam('db'));
         if (!empty($db)) {
             $response = $this->getModel()->dropDatabase($db);
 

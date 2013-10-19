@@ -33,16 +33,16 @@
     <div class="block span6"><a name="editCollection"></a>
         <p class="block-heading" id="block-heading"><?php I18n::p('C_DB');?></p>
         <div class="block-body">
-            <form id="form-create-database" method="post" class="form-inline">
+            <form id="form-create-database" method="post" class="form-inline" action="index.php">
                 <label><?php I18n::p('NAME');?></label>
                 <input type="text" value="" id="database" name="db" class="input-xlarge">
                 <input type="hidden" id="load-create" name="load" value="Database/Save" />
-                <button class="btn " name="save"><i class="icon-save" ></i><?php I18n::p('SAVE');?> </button>
+                <button class="btn " name="btnCreateDb"><i class="icon-save" ></i><?php I18n::p('SAVE');?> </button>
             </form>
         </div>
     </div>
 </div>
-<form method="post" name="form-drop-db" id="form-drop-db" >
+<form method="post" name="form-drop-db" id="form-drop-db" action="index.php">
     <div class="modal small hide fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>

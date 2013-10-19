@@ -19,10 +19,15 @@ class CollectionController extends Controller {
             return $this->model;
         }
     }
-
+    public function setDB(){
+        $this->db =  urldecode($this->request->getParam('db'));
+    }
+    public function setCollection(){
+        $this->collection = urldecode($this->request->getParam('collection'));
+    }
     public function Index() {
 
-        $this->db =  $this->request->getParam('db');
+        $this->setDB();
         if ($this->isValidDB($this->db)) {
             $model = $this->getModel();
             $collections = $model->listCollections($this->db, TRUE);
@@ -44,8 +49,8 @@ class CollectionController extends Controller {
     }
 
     public function Insert() {
-        $this->db = $this->request->getParam('db');
-        $this->collection = $this->request->getParam('collection');
+        $this->setDB();
+        $this->setCollection();
         if (empty($this->db) || empty($this->collection)) {
             header("Location:index.php?load=Database/Index");
         }
@@ -54,8 +59,8 @@ class CollectionController extends Controller {
     }
 
     public function Indexes() {
-        $this->db = $this->request->getParam('db');
-        $this->collection = $this->request->getParam('collection');
+        $this->setDB();
+        $this->setCollection();
         if (empty($this->db) || empty($this->collection)) {
             header("Location:index.php?load=Database/Index");
         }
@@ -65,8 +70,8 @@ class CollectionController extends Controller {
     }
 
     public function DeleteIndexes() {
-        $this->db = $this->request->getParam('db');
-        $this->collection = $this->request->getParam('collection');
+        $this->setDB();
+        $this->setCollection();
         $name = trim($this->request->getParam('name'));
         if (empty($this->db) || empty($this->collection) || empty($name)) {
             header("Location:index.php?load=Database/Index");
@@ -86,8 +91,8 @@ class CollectionController extends Controller {
     }
 
     public function CreateIndexes() {
-        $this->db = $this->request->getParam('db');
-        $this->collection = $this->request->getParam('collection');
+        $this->setDB();
+        $this->setCollection();
         $fields = $this->request->getParam('fields');
         $orders = $this->request->getParam('orders');
         $name = $this->request->getParam('name');
@@ -115,8 +120,8 @@ class CollectionController extends Controller {
     }
 
     public function Record() {
-        $this->db = $this->request->getParam('db');
-        $this->collection = $this->request->getParam('collection');
+        $this->setDB();
+        $this->setCollection();
         if ($this->validation($this->db, $this->collection)) {
             $skip = (isset($_GET['start']) ? $_GET['start'] : 0);
             $limit = (isset($_GET['limit']) ? $_GET['limit'] : 10);
@@ -134,8 +139,8 @@ class CollectionController extends Controller {
     }
 
     public function EditRecord() {
-        $this->db = $this->request->getParam('db');
-        $this->collection = $this->request->getParam('collection');
+        $this->setDB();
+        $this->setCollection();
         $id = $this->request->getParam('id');
         $idType=$this->request->getParam('id_type');
         $format = $this->request->getParam('format');
@@ -169,8 +174,8 @@ class CollectionController extends Controller {
     }
 
     public function DeleteRecord() {
-        $this->db = $this->request->getParam('db');
-        $this->collection = $this->request->getParam('collection');
+        $this->setDB();
+        $this->setCollection();
         $id = $this->request->getParam('id');
         $idType=$this->request->getParam('id_type');
         if (!empty($this->db) && !empty($this->collection) && !empty($id)) {
@@ -186,8 +191,8 @@ class CollectionController extends Controller {
     }
 
     public function SaveRecord() {
-        $this->db = $this->request->getParam('db');
-        $this->collection = $this->request->getParam('collection');
+        $this->setDB();
+        $this->setCollection();
         if ($this->validation($this->db, $this->collection)) {
             $type = isset($_REQUEST['type']) ? strtolower($_REQUEST['type']) : NULL;
             switch ($type) {
@@ -290,11 +295,12 @@ class CollectionController extends Controller {
     }
 
     public function Update() {
-        $this->db = $this->request->getParam('db');
-        $this->collection = $this->request->getParam('collection');
+        $this->setDB();
+        $this->setCollection();
+        $oldCollection=  urldecode($this->request->getParam('old_collection'));
         if ($this->validation($this->db, $this->collection)) {
-            if ($this->isValidCollection($this->request->getParam('old_collection'))) {
-                $response = $this->getModel()->renameCollection($this->collection,$this->request->getParam('old_collection'), $this->db);
+            if ($this->isValidCollection($oldCollection)) {
+                $response = $this->getModel()->renameCollection($this->collection,$oldCollection, $this->db);
                 if ($response['ok'] == '1') {
                     $this->message->sucess =  I18n::t('C_R_S');
                 } else {
@@ -307,8 +313,8 @@ class CollectionController extends Controller {
     }
 
     public function Drop() {
-        $this->db = $this->request->getParam('db');
-        $this->collection = $this->request->getParam('collection');
+        $this->setDB();
+        $this->setCollection();
         if ($this->validation($this->db, $this->collection)) {
             $response = $this->getModel()->dropCollection($this->db, $this->collection);
             if ($response['ok'] == '1') {
@@ -322,8 +328,8 @@ class CollectionController extends Controller {
     }
 
     public function Remove() {
-        $this->db = $this->request->getParam('db');
-        $this->collection = $this->request->getParam('collection');
+        $this->setDB();
+        $this->setCollection();
         if ($this->validation($this->db, $this->collection)) {
             $response = $this->getModel()->removeCollection($this->db, $this->collection);
             $this->message->sucess = I18n::t('C_R',$this->collection);
@@ -402,8 +408,8 @@ class CollectionController extends Controller {
     }
 
     public function Export() {
-        $this->db = $this->request->getParam('db');
-        $this->collection = $this->request->getParam('collection');
+        $this->setDB();
+        $this->setCollection();
         $record = false;
         if ($this->request->isPost()) {
             switch ($this->request->getParam('quick_or_custom')) {
@@ -424,8 +430,8 @@ class CollectionController extends Controller {
     }
 
     public function Import() {
-        $this->db = $this->request->getParam('db');
-        $this->collection = $this->request->getParam('collection');
+        $this->setDB();
+        $this->setCollection();
         if ($this->request->isPost()) {
             if ($_FILES['import_file']['error'] == UPLOAD_ERR_OK && is_uploaded_file($_FILES['import_file']['tmp_name'])) { //checks that file is uploaded
                 $handle = @fopen($_FILES['import_file']['tmp_name'], "r");

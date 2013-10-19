@@ -8,7 +8,6 @@
     <div class="container-fluid">
         <div class="row-fluid">
             <?php
-            
             $sucess = View::getMessage()->__isset('sucess');
             $error = View::getMessage()->__isset('error');
             ?>
@@ -18,7 +17,9 @@
                     <strong>Note:</strong> <?php echo $error == true ? View::getMessage()->error : View::getMessage()->sucess; ?>
                 </div>
             <?php } ?>
-            <?php echo View::getContent(); ?>
+            <div id="middle-content">
+                <?php echo View::getContent(); ?>
+            </div>
         </div>
     </div>
 

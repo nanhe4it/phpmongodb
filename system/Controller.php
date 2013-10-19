@@ -1,6 +1,5 @@
-<?php defined('PMDDA') or die('Restricted access'); ?>
 <?php
-
+defined('PMDDA') or die('Restricted access');
 class Controller {
 
     protected $data = array();
@@ -13,7 +12,7 @@ class Controller {
     public function setProperties($application, $message) {
         $this->application = $application;
         $this->message = $message;
-        $this->request=$this->application->request;
+        $this->request=new CHttp();
     }
     
     protected function display($view = '', $data = array()) {

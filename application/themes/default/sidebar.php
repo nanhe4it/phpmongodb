@@ -33,7 +33,7 @@
                     ?>
                     <ul id="accounts-menu" class="nav nav-list collapse in">
                         <?php foreach ($collectionList as $collection) {?>
-                        <li ><a href=<?php echo Theme::URL('Collection/Record', array('db' => $db['name'], 'collection' => $collection['name'])); ?>"><?php echo $collection['name'],' ('.$collection['count'],')'; ?></a></li>
+                        <li ><a href="<?php echo Theme::URL('Collection/Record', array('db' => $db['name'], 'collection' => $collection['name'])); ?>"><?php echo $collection['name'],' ('.$collection['count'],')'; ?></a></li>
                         <?php } ?>
                     </ul>
                     <?php

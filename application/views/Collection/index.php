@@ -31,10 +31,10 @@
             </table>
         </div>
     </div>
-    <div class="block span6"><a name="editCollection"></a>
+    <div class="block span6">
         <p class="block-heading" id="block-heading">Create Collection</p>
         <div class="block-body">
-            <form id="form-create-collection" method="post" class="form-inline">
+            <form id="form-create-collection" method="post" class="form-inline" action="index.php">
                 <label style="width:70px;"><?php I18n::p('NAME');?></label>
                 <input type="text" value="" id="collection_name" name="collection" class="input-xlarge"><br><br>
                 <label style="width:70px;"><?php I18n::p('IS_CAPPED');?></label>
@@ -53,7 +53,7 @@
         </div>
     </div>
 </div>
-<form method="post" name="form-delete-collection" id="form-delete-collection" >
+<form method="post" name="form-delete-collection" id="form-delete-collection" action="index.php" >
 
     <div class="modal small hide fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-header">

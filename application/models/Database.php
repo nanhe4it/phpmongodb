@@ -17,7 +17,7 @@ class Database extends Model{
     public function renamdDatabase($oldDB,$newDB){
         $response=$this->copyDatabase($oldDB, $newDB);
         if($response['ok']==1){
-           return $this->mongo->{$oldDB}->command(array('dropDatabase' => 1));
+           $response= $this->mongo->{$oldDB}->command(array('dropDatabase' => 1));
         }
         return $response;
     }
