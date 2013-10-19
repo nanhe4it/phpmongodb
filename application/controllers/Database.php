@@ -1,6 +1,5 @@
-<?php defined('PMDDA') or die('Restricted access'); ?>
 <?php
-
+defined('PMDDA') or die('Restricted access');
 class DatabaseController extends Controller {
 
     protected $model = FALSE;
@@ -60,10 +59,6 @@ class DatabaseController extends Controller {
         }
         header("Location:index.php?load=Database/Index");
     }
-    public function ListDB(){
-        $model=new Model();      
-        $dbList = $model->listDatabases();
-        $this->display('list', $dbList);
-    }
+    
 
 }
