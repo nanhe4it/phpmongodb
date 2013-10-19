@@ -29,7 +29,7 @@ class Collection extends Model {
 
     public function dropCollection($db, $collection) {
         try {
-            $x = $this->mongo->{$db}->{$collection}->drop();
+            return $this->mongo->{$db}->{$collection}->drop();
         } catch (Exception $e) {
             exit($e->getMessage());
         }

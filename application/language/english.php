@@ -15,6 +15,7 @@ $language = array(
     'C_R_S' => 'Collection rename successfully',
     'C_D' => '%s Collection droped',
     'C_R' => 'Collection removed.',
+    'E_C_N'=>'Enter Collectin Name',
     //application/views/Index/index.php
     'W_S'=>'Web server',
     'PHP_V'=>'PHP version',

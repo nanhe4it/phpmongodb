@@ -19,12 +19,15 @@ class CollectionController extends Controller {
             return $this->model;
         }
     }
-    public function setDB(){
-        $this->db =  urldecode($this->request->getParam('db'));
+
+    public function setDB() {
+        $this->db = urldecode($this->request->getParam('db'));
     }
-    public function setCollection(){
+
+    public function setCollection() {
         $this->collection = urldecode($this->request->getParam('collection'));
     }
+
     public function Index() {
 
         $this->setDB();
@@ -38,7 +41,6 @@ class CollectionController extends Controller {
             //$this->debug($collectionList);
             $data = array(
                 'collectionList' => $collectionList,
-              
             );
             //$this->debug($data);
             $this->application->view = 'Collection';
@@ -81,7 +83,7 @@ class CollectionController extends Controller {
         foreach ($indexes as $index) {
             if ($index['name'] === $name) {
                 $response = $model->deleteIndex($this->db, $this->collection, $index['key']);
-                $this->message->sucess =I18n::t('I_D');
+                $this->message->sucess = I18n::t('I_D');
                 break;
             }
         }
@@ -142,25 +144,25 @@ class CollectionController extends Controller {
         $this->setDB();
         $this->setCollection();
         $id = $this->request->getParam('id');
-        $idType=$this->request->getParam('id_type');
+        $idType = $this->request->getParam('id_type');
         $format = $this->request->getParam('format');
         $cryptography = new Cryptography();
         $model = $this->getModel();
         if ($this->request->isPost()) {
-            
+
             if ($this->request->getParam('format') == 'array') {
                 $data = $cryptography->stringToArray($this->request->getParam('data'));
-                $response = $model->updateById($this->db, $this->collection, $id, $data,'array',$idType);
+                $response = $model->updateById($this->db, $this->collection, $id, $data, 'array', $idType);
             } else if ($this->request->getParam('format') == 'json') {
-                $response = $model->updateById($this->db, $this->collection, $id, $this->request->getParam('data'), 'json',$idType);
+                $response = $model->updateById($this->db, $this->collection, $id, $this->request->getParam('data'), 'json', $idType);
             }
             if (isset($response) && $response['ok'] == 1) {
-                $this->message->sucess =I18n::t('U_S');
+                $this->message->sucess = I18n::t('U_S');
             }
         }
-        
+
         if (!empty($this->db) && !empty($this->collection) && !empty($id) && !empty($idType)) {
-            $cursor = $model->findById($this->db, $this->collection, $id,$idType);
+            $cursor = $model->findById($this->db, $this->collection, $id, $idType);
             unset($cursor['_id']);
 
             $record['json'] = $cryptography->arrayToJSON($cursor);
@@ -177,11 +179,11 @@ class CollectionController extends Controller {
         $this->setDB();
         $this->setCollection();
         $id = $this->request->getParam('id');
-        $idType=$this->request->getParam('id_type');
+        $idType = $this->request->getParam('id_type');
         if (!empty($this->db) && !empty($this->collection) && !empty($id)) {
-            $response = $this->getModel()->removeById($this->db, $this->collection, $id,$idType);
+            $response = $this->getModel()->removeById($this->db, $this->collection, $id, $idType);
             if ($response['n'] == 1 && $response['ok'] == 1) {
-                $this->message->sucess =I18n::t('R_S_D'); 
+                $this->message->sucess = I18n::t('R_S_D');
             }
             $this->url = "index.php?load=Collection/Record&db=" . $this->db . "&collection=" . $this->collection;
         } else {
@@ -206,11 +208,11 @@ class CollectionController extends Controller {
                     $this->insertRecord($a);
                     break;
                 case 'json':
-                    $response = $this->getModel()->insert($this->db, $this->collection, $this->request->getParam('data'),'json');
+                    $response = $this->getModel()->insert($this->db, $this->collection, $this->request->getParam('data'), 'json');
                     if ($response['ok'] == 1) {
-                        $this->message->sucess =I18n::t('R_I');
+                        $this->message->sucess = I18n::t('R_I');
                     } else {
-                        $this->message->error =I18n::t('I_J');
+                        $this->message->error = I18n::t('I_J');
                     }
                     break;
             }
@@ -225,7 +227,7 @@ class CollectionController extends Controller {
             $this->message->sucess = count($a) . I18n::t('R_I');
             $this->getModel()->insert($this->db, $this->collection, $a);
         } else {
-            $this->message->error =I18n::t('E_F_N_A_V'); 
+            $this->message->error = I18n::t('E_F_N_A_V');
         }
     }
 
@@ -241,7 +243,7 @@ class CollectionController extends Controller {
 
     private function isValidDB($db = NULL) {
         if (empty($db) || !isset($db) || !$this->isValidName($db)) {
-            $this->message->error =  I18n::t('I_D_N');
+            $this->message->error = I18n::t('I_D_N');
             $this->setURL('db');
             return false;
         }
@@ -250,11 +252,11 @@ class CollectionController extends Controller {
 
     private function isValidCollection($collection = NULL) {
         if (empty($collection) || !isset($collection)) {
-            $this->message->error =I18n::t('E_C_N');
+            $this->message->error = I18n::t('E_C_N');
             $this->setURL('collection');
             return false;
         } else if (!$this->isValidName($collection)) {
-            $this->message->error =I18n::t('Y_C_N_U_C_F_C_N');
+            $this->message->error = I18n::t('Y_C_N_U_C_F_C_N');
             $this->setURL('collection');
             return false;
         } else {
@@ -277,32 +279,36 @@ class CollectionController extends Controller {
         }
     }
 
-    public function Save() {
-        $this->db = $this->request->getPost('db');
-        $this->collection = $this->request->getPost('collection');
-        $capped = $this->request->getPost('capped');
-        $capped = !empty($capped) ? TRUE : FALSE;
-        $size = $this->request->getPost('size');
-        $size = !empty($size) ? $size : 0;
-        $max = $this->request->getPost('max');
-        $max = !empty($max) ? $max : 0;
-        if (!empty($this->db) && !empty($this->collection)) {
-            $this->getModel()->createCollection($this->db, $this->collection, $capped, $size, $max);
-            $this->message->sucess =I18n::t('C_C',$this->collection);
+    public function CreateCollection() {
+        $this->setDB();
+        if (!empty($this->db)) {
+            $this->setCollection();
+            $capped = $this->request->getPost('capped');
+            $capped = !empty($capped) ? TRUE : FALSE;
+            $size = $this->request->getPost('size');
+            $size = !empty($size) ? $size : 0;
+            $max = $this->request->getPost('max');
+            $max = !empty($max) ? $max : 0;
+            if (!empty($this->collection)) {
+                $this->getModel()->createCollection($this->db, $this->collection, $capped, $size, $max);
+                $this->message->sucess = I18n::t('C_C', $this->collection);
+            }else{
+                $this->message->error = I18n::t('E_C_N');
+            }
             $this->url = "index.php?load=Collection/Index&db=" . $this->db;
         }
         header("Location:" . $this->url);
     }
 
-    public function Update() {
+    public function RenameCollection() {
         $this->setDB();
         $this->setCollection();
-        $oldCollection=  urldecode($this->request->getParam('old_collection'));
+        $oldCollection = urldecode($this->request->getParam('old_collection'));
         if ($this->validation($this->db, $this->collection)) {
             if ($this->isValidCollection($oldCollection)) {
-                $response = $this->getModel()->renameCollection($this->collection,$oldCollection, $this->db);
+                $response = $this->getModel()->renameCollection($this->collection, $oldCollection, $this->db);
                 if ($response['ok'] == '1') {
-                    $this->message->sucess =  I18n::t('C_R_S');
+                    $this->message->sucess = I18n::t('C_R_S');
                 } else {
                     $this->message->error = $response['errmsg'];
                 }
@@ -312,13 +318,13 @@ class CollectionController extends Controller {
         header("Location:" . $this->url);
     }
 
-    public function Drop() {
+    public function DropCollection() {
         $this->setDB();
         $this->setCollection();
         if ($this->validation($this->db, $this->collection)) {
             $response = $this->getModel()->dropCollection($this->db, $this->collection);
             if ($response['ok'] == '1') {
-                $this->message->sucess =I18n::t('C_D',$this->collection);
+                $this->message->sucess = I18n::t('C_D', $this->collection);
             } else {
                 $this->message->error = $response['errmsg'];
             }
@@ -332,7 +338,7 @@ class CollectionController extends Controller {
         $this->setCollection();
         if ($this->validation($this->db, $this->collection)) {
             $response = $this->getModel()->removeCollection($this->db, $this->collection);
-            $this->message->sucess = I18n::t('C_R',$this->collection);
+            $this->message->sucess = I18n::t('C_R', $this->collection);
             $this->url = "index.php?load=Collection/Index&db=" . $this->db;
         }
         header("Location:" . $this->url);
@@ -437,15 +443,15 @@ class CollectionController extends Controller {
                 $handle = @fopen($_FILES['import_file']['tmp_name'], "r");
                 if ($handle) {
                     while (($record = fgets($handle)) !== false) {
-                        $response = $this->getModel()->insert($this->db, $this->collection, $record,'json');
+                        $response = $this->getModel()->insert($this->db, $this->collection, $record, 'json');
                         if ($response['ok'] == 1) {
-                            $this->message->sucess =I18n::t('A_D_I_S');
+                            $this->message->sucess = I18n::t('A_D_I_S');
                         } else {
                             $this->message->error = $response['errmsg'];
                         }
                     }
                     if (!feof($handle)) {
-                        $this->message->error =I18n::t('E_U_F');
+                        $this->message->error = I18n::t('E_U_F');
                     }
                     fclose($handle);
                 }

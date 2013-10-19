@@ -43,7 +43,7 @@
                 <input type="text" value="" id="collection_size" name="size" class="input-xlarge "><br><br>
                 <label style="width:70px;"><?php I18n::p('Max');?></label>
                 <input type="text" value="" id="collection_max" name="max" class="input-xlarge"><br><br>
-                <input type="hidden" id="load-create" name="load" value="Collection/Save" />
+                <input type="hidden" id="load-create" name="load" value="Collection/CreateCollection" />
                 <input type="hidden" name="db" value="<?php echo $this->db; ?>" />
                 <label style="width:70px;">&nbsp;</label>
 
@@ -86,7 +86,7 @@
 
             $("#pop-up-collection").val(decodeURIComponent($(this).attr("data-edit-collection")));
             $("#pop-up-old_collection").val($(this).attr("data-edit-collection"));
-            $("#pop-up-load").val("Collection/Update");
+            $("#pop-up-load").val("Collection/RenameCollection");
             $('#button-delete-collection').hide();
             $('#button-create-collection').show();
             $("#pop-up-collection").show();
@@ -97,7 +97,7 @@
 
         $("a[data-delete-collection]").click(function() {
             $("#pop-up-collection").val(decodeURIComponent($(this).attr("data-delete-collection")));
-            $("#pop-up-load").val("Collection/Drop");
+            $("#pop-up-load").val("Collection/DropCollection");
             $('#button-delete-collection').show();
             $('#button-create-collection').hide();
             $("#pop-up-collection").hide();
