@@ -36,7 +36,7 @@
         <div class="block-body">
             <form id="form-create-collection" method="post" class="form-inline" action="index.php">
                 <label style="width:70px;"><?php I18n::p('NAME');?></label>
-                <input type="text" value="" id="collection_name" name="collection" class="input-xlarge"><br><br>
+                <input type="text" value="" id="collection_name" name="collection" class="input-xlarge" required="required"><br><br>
                 <label style="width:70px;"><?php I18n::p('IS_CAPPED');?></label>
                 <input type="checkbox" value="1" id="collection_capped" name="capped"><br><br>
                 <label style="width:70px;"><?php I18n::p('SIZE');?></label>
@@ -61,7 +61,7 @@
             <h3 id="myModalLabel">Delete Confirmation</h3>
         </div>
         <div class="modal-body">
-            <input type="text" value="" id="pop-up-collection" name="collection" class="input-xlarge">
+            <input type="text" value="" id="pop-up-collection" name="collection" class="input-xlarge" required="required">
 
             <p class="error-text" id="pop-up-error-text"><i class="icon-warning-sign modal-icon"></i>Are you sure you want to delete collection ?</p>
         </div>

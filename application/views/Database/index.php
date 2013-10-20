@@ -35,7 +35,7 @@
         <div class="block-body">
             <form id="form-create-database" method="post" class="form-inline" action="index.php">
                 <label><?php I18n::p('NAME');?></label>
-                <input type="text" value="" id="database" name="db" class="input-xlarge">
+                <input type="text" value="" id="database" name="db" class="input-xlarge" required="required">
                 <input type="hidden" id="load-create" name="load" value="Database/Save" />
                 <button class="btn " name="btnCreateDb"><i class="icon-save" ></i><?php I18n::p('SAVE');?> </button>
             </form>
@@ -49,7 +49,7 @@
             <h3 id="myModalLabel"><?php I18n::p('DEL_C');?></h3>
         </div>
         <div class="modal-body">
-            <input type="text" value="" id="pop-up-database" name="db" class="input-xlarge">
+            <input type="text" value="" id="pop-up-database" name="db" class="input-xlarge" required="required">
             <p class="error-text" id="pop-up-error-text"><i class="icon-warning-sign modal-icon"></i><?php I18n::p('A_Y_W_T_D_D');?></p>
         </div>
         <div class="modal-footer">

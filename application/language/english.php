@@ -16,6 +16,7 @@ $language = array(
     'C_D' => '%s Collection droped',
     'C_R' => 'Collection removed.',
     'E_C_N'=>'Enter Collectin Name',
+    'SEARCH'=>'Search',
     //application/views/Index/index.php
     'W_S'=>'Web server',
     'PHP_V'=>'PHP version',

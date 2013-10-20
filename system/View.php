@@ -2,7 +2,7 @@
 
 class View {
 
-    protected static $content = 'Hello Word';
+    protected static $content;
     protected static $message;
 
     public static function setContent($content) {

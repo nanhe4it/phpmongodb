@@ -42,11 +42,11 @@ $cryptography = new Cryptography();
                 <table id="tbl-create-indexes">
                     <tr>
                         <td style="width:160px;"><?php I18n::p('NAME');?></td>
-                        <td colspan="2"><input type="text" class="input-xlarge" name="name"></td>
+                        <td colspan="2"><input type="text" class="input-xlarge" name="name" required="required"></td>
                     </tr>
                     <tr>
                         <td><?php I18n::p('FIELDS');?></td>
-                        <td><input type="text" class="input-xlarge" name="fields[]"></td>
+                        <td><input type="text" class="input-xlarge" name="fields[]" required="required"></td>
                         <td>
                             <select name="orders[]" style="width:auto;">
                                 <option value="1">ASC</option>

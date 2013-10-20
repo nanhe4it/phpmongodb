@@ -12,4 +12,5 @@
     <a class="btn <?php echo $this->application->view==='export'?'active':'';?>" onclick="callAjax('<?php echo Theme::URL('Collection/Export',array('db'=>$this->db,'collection'=>$this->collection)); ?>');" href="javascript:void(0)"><?php I18n::p('EXPORT');?></a>
     <a class="btn <?php echo $this->application->view==='import'?'active':'';?>" onclick="callAjax('<?php echo Theme::URL('Collection/Import',array('db'=>$this->db,'collection'=>$this->collection)); ?>')" href="javascript:void(0)"><?php I18n::p('IMPORT');?></a>
     <a class="btn <?php echo $this->application->view==='indexes'?'active':'';?>" onclick="callAjax('<?php echo Theme::URL('Collection/Indexes',array('db'=>$this->db,'collection'=>$this->collection)); ?>')" href="javascript:void(0)"><?php I18n::p('INDEXES');?></a>
+    <a class="btn <?php echo $this->application->view==='search'?'active':'';?>" onclick="callAjax('<?php echo Theme::URL('Collection/Search',array('db'=>$this->db,'collection'=>$this->collection)); ?>')" href="javascript:void(0)"><?php I18n::p('SEARCH');?></a>
 </div>

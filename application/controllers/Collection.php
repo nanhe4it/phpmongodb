@@ -460,5 +460,9 @@ class CollectionController extends Controller {
         $this->application->view = 'Collection';
         $this->display('import');
     }
-
+    public function Search(){
+        $this->setDB();
+        $this->setCollection();
+        $this->display('search');
+    }
 }
