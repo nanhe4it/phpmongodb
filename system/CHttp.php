@@ -110,6 +110,22 @@ class CHttp {
         else
             return $this->_hostInfo;
     }
+        /**
+	 * Redirects the browser to the specified URL.
+	 * @param string $url URL to be redirected to. Note that when URL is not
+	 * absolute (not starting with "/") it will be relative to current request URL.
+	 * @param boolean $terminate whether to terminate the current application
+	 * @param integer $statusCode the HTTP status code. Defaults to 302. See {@link http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html}
+	 * for details about HTTP status code.
+	 */
+	public function redirect($url,$terminate=true,$statusCode=302)
+	{
+		if(strpos($url,'/')===0 && strpos($url,'//')!==0)
+			$url=$this->getHost().$url;
+		header('Location: '.$url, true, $statusCode);
+		if($terminate)
+                    exit ();
+	}
 
 }
 

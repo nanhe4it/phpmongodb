@@ -64,7 +64,7 @@ class Theme {
     }
 
     public function currentURL($start = FALSE) {
-        $url = self::$homeUri . 'index.php';
+        $url = self::$homeUri . '/index.php';
         if (!empty($_SERVER['QUERY_STRING'])) {
             $queryString = explode('&', $_SERVER['QUERY_STRING']);
             if (is_array($queryString)) {
@@ -113,7 +113,7 @@ class Theme {
                 echo '<li><a href="' . self::paginationURL($url, (($current - 1) * $split)) . '">Prev</a></li>';
             }
 
-            //echo "debug start=$page & end =$end";            die;
+            
             for (; $page < $end; $page++) {
                 echo '<li class="' . ($current == $page ? "active" : "") . '"><a href="' . ($current != $page ? self::paginationURL($url, ($page * $split)) : 'javascript:void(0)') . '" >' . ($page + 1) . '</a></li>';
             }

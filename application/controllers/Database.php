@@ -36,7 +36,7 @@ class DatabaseController extends Controller {
         } else {
             $this->message->error = I18n::t('I_D_N'); 
         }
-        header("Location:index.php?load=Database/Index");
+         $this->gotoDatabse();
     }
 
     public function Save() {
@@ -48,7 +48,7 @@ class DatabaseController extends Controller {
         } else {
             $this->message->error =I18n::t('E_D_N');
         }
-        header("Location:index.php?load=Database/Index");
+       $this->gotoDatabse();
     }
 
     public function Drop() {
@@ -58,8 +58,10 @@ class DatabaseController extends Controller {
 
             $this->message->sucess =I18n::t('D_D',$db);
         }
-        header("Location:index.php?load=Database/Index");
+        $this->gotoDatabse();
     }
-    
+    protected function gotoDatabse(){
+       $this->request->redirect(Theme::URL('Database/Index'));
+    }
 
 }

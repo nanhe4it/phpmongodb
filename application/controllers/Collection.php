@@ -46,7 +46,7 @@ class CollectionController extends Controller {
             $this->application->view = 'Collection';
             $this->display('index', $data);
         } else {
-            header("Location:index.php?load=Database/Index");
+            $this->gotoDatabse();
         }
     }
 
@@ -54,7 +54,7 @@ class CollectionController extends Controller {
         $this->setDB();
         $this->setCollection();
         if (empty($this->db) || empty($this->collection)) {
-            header("Location:index.php?load=Database/Index");
+            $this->gotoDatabse();
         }
         $this->application->view = 'Collection';
         $this->display('insert', array());
@@ -64,7 +64,7 @@ class CollectionController extends Controller {
         $this->setDB();
         $this->setCollection();
         if (empty($this->db) || empty($this->collection)) {
-            header("Location:index.php?load=Database/Index");
+            $this->gotoDatabse();
         }
         $this->application->view = 'Collection';
         $data = $this->getModel()->getIndexInfo($this->db, $this->collection);
@@ -76,7 +76,7 @@ class CollectionController extends Controller {
         $this->setCollection();
         $name = trim($this->request->getParam('name'));
         if (empty($this->db) || empty($this->collection) || empty($name)) {
-            header("Location:index.php?load=Database/Index");
+            $this->gotoDatabse();
         }
         $model = $this->getModel();
         $indexes = $model->getIndexInfo($this->db, $this->collection);
@@ -87,9 +87,8 @@ class CollectionController extends Controller {
                 break;
             }
         }
-
-        $url = Theme::URL('Collection/Indexes', array('db' => $this->db, 'collection' => $this->collection));
-        header("Location:$url");
+        $this->request->redirect(Theme::URL('Collection/Indexes', array('db' => $this->db, 'collection' => $this->collection)));
+        
     }
 
     public function CreateIndexes() {
@@ -117,16 +116,16 @@ class CollectionController extends Controller {
         $response = $this->getModel()->createIndex($this->db, $this->collection, $key, $options);
 
         //$this->debug($response);
-        $url = Theme::URL('Collection/Indexes', array('db' => $this->db, 'collection' => $this->collection));
-        header("Location:$url");
+        $this->request->redirect(Theme::URL('Collection/Indexes', array('db' => $this->db, 'collection' => $this->collection)));
+        
     }
 
     public function Record() {
         $this->setDB();
         $this->setCollection();
         if ($this->validation($this->db, $this->collection)) {
-            $skip = (isset($_GET['start']) ? $_GET['start'] : 0);
-            $limit = (isset($_GET['limit']) ? $_GET['limit'] : 10);
+            $skip =$this->request->getParam('start',0);
+            $limit =$this->request->getParam('limit',10);
             $query = array();
             $fields = array();
             $cursor = $this->getModel()->find($this->db, $this->collection, $query, $fields, $limit, $skip);
@@ -136,7 +135,7 @@ class CollectionController extends Controller {
             $format = array('json', 'array', 'document');
             $this->display('record', array('record' => $record, 'format' => $format));
         } else {
-            header("Location:" . $this->url);
+            $this->request->redirect($this->url);
         }
     }
 
@@ -171,7 +170,7 @@ class CollectionController extends Controller {
             $this->display('edit', array('record' => $record, 'format' => $format, 'id' => $id));
         } else {
             $this->url = "index.php";
-            header("Location:" . $this->url);
+            $this->request->redirect($this->url);
         }
     }
 
@@ -185,21 +184,21 @@ class CollectionController extends Controller {
             if ($response['n'] == 1 && $response['ok'] == 1) {
                 $this->message->sucess = I18n::t('R_S_D');
             }
-            $this->url = "index.php?load=Collection/Record&db=" . $this->db . "&collection=" . $this->collection;
+            $this->url = Theme::URL('Collection/Index', array('db' => $this->db, 'collection' => $this->collection));
         } else {
             $this->url = "index.php";
         }
-        header("Location:" . $this->url);
+        $this->request->redirect($this->url);
     }
 
     public function SaveRecord() {
         $this->setDB();
         $this->setCollection();
         if ($this->validation($this->db, $this->collection)) {
-            $type = isset($_REQUEST['type']) ? strtolower($_REQUEST['type']) : NULL;
+            $type = $this->request->getParam('type');
             switch ($type) {
                 case 'fieldvalue':
-                    $a = array_combine($_REQUEST['fields'], $_REQUEST['values']);
+                    $a = array_combine($this->request->getParam('fields'), $this->request->getParam('values'));
                     $this->insertRecord($a);
                     break;
                 case 'array':
@@ -217,8 +216,7 @@ class CollectionController extends Controller {
                     break;
             }
         }
-        $this->url = "index.php?load=Collection/Record&db=" . $this->db . "&collection=" . $this->collection;
-        header("Location:" . $this->url);
+        $this->request->redirect(Theme::URL('Collection/Index', array('db' => $this->db, 'collection' => $this->collection)));
     }
 
     private function insertRecord($a) {
@@ -268,10 +266,10 @@ class CollectionController extends Controller {
         switch ($type) {
             case 'db':
             case 'database':
-                $this->url = "index.php?load=Database/Index";
+                $this->url = Theme::URL('Database/Indexes');
                 break;
             case 'collection':
-                $this->url = (empty($this->db) ? "index.php?load=Database/Index" : "index.php?load=Collection/Index&db=" . $this->db);
+                $this->url = (empty($this->db) ? Theme::URL('Database/Indexes') :Theme::URL('Collection/Index', array('db' => $this->db)));
                 break;
             default :
                 $this->url = "index.php";
@@ -283,21 +281,19 @@ class CollectionController extends Controller {
         $this->setDB();
         if (!empty($this->db)) {
             $this->setCollection();
-            $capped = $this->request->getPost('capped');
-            $capped = !empty($capped) ? TRUE : FALSE;
-            $size = $this->request->getPost('size');
-            $size = !empty($size) ? $size : 0;
-            $max = $this->request->getPost('max');
-            $max = !empty($max) ? $max : 0;
+            $capped = $this->request->getPost('capped',FALSE);
+            $size = $this->request->getPost('size',0);
+            $max = $this->request->getPost('max',0);
+            
             if (!empty($this->collection)) {
                 $this->getModel()->createCollection($this->db, $this->collection, $capped, $size, $max);
                 $this->message->sucess = I18n::t('C_C', $this->collection);
             }else{
                 $this->message->error = I18n::t('E_C_N');
             }
-            $this->url = "index.php?load=Collection/Index&db=" . $this->db;
+            $this->url = Theme::URL('Collection/Index', array('db' => $this->db));
         }
-        header("Location:" . $this->url);
+        $this->request->redirect($this->url);
     }
 
     public function RenameCollection() {
@@ -312,10 +308,10 @@ class CollectionController extends Controller {
                 } else {
                     $this->message->error = $response['errmsg'];
                 }
-                $this->url = "index.php?load=Collection/Index&db=" . $this->db;
+                $this->url = Theme::URL('Collection/Index', array('db' => $this->db));
             }
         }
-        header("Location:" . $this->url);
+        $this->request->redirect($this->url);
     }
 
     public function DropCollection() {
@@ -328,9 +324,9 @@ class CollectionController extends Controller {
             } else {
                 $this->message->error = $response['errmsg'];
             }
-            $this->url = "index.php?load=Collection/Index&db=" . $this->db;
+            $this->url = Theme::URL('Collection/Index', array('db' => $this->db));
         }
-        header("Location:" . $this->url);
+        $this->request->redirect($this->url);
     }
 
     public function Remove() {
@@ -339,9 +335,9 @@ class CollectionController extends Controller {
         if ($this->validation($this->db, $this->collection)) {
             $response = $this->getModel()->removeCollection($this->db, $this->collection);
             $this->message->sucess = I18n::t('C_R', $this->collection);
-            $this->url = "index.php?load=Collection/Index&db=" . $this->db;
+            $this->url = Theme::URL('Collection/Index', array('db' => $this->db));
         }
-        header("Location:" . $this->url);
+        $this->request->redirect($this->url);
     }
 
     protected function quickExport() {
@@ -431,7 +427,7 @@ class CollectionController extends Controller {
             $this->application->view = 'Collection';
             $this->display('export', array('record' => $record));
         } else {
-            header("Location:index.php?load=Collection/Index");
+            $this->gotoDatabse();
         }
     }
 
@@ -464,5 +460,8 @@ class CollectionController extends Controller {
         $this->setDB();
         $this->setCollection();
         $this->display('search');
+    }
+    protected function gotoDatabse(){
+        $this->request->redirect(Theme::URL('Database/Index'));
     }
 }
