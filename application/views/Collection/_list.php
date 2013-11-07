@@ -19,11 +19,14 @@
         ?>
         <div id="record-<?php echo $format; ?>" style="display: <?php echo $format === 'json' ? 'block' : 'none'; ?>">
             <?php
+            $i=-1;
             foreach ($this->data['record'][$format] as $cursor) {
+                ++$i;
+                
                 if(isset($this->data['record']['document'][0]['_id'])){
                 //echo '&nbsp<a href="'.Theme::URL('Collection/EditRecord',array('db'=>$this->db,'collection'=>$this->collection,'id'=>$this->data['record']['document'][0]['_id'],'format'=>$format,'id_type'=>gettype($this->data['record']['document'][0]['_id']))).'" class="btn"z>'.I18n::t('EDIT').'</a>';
-                echo '&nbsp<a href="javascript:void(0)"  onclick="callAjax(\''.Theme::URL('Collection/EditRecord',array('db'=>$this->db,'collection'=>$this->collection,'id'=>$this->data['record']['document'][0]['_id'],'format'=>$format,'id_type'=>gettype($this->data['record']['document'][0]['_id']))).'\')" class="btn"z">'.I18n::t('EDIT').'</a>';
-                echo '&nbsp<a href="'.Theme::URL('Collection/DeleteRecord',array('db'=>$this->db,'collection'=>$this->collection,'id'=>$this->data['record']['document'][0]['_id'],'id_type'=>gettype($this->data['record']['document'][0]['_id']))).'" class="btn">'.I18n::t('DELETE').'</a>';
+                echo '&nbsp<a href="javascript:void(0)"  onclick="callAjax(\''.Theme::URL('Collection/EditRecord',array('db'=>$this->db,'collection'=>$this->collection,'id'=>$this->data['record']['document'][$i]['_id'],'format'=>$format,'id_type'=>gettype($this->data['record']['document'][$i]['_id']))).'\')" class="btn"z">'.I18n::t('EDIT').'</a>';
+                echo '&nbsp<a href="'.Theme::URL('Collection/DeleteRecord',array('db'=>$this->db,'collection'=>$this->collection,'id'=>$this->data['record']['document'][$i]['_id'],'id_type'=>gettype($this->data['record']['document'][$i]['_id']))).'" class="btn">'.I18n::t('DELETE').'</a>';
                 }
                 echo "<pre>";
                 print_r($cursor);
