@@ -120,6 +120,26 @@ class CollectionController extends Controller {
         
     }
 
+
+    protected function getQuery($fields,$operators,$values,$types,$logicalOperator='&&'){
+
+        $total=count($fields);
+        $condition=FALSE;
+        $operator='';
+        for($i=0;$i<$total;$i++){
+            if(!isset($fields[$i]) || empty($fields[$i])){
+                continue;
+            }
+            
+            $condition.=$operator.' this.'.$fields[$i].$operators[$i].$values[$i];
+            $operator=$logicalOperator;
+        }
+      
+       return $condition?array('$where' => "function() {return $condition;}"):array();
+       
+        
+    }
+
     public function Record() {
         $this->setDB();
         $this->setCollection();
@@ -128,6 +148,10 @@ class CollectionController extends Controller {
             $limit =$this->request->getParam('limit',10);
             $query = array();
             $fields = array();
+            if($this->request->isPost() && $this->request->getParam('search',false)){
+                 $query=  $this->getQuery($this->request->getParam('fields'), $this->request->getParam('operators'), $this->request->getParam('values'),$this->request->getParam('types'),$this->request->getParam('logical_operator'));
+                 //$this->debug($query);
+            }
             $cursor = $this->getModel()->find($this->db, $this->collection, $query, $fields, $limit, $skip);
             $cryptography = new Cryptography();
             $record = $cryptography->decode($cursor);
@@ -192,13 +216,18 @@ class CollectionController extends Controller {
     }
 
     public function SaveRecord() {
+       
         $this->setDB();
         $this->setCollection();
         if ($this->validation($this->db, $this->collection)) {
-            $type = $this->request->getParam('type');
-            switch ($type) {
+
+            switch (strtolower($this->request->getParam('type'))) {
                 case 'fieldvalue':
-                    $a = array_combine($this->request->getParam('fields'), $this->request->getParam('values'));
+                    $a = array_combine($this->request->getParam('attributes'), $this->request->getParam('values'));
+//                    foreach ($a as $k=>$v){
+//                        echo gettype($v),$v;
+//                    }
+//                    die;
                     $this->insertRecord($a);
                     break;
                 case 'array':
