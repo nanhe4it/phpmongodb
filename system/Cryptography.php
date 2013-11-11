@@ -7,7 +7,6 @@ class Cryptography {
     public function decode($cursor) {
         while ($cursor->hasNext()) {
             $document = $cursor->getNext();
-          
             $this->data['document'][] = $document;
             $this->data['json'][] =$this->highlight($this->arrayToJSON($document));
             $this->data['array'][] = $this->highlight($this->arrayToString($document));

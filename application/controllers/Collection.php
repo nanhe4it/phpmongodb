@@ -121,8 +121,7 @@ class CollectionController extends Controller {
     }
 
 
-    protected function getQuery($fields,$operators,$values,$types,$logicalOperator='&&'){
-
+    protected function getQuery($fields,$operators,$values,$types,$logicalOperator){
         $total=count($fields);
         $condition=FALSE;
         $operator='';
@@ -131,13 +130,26 @@ class CollectionController extends Controller {
                 continue;
             }
             
-            $condition.=$operator.' this.'.$fields[$i].$operators[$i].$values[$i];
-            $operator=$logicalOperator;
+            $condition.=$operator.' this.'.$fields[$i].$operators[$i];
+            $condition.=is_numeric($values[$i])?$values[$i]:"'".$values[$i]."'";
+            $operator=isset($logicalOperator[$i])?$logicalOperator[$i]:'';
         }
-      
+        //echo $condition;
        return $condition?array('$where' => "function() {return $condition;}"):array();
        
-        
+    }
+    public function getSort($orderBy,$orders){
+        $sort=false;
+        if($orderBy){
+        $total=count($orderBy);
+        for($i=0;$i<$total;$i++){
+            if(!isset($orderBy[$i]) || empty($orderBy[$i])){
+                continue;
+            }
+            $sort[$orderBy[$i]]=(int)$orders[$i];
+        }
+        }
+        return $sort;
     }
 
     public function Record() {
@@ -149,10 +161,13 @@ class CollectionController extends Controller {
             $query = array();
             $fields = array();
             if($this->request->isPost() && $this->request->getParam('search',false)){
-                 $query=  $this->getQuery($this->request->getParam('fields'), $this->request->getParam('operators'), $this->request->getParam('values'),$this->request->getParam('types'),$this->request->getParam('logical_operator'));
+                 $query=  $this->getQuery($this->request->getParam('fields'), $this->request->getParam('operators'), $this->request->getParam('values'),$this->request->getParam('types'),$this->request->getParam('logical_operators'));
                  //$this->debug($query);
             }
             $cursor = $this->getModel()->find($this->db, $this->collection, $query, $fields, $limit, $skip);
+            $ordeBy=$this->getSort($this->request->getParam('order_by',false),$this->request->getParam('orders',false));
+            if($ordeBy)
+                $cursor->sort($ordeBy);
             $cryptography = new Cryptography();
             $record = $cryptography->decode($cursor);
             $this->application->view = 'Collection';

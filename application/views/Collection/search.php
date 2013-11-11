@@ -1,7 +1,7 @@
 <?php require_once '_menu.php'; ?>
 <div class="well" id="container-indexes">
     <ul class="nav nav-tabs">
-        <li class="active"><a href="#searchColVal" data-toggle="tab"><?php I18n::p('ATTRIBUTES'); ?></a></li>
+        <li class="active"><a href="#searchColVal" data-toggle="tab"><?php I18n::p('F_V'); ?></a></li>
 
     </ul>
 
@@ -11,6 +11,7 @@
             <form id="tab1" method="post" action="index.php">
                 <table id="tbl-search-col-val">
                     <tr>
+                        <th>&nbsp;</th>
                         <th>Field</th>
                         <th>Operator</th>
                         <th>Value</th>
@@ -18,6 +19,7 @@
                         <th>&nbsp;</th>
                     </tr>
                     <tr>
+                        <td>&nbsp;</td>
                         <td><input type="text" class="input-xlarge" name="fields[]"  placeholder="Enter Attribute"></td>
                         <td><select name="operators[]" style="width: auto;">
                                 <option value="==">=</option>
@@ -28,19 +30,23 @@
                                 <option value="!=">!=</option>
                             </select></td>
                         <td ><input type="text" class="input-xlarge" name="values[]" placeholder="Enter Value"></td>
-
-
                         <td>&nbsp;<a href="javascript:void(0)" onclick="appendTR();" class="btn-primary"><i class="icon-plus"></i></a>&nbsp;</td>
                     </tr>
-
-
+                </table>
+                <table id="tbl-order-by">
+                    <tr>
+                        <th>Order By</th>
+                        <th>Order</th>
+                        <th>&nbsp;</th>
+                    </tr>
+                    <tr>
+                        <td><input type="text" class="input-xlarge" name="order_by[]"  value="_id" placeholder="Enter Attribute"></td>
+                        <td><select style="width: auto;" name="orders[]"><option value="1">ASC</option><option value="-1">DESC</option></select></td>
+                        <td>&nbsp;<a href="javascript:void(0)" onclick="appendOrderBy();" class="btn-primary"><i class="icon-plus"></i></a>&nbsp;</td>
+                    </tr>
                 </table>
 
 
-                <p >Logical Operator
-                    <input type="radio" checked="checked" name="logical_operator" value="&&" > && 
-                    <input type="radio" name="logical_operator" value="||" >||
-                </p>
 
                 <div>
                     <button class="btn btn-primary"><?php I18n::p('GO'); ?></button>
@@ -58,6 +64,7 @@
                             function appendTR() {
                                 var trID = 'tr-indexes' + $('#tbl-search-col-val tr').length;
                                 var tr = '<tr id="' + trID + '">';
+                                tr = tr + '<td><select name="logical_operators[]" style="width: auto;"><option value="&&">AND</option><option value="||">OR</option></select></td>';
                                 tr = tr + '<td><input type="text" class="input-xlarge" name="fields[]"  placeholder="Enter Attribute"></td>';
                                 tr = tr + '<td>';
                                 tr = tr + '<select name="operators[]" style="width: auto;">';
@@ -83,15 +90,22 @@
                                 $("table#tbl-search-col-val tr#" + trID).remove();
                                 return false;
                             }
-                            $(document).ready(function() {
-                                $("#index_unique").click(function() {
-                                    var checked = $(this).is(':checked');
-                                    if (checked) {
-                                        $('#drop_duplicates').show();
-                                    } else {
-                                        $('#drop_duplicates').hide();
-                                    }
-                                });
-                            });
+                            function appendOrderBy() {
+                                var trID = 'tr-indexes' + $('#tbl-order-by tr').length;
+                                var tr = '<tr id="' + trID + '">';
+                                tr = tr + '<td><input type="text" class="input-xlarge" name="order_by[]"  value="" placeholder="Enter Attribute"></td><td><select style="width: auto;" name="orders[]"><option value="1">ASC</option><option value="-1">DESC</option></select></td>';
+                                tr = tr + '<td>';
+                                tr = tr + '&nbsp;<a href="javascript:void(0)" onclick="appendOrderBy();" class="btn-primary"><i class="icon-plus"></i></a>&nbsp;';
+                                tr = tr + "<a href=\"javascript:void(0)\" onclick=\"removeOrderBy('" + trID + "');\" class=\"btn-primary\"><i class=\"icon-minus\"></i></a>";
+                                tr = tr + '</td>';
+                                tr = tr + '</tr>';
+                                $("#tbl-order-by").append(tr);
+                                return false;
+                            }
+                            function removeOrderBy(trID) {
+
+                                $("table#tbl-order-by tr#" + trID).remove();
+                                return false;
+                            }
 
 </script>   
