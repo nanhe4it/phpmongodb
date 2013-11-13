@@ -227,7 +227,66 @@ class Cryptography {
 
         return eval($string);
     }
+    public function executeAND($query) {
+            $key = array_search('$and', $query);
+            
+            if (!$key)
+               return array_values($query);
+            if ($query[$key - 2] == '=') {
+                $left = array($query[$key - 3] => $query[$key - 1]);
+            } else {
+                $left = array($query[$key - 3] => array($query[$key - 2] => $query[$key - 1]));
+            }
+            if ($query[$key + 2] == '=') {
+                $right = array($query[$key + 1] => $query[$key + 3]);
+            } else {
+                $right = array($query[$key + 1] => array($query[$key + 2] => $query[$key + 3]));
+            }
+            $and = array('$and' => array($left, $right));
+            for ($i = $key - 3; $i <= $key + 3; $i++) {
+                unset($query[$i]);
+            }
+            $query[$key + 3] = $and;
+            ksort($query);
+       return $this->executeAND(array_values($query));
+    }
 
+    public function executeOR($query) {
+            $key = array_search('$or', $query);
+           
+            if (!$key)
+                return array_values($query);
+            if (!is_array($query[$key - 1])) {
+                if ($query[$key - 2] == '=') {
+                    $left = array($query[$key - 3] =>is_numeric($query[$key-1])?doubleval($query[$key-1]):$query[$key-1]);
+                } else {
+                    $left = array($query[$key - 3] => array($query[$key - 2] => $query[$key - 1]));
+                }
+                for ($i = $key - 3; $i < $key; $i++) {
+                    unset($query[$i]);
+                }
+            } else {
+                $left = $query[$key - 1];
+                unset($query[$key - 1]);
+            }
+            if (!is_array($query[$key + 1])) {
+                if ($query[$key + 2] == '=') {
+                    $right = array($query[$key + 1] =>is_numeric($query[$key+3])?doubleval($query[$key+3]):$query[$key+3]);
+                } else {
+                    $right = array($query[$key + 1] => array($query[$key + 2] => $query[$key + 3]));
+                }
+
+                for ($i = $key + 1; $i <= $key + 3; $i++) {
+                    unset($query[$i]);
+                }
+            } else {
+                $right = $query[$key + 1];
+                unset($query[$key + 1]);
+            }
+            $query[$key] = array('$or' => array($left, $right));;
+            ksort($query);
+        return $this->executeOR(array_values($query));
+    }
     protected function debug($a) {
         echo "<pre>";
         print_r($a);

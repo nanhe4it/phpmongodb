@@ -20,16 +20,16 @@
                     </tr>
                     <tr>
                         <td>&nbsp;</td>
-                        <td><input type="text" class="input-xlarge" name="fields[]"  placeholder="Enter Attribute"></td>
-                        <td><select name="operators[]" style="width: auto;">
-                                <option value="==">=</option>
-                                <option value="&gt;">&gt;</option>
-                                <option value="&gt;=">&gt;=</option>
-                                <option value="&lt;">&lt;</option>
-                                <option value="&lt;=">&lt;=</option>
-                                <option value="!=">!=</option>
+                        <td><input type="text" class="input-xlarge" name="query[]"  placeholder="Enter Attribute"></td>
+                        <td><select name="query[]" style="width: auto;">
+                                <option value="=">=</option>
+                                <option value="$gt">&gt;</option>
+                                <option value="$gte=">&gt;=</option>
+                                <option value="$lt">&lt;</option>
+                                <option value="$lte=">&lt;=</option>
+                                <option value="$ne">!=</option>
                             </select></td>
-                        <td ><input type="text" class="input-xlarge" name="values[]" placeholder="Enter Value"></td>
+                        <td ><input type="text" class="input-xlarge" name="query[]" placeholder="Enter Value"></td>
                         <td>&nbsp;<a href="javascript:void(0)" onclick="appendTR();" class="btn-primary"><i class="icon-plus"></i></a>&nbsp;</td>
                     </tr>
                 </table>
@@ -64,19 +64,19 @@
                             function appendTR() {
                                 var trID = 'tr-indexes' + $('#tbl-search-col-val tr').length;
                                 var tr = '<tr id="' + trID + '">';
-                                tr = tr + '<td><select name="logical_operators[]" style="width: auto;"><option value="&&">AND</option><option value="||">OR</option></select></td>';
-                                tr = tr + '<td><input type="text" class="input-xlarge" name="fields[]"  placeholder="Enter Attribute"></td>';
+                                tr = tr + '<td><select name="query[]" style="width: auto;"><option value="$and">AND</option><option value="$or">OR</option></select></td>';
+                                tr = tr + '<td><input type="text" class="input-xlarge" name="query[]"  placeholder="Enter Attribute"></td>';
                                 tr = tr + '<td>';
-                                tr = tr + '<select name="operators[]" style="width: auto;">';
-                                tr = tr + '<option value="==">=</option>';
-                                tr = tr + '<option value="&gt;">&gt;</option>';
-                                tr = tr + '<option value="&gt;=">&gt;=</option>';
-                                tr = tr + '<option value="&lt;">&lt;</option>';
-                                tr = tr + '<option value="&lt;=">&lt;=</option>';
-                                tr = tr + '<option value="!=">!=</option>';
+                                tr = tr + '<select name="query[]" style="width: auto;">';
+                                tr = tr + '<option value="=">=</option>';
+                                tr = tr + '<option value="$gt">&gt;</option>';
+                                tr = tr + '<option value="$gte=">&gt;=</option>';
+                                tr = tr + '<option value="$lt">&lt;</option>';
+                                tr = tr + '<option value="$lte=">&lt;=</option>';
+                                tr = tr + '<option value="$ne">!=</option>';
                                 tr = tr + '</select>';
                                 tr = tr + '</td>';
-                                tr = tr + '<td><input type="text" class="input-xlarge" name="values[]" placeholder="Enter Value"></td>';
+                                tr = tr + '<td><input type="text" class="input-xlarge" name="query[]" placeholder="Enter Value"></td>';
                                 tr = tr + '<td>';
                                 tr = tr + '&nbsp;<a href="javascript:void(0)" onclick="appendTR();" class="btn-primary"><i class="icon-plus"></i></a>&nbsp;';
                                 tr = tr + "<a href=\"javascript:void(0)\" onclick=\"removeTR('" + trID + "');\" class=\"btn-primary\"><i class=\"icon-minus\"></i></a>";

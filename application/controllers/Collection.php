@@ -121,22 +121,55 @@ class CollectionController extends Controller {
     }
 
 
-    protected function getQuery($fields,$operators,$values,$types,$logicalOperator){
-        $total=count($fields);
-        $condition=FALSE;
-        $operator='';
-        for($i=0;$i<$total;$i++){
-            if(!isset($fields[$i]) || empty($fields[$i])){
-                continue;
-            }
-            
-            $condition.=$operator.' this.'.$fields[$i].$operators[$i];
-            $condition.=is_numeric($values[$i])?$values[$i]:"'".$values[$i]."'";
-            $operator=isset($logicalOperator[$i])?$logicalOperator[$i]:'';
-        }
-        //echo $condition;
-       return $condition?array('$where' => "function() {return $condition;}"):array();
+//    protected function getQuery($fields,$operators,$values,$types,$logicalOperator){
+//        $total=count($fields);
+//        $condition=FALSE;
+//        $operator='';
+//        for($i=0;$i<$total;$i++){
+//            if(!isset($fields[$i]) || empty($fields[$i])){
+//                continue;
+//            }
+//            
+//            $condition.=$operator.' this.'.$fields[$i].$operators[$i];
+//            $condition.=is_numeric($values[$i])?$values[$i]:"'".$values[$i]."'";
+//            $operator=isset($logicalOperator[$i])?$logicalOperator[$i]:'';
+//        }
+//        //echo $condition;
+//       return $condition?array('$where' => "function() {return $condition;}"):array();
+//       
+//    }
+    protected function getQuery($query=array()){
        
+        for($ind=0;$ind<count($query);$ind+=3){
+            if(empty($query[$ind])){
+                unset($query[$ind]);
+                unset($query[$ind+1]);
+                unset($query[$ind+2]);
+                $query=array_values($query);
+                if(isset($query[$ind]) && in_array($query[$ind],array('$or','$and','$ne','$gt','$gte','$lt','$lte'))){
+                    unset($query[$ind]);
+                    $query=array_values($query);
+                }
+                $ind-=3;
+            }
+        }
+        if(count($query)==0){
+            return $query;
+        }else if(count($query)==3){
+            if ($query[1] == '=') {
+                $query = array($query[0] =>is_numeric($query[2])?doubleval($query[2]):$query[2]);
+            } else {
+                $query = array($query[0] => array($query[1] =>is_numeric($query[2])?doubleval($query[2]):$query[2]));
+            }
+            return $query;
+        }
+        
+        
+        $cryptography=new Cryptography();
+        $query = $cryptography->executeAND($query);
+        $query = $cryptography->executeOR($query);
+        $this->debug($query);
+        return $query[0];
     }
     public function getSort($orderBy,$orders){
         $sort=false;
@@ -160,8 +193,12 @@ class CollectionController extends Controller {
             $limit =$this->request->getParam('limit',10);
             $query = array();
             $fields = array();
-            if($this->request->isPost() && $this->request->getParam('search',false)){
-                 $query=  $this->getQuery($this->request->getParam('fields'), $this->request->getParam('operators'), $this->request->getParam('values'),$this->request->getParam('types'),$this->request->getParam('logical_operators'));
+//            if($this->request->isPost() && $this->request->getParam('search',false)){
+//                 $query=  $this->getQuery($this->request->getParam('fields'), $this->request->getParam('operators'), $this->request->getParam('values'),$this->request->getParam('types'),$this->request->getParam('logical_operators'));
+//                 //$this->debug($query);
+//            }
+            if($this->request->isPost() && $this->request->getParam('query',false)){
+                 $query=  $this->getQuery($this->request->getParam('query'));
                  //$this->debug($query);
             }
             $cursor = $this->getModel()->find($this->db, $this->collection, $query, $fields, $limit, $skip);
