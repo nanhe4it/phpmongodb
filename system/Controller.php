@@ -1,27 +1,34 @@
 <?php
+
 defined('PMDDA') or die('Restricted access');
+
 class Controller {
 
     protected $data = array();
     protected $message;
     protected $application;
     protected $request;
-    
-    
 
     public function setProperties($application, $message) {
         $this->application = $application;
         $this->message = $message;
-        $this->request=new CHttp();
+        $this->request = new CHttp();
     }
-    
+
+    public function isError() {
+        if (error_get_last()) {
+            $error = error_get_last();
+            $this->message->error = $error['message'].'<br>'.$error['file'];
+            return TRUE;
+        }
+        return FALSE;
+    }
+
     protected function display($view = '', $data = array()) {
         $this->application->view = $view;
         $this->data = $data;
         $this->callView();
     }
-
-    
 
     private function callView() {
         try {
@@ -33,7 +40,6 @@ class Controller {
                 ob_start();
                 require_once ($view);
                 View::setContent(ob_get_clean());
-               
             }
         } catch (Exception $e) {
             echo 'Caught exception: ', $e->getMessage(), "\n";

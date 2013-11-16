@@ -88,7 +88,6 @@ class CollectionController extends Controller {
             }
         }
         $this->request->redirect(Theme::URL('Collection/Indexes', array('db' => $this->db, 'collection' => $this->collection)));
-        
     }
 
     public function CreateIndexes() {
@@ -117,9 +116,7 @@ class CollectionController extends Controller {
 
         //$this->debug($response);
         $this->request->redirect(Theme::URL('Collection/Indexes', array('db' => $this->db, 'collection' => $this->collection)));
-        
     }
-
 
 //    protected function getQuery($fields,$operators,$values,$types,$logicalOperator){
 //        $total=count($fields);
@@ -138,49 +135,43 @@ class CollectionController extends Controller {
 //       return $condition?array('$where' => "function() {return $condition;}"):array();
 //       
 //    }
-    protected function getQuery($query=array()){
-       
-        for($ind=0;$ind<count($query);$ind+=3){
-            if(empty($query[$ind])){
+    protected function getQuery($query = array()) {
+        $cryptography = new Cryptography();
+        for ($ind = 0; $ind < count($query); $ind+=3) {
+            if (empty($query[$ind])) {
                 unset($query[$ind]);
-                unset($query[$ind+1]);
-                unset($query[$ind+2]);
-                $query=array_values($query);
-                if(isset($query[$ind]) && in_array($query[$ind],array('$or','$and','$ne','$gt','$gte','$lt','$lte'))){
+                unset($query[$ind + 1]);
+                unset($query[$ind + 2]);
+                $query = array_values($query);
+                if (isset($query[$ind]) && in_array($query[$ind], array('$or', '$and', '$ne', '$gt', '$gte', '$lt', '$lte'))) {
                     unset($query[$ind]);
-                    $query=array_values($query);
+                    $query = array_values($query);
                 }
                 $ind-=3;
             }
         }
-        if(count($query)==0){
+        if (count($query) == 0) {
             return $query;
-        }else if(count($query)==3){
-            if ($query[1] == '=') {
-                $query = array($query[0] =>is_numeric($query[2])?doubleval($query[2]):$query[2]);
-            } else {
-                $query = array($query[0] => array($query[1] =>is_numeric($query[2])?doubleval($query[2]):$query[2]));
-            }
+        } else if (count($query) == 3) {
+            $query = $cryptography->executeValue($query, 2);
             return $query;
         }
-        
-        
-        $cryptography=new Cryptography();
         $query = $cryptography->executeAND($query);
         $query = $cryptography->executeOR($query);
-        $this->debug($query);
+        //$this->debug($query);
         return $query[0];
     }
-    public function getSort($orderBy,$orders){
-        $sort=false;
-        if($orderBy){
-        $total=count($orderBy);
-        for($i=0;$i<$total;$i++){
-            if(!isset($orderBy[$i]) || empty($orderBy[$i])){
-                continue;
+
+    public function getSort($orderBy, $orders) {
+        $sort = false;
+        if ($orderBy) {
+            $total = count($orderBy);
+            for ($i = 0; $i < $total; $i++) {
+                if (!isset($orderBy[$i]) || empty($orderBy[$i])) {
+                    continue;
+                }
+                $sort[$orderBy[$i]] = (int) $orders[$i];
             }
-            $sort[$orderBy[$i]]=(int)$orders[$i];
-        }
         }
         return $sort;
     }
@@ -188,25 +179,46 @@ class CollectionController extends Controller {
     public function Record() {
         $this->setDB();
         $this->setCollection();
+        $cryptography = new Cryptography();
         if ($this->validation($this->db, $this->collection)) {
-            $skip =$this->request->getParam('start',0);
-            $limit =$this->request->getParam('limit',10);
+            $record=array();
+            $skip = $this->request->getParam('start', 0);
+            $limit = $this->request->getParam('limit', 10);
+            $type=$this->request->getParam('type','array');
             $query = array();
             $fields = array();
 //            if($this->request->isPost() && $this->request->getParam('search',false)){
 //                 $query=  $this->getQuery($this->request->getParam('fields'), $this->request->getParam('operators'), $this->request->getParam('values'),$this->request->getParam('types'),$this->request->getParam('logical_operators'));
 //                 //$this->debug($query);
 //            }
-            if($this->request->isPost() && $this->request->getParam('query',false)){
-                 $query=  $this->getQuery($this->request->getParam('query'));
-                 //$this->debug($query);
+            if ($this->request->getParam('search', false) && $this->request->getParam('query', false)) {
+                switch (strtolower($this->request->getParam('type'))) {
+                    case 'fieldvalue':
+                        $query = $this->getQuery($this->request->getParam('query'));
+                        break;
+                    case 'array':
+                        $query = $cryptography->stringToArray($this->request->getParam('query'));
+                        break;
+                    case 'json':
+                        $query=$this->request->getParam('query');
+                        break;
+                    default :
+                        $query = array();
+                        break;
+                }
+
+
+                //$this->debug($query);
             }
-            $cursor = $this->getModel()->find($this->db, $this->collection, $query, $fields, $limit, $skip);
-            $ordeBy=$this->getSort($this->request->getParam('order_by',false),$this->request->getParam('orders',false));
-            if($ordeBy)
+            if(!$this->isError()){
+            $cursor = $this->getModel()->find($this->db, $this->collection, $query, $fields, $limit, $skip,$type);
+            //if($type=='json'){$this->debug($cursor);die;}
+            $ordeBy = $this->getSort($this->request->getParam('order_by', false), $this->request->getParam('orders', false));
+            if ($ordeBy)
                 $cursor->sort($ordeBy);
-            $cryptography = new Cryptography();
-            $record = $cryptography->decode($cursor);
+
+            $record = $cryptography->decode($cursor,$type);
+            }
             $this->application->view = 'Collection';
             $format = array('json', 'array', 'document');
             $this->display('record', array('record' => $record, 'format' => $format));
@@ -268,7 +280,7 @@ class CollectionController extends Controller {
     }
 
     public function SaveRecord() {
-       
+
         $this->setDB();
         $this->setCollection();
         if ($this->validation($this->db, $this->collection)) {
@@ -350,7 +362,7 @@ class CollectionController extends Controller {
                 $this->url = Theme::URL('Database/Indexes');
                 break;
             case 'collection':
-                $this->url = (empty($this->db) ? Theme::URL('Database/Indexes') :Theme::URL('Collection/Index', array('db' => $this->db)));
+                $this->url = (empty($this->db) ? Theme::URL('Database/Indexes') : Theme::URL('Collection/Index', array('db' => $this->db)));
                 break;
             default :
                 $this->url = "index.php";
@@ -362,14 +374,14 @@ class CollectionController extends Controller {
         $this->setDB();
         if (!empty($this->db)) {
             $this->setCollection();
-            $capped = $this->request->getPost('capped',FALSE);
-            $size = $this->request->getPost('size',0);
-            $max = $this->request->getPost('max',0);
-            
+            $capped = $this->request->getPost('capped', FALSE);
+            $size = $this->request->getPost('size', 0);
+            $max = $this->request->getPost('max', 0);
+
             if (!empty($this->collection)) {
                 $this->getModel()->createCollection($this->db, $this->collection, $capped, $size, $max);
                 $this->message->sucess = I18n::t('C_C', $this->collection);
-            }else{
+            } else {
                 $this->message->error = I18n::t('E_C_N');
             }
             $this->url = Theme::URL('Collection/Index', array('db' => $this->db));
@@ -537,12 +549,15 @@ class CollectionController extends Controller {
         $this->application->view = 'Collection';
         $this->display('import');
     }
-    public function Search(){
+
+    public function Search() {
         $this->setDB();
         $this->setCollection();
         $this->display('search');
     }
-    protected function gotoDatabse(){
+
+    protected function gotoDatabse() {
         $this->request->redirect(Theme::URL('Database/Index'));
     }
+
 }

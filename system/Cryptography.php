@@ -4,14 +4,33 @@ class Cryptography {
 
     protected $data;
 
-    public function decode($cursor) {
+    public function decode($data, $format = 'array') {
+        if ($format == 'json') {
+            return $this->decodeArray($data);
+        } else {
+            return $this->decodeCursor($data);
+        }
+    }
+
+    public function decodeArray($data) {
+        if(!is_array($data))
+            return false;
+        foreach ($data as $document) {
+
+            $this->data['document'][] = $document;
+            $this->data['json'][] = $this->highlight($this->arrayToJSON($document));
+            $this->data['array'][] = $this->highlight($this->arrayToString($document));
+        }
+        return $this->data;
+    }
+
+    public function decodeCursor($cursor) {
         while ($cursor->hasNext()) {
             $document = $cursor->getNext();
             $this->data['document'][] = $document;
-            $this->data['json'][] =$this->highlight($this->arrayToJSON($document));
+            $this->data['json'][] = $this->highlight($this->arrayToJSON($document));
             $this->data['array'][] = $this->highlight($this->arrayToString($document));
         }
-
         return $this->data;
     }
 
@@ -29,16 +48,14 @@ class Cryptography {
                 $string.="\"$key\"" . '=>' . $this->arrayToString($value, "$tab\t");
             } else if (is_object($value)) {
                 $string.="\"$key\"" . '=>' . $this->objectToString($value);
-            }else if(is_numeric($value)){ 
-                                $string.="\"$key\"" . '=>' . $value;
-            }else {
-                $string.="\"$key\"" . '=>'."\"$value\"";
+            } else if (is_numeric($value)) {
+                $string.="\"$key\"" . '=>' . $value;
+            } else {
+                $string.="\"$key\"" . '=>' . "\"$value\"";
             }
             $string.=',';
         }
-        return $string.="\n".$tab . ')';
-        
-        
+        return $string.="\n" . $tab . ')';
     }
 
     public function objectToString($object) {
@@ -78,7 +95,7 @@ class Cryptography {
         return $string;
     }
 
-    function arrayToJSON($array,$tab="") {
+    function arrayToJSON($array, $tab = "") {
         if (!is_array($array)) {
             return false;
         }
@@ -94,37 +111,37 @@ class Cryptography {
                 $key = "'" . addslashes($key) . "'";
 
                 if (is_array($value)) {
-                    $value = $this->arrayToJSON($value,"$tab\t");
-                } else if (is_object ($value)) {
-                    $value =  $this->objectToJSON($value);
-                }else if (is_double($value)) {
+                    $value = $this->arrayToJSON($value, "$tab\t");
+                } else if (is_object($value)) {
+                    $value = $this->objectToJSON($value);
+                } else if (is_double($value)) {
                     $value = "NumberLong(" . addslashes($value) . ")";
-                }else if (!is_numeric($value) || is_string($value)) {
+                } else if (!is_numeric($value) || is_string($value)) {
                     $value = "'" . addslashes($value) . "'";
                 }
-                
-                $construct[] ="\n\t$tab"."$key: $value";
+
+                $construct[] = "\n\t$tab" . "$key: $value";
             }
 
-            
-            $result = "{" . implode(",", $construct) ."\n$tab}";
+
+            $result = "{" . implode(",", $construct) . "\n$tab}";
         } else { // If the array is a vector (not associative):
             $construct = array();
             foreach ($array as $value) {
 
                 if (is_array($value)) {
-                     $value = $this->arrayToJSON($value,"$tab\t");
-                } else if (is_object ($value)) {
-                    $value =  $this->objectToJSON($value);
-                }else if (!is_numeric($value) || is_string($value)) {
+                    $value = $this->arrayToJSON($value, "$tab\t");
+                } else if (is_object($value)) {
+                    $value = $this->objectToJSON($value);
+                } else if (!is_numeric($value) || is_string($value)) {
                     $value = "'" . addslashes($value) . "'";
                 }
 
-                
+
                 $construct[] = $value;
             }
 
-            
+
             $result = "[ " . implode(", ", $construct) . " ]";
         }
 
@@ -132,7 +149,7 @@ class Cryptography {
     }
 
     public function objectToJSON($object) {
-        
+
         switch (get_class($object)) {
             case "MongoId":
                 $json = 'ObjectId("' . $object->__toString() . '")';
@@ -172,10 +189,8 @@ class Cryptography {
         return $json;
     }
 
-    
-
     public function stringToArray($string) {
-        $string = "return " . $string . ";";
+        $string = " return " . $string . ";";
         if (function_exists("token_get_all")) {
             $php = "<?php\n" . $string . "\n?>";
             $tokens = token_get_all($php);
@@ -224,69 +239,94 @@ class Cryptography {
                 }
             }
         }
-
-        return eval($string);
-    }
-    public function executeAND($query) {
-            $key = array_search('$and', $query);
+  
             
-            if (!$key)
-               return array_values($query);
-            if ($query[$key - 2] == '=') {
-                $left = array($query[$key - 3] => $query[$key - 1]);
-            } else {
-                $left = array($query[$key - 3] => array($query[$key - 2] => $query[$key - 1]));
-            }
-            if ($query[$key + 2] == '=') {
-                $right = array($query[$key + 1] => $query[$key + 3]);
-            } else {
-                $right = array($query[$key + 1] => array($query[$key + 2] => $query[$key + 3]));
-            }
-            $and = array('$and' => array($left, $right));
-            for ($i = $key - 3; $i <= $key + 3; $i++) {
-                unset($query[$i]);
-            }
-            $query[$key + 3] = $and;
-            ksort($query);
-       return $this->executeAND(array_values($query));
+            $array=@eval($string);
+            if (error_get_last())
+                return false;
+            return $array;
+       
+    }
+    
+    public function executeAND($query) {
+        $key = array_search('$and', $query);
+
+        if (!$key)
+            return array_values($query);
+        if ($query[$key - 2] == '=') {
+            $left = array($query[$key - 3] => $query[$key - 1]);
+        } else {
+            $left = array($query[$key - 3] => array($query[$key - 2] => $query[$key - 1]));
+        }
+        if ($query[$key + 2] == '=') {
+            $right = array($query[$key + 1] => $query[$key + 3]);
+        } else {
+            $right = array($query[$key + 1] => array($query[$key + 2] => $query[$key + 3]));
+        }
+        $and = array('$and' => array($left, $right));
+        for ($i = $key - 3; $i <= $key + 3; $i++) {
+            unset($query[$i]);
+        }
+        $query[$key + 3] = $and;
+        ksort($query);
+        return $this->executeAND(array_values($query));
     }
 
     public function executeOR($query) {
-            $key = array_search('$or', $query);
-           
-            if (!$key)
-                return array_values($query);
-            if (!is_array($query[$key - 1])) {
-                if ($query[$key - 2] == '=') {
-                    $left = array($query[$key - 3] =>is_numeric($query[$key-1])?doubleval($query[$key-1]):$query[$key-1]);
-                } else {
-                    $left = array($query[$key - 3] => array($query[$key - 2] => $query[$key - 1]));
-                }
-                for ($i = $key - 3; $i < $key; $i++) {
-                    unset($query[$i]);
-                }
-            } else {
-                $left = $query[$key - 1];
-                unset($query[$key - 1]);
-            }
-            if (!is_array($query[$key + 1])) {
-                if ($query[$key + 2] == '=') {
-                    $right = array($query[$key + 1] =>is_numeric($query[$key+3])?doubleval($query[$key+3]):$query[$key+3]);
-                } else {
-                    $right = array($query[$key + 1] => array($query[$key + 2] => $query[$key + 3]));
-                }
+        $key = array_search('$or', $query);
 
-                for ($i = $key + 1; $i <= $key + 3; $i++) {
-                    unset($query[$i]);
-                }
+        if (!$key)
+            return array_values($query);
+        if (!is_array($query[$key - 1])) {
+            if ($query[$key - 2] == '=') {
+                $left = array($query[$key - 3] => is_numeric($query[$key - 1]) ? doubleval($query[$key - 1]) : $query[$key - 1]);
             } else {
-                $right = $query[$key + 1];
-                unset($query[$key + 1]);
+                $left = array($query[$key - 3] => array($query[$key - 2] => $query[$key - 1]));
             }
-            $query[$key] = array('$or' => array($left, $right));;
-            ksort($query);
+            for ($i = $key - 3; $i < $key; $i++) {
+                unset($query[$i]);
+            }
+        } else {
+            $left = $query[$key - 1];
+            unset($query[$key - 1]);
+        }
+        if (!is_array($query[$key + 1])) {
+            if ($query[$key + 2] == '=') {
+                $right = array($query[$key + 1] => is_numeric($query[$key + 3]) ? doubleval($query[$key + 3]) : $query[$key + 3]);
+            } else {
+                $right = array($query[$key + 1] => array($query[$key + 2] => $query[$key + 3]));
+            }
+
+            for ($i = $key + 1; $i <= $key + 3; $i++) {
+                unset($query[$i]);
+            }
+        } else {
+            $right = $query[$key + 1];
+            unset($query[$key + 1]);
+        }
+        $query[$key] = array('$or' => array($left, $right));
+        ;
+        ksort($query);
         return $this->executeOR(array_values($query));
     }
+
+    public function executeValue($query, $key) {
+        if ($query[$key - 1] == '=') {
+            if (is_numeric($query[$key])) {
+                $query = array('$or' => array(array($query[$key - 2] => doubleval($query[$key])), array($query[$key - 2] => $query[$key])));
+            } else {
+                $query = array($query[$key - 2] => $query[$key]);
+            }
+        } else {
+            if (is_numeric($query[$key])) {
+                $query = array('$or' => array(array($query[$key - 2] => array($query[$key - 1] => doubleval($query[$key]))), array($query[$key - 2] => array($query[$key - 1] => $query[$key]))));
+            } else {
+                $query = array('$or' => array(array($query[$key - 2] => array($query[$key - 1] => doubleval($query[$key]))), array($query[$key - 2] => array($query[$key - 1] => $query[$key]))));
+            }
+        }
+        return $query;
+    }
+
     protected function debug($a) {
         echo "<pre>";
         print_r($a);

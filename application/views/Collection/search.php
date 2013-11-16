@@ -2,11 +2,12 @@
 <div class="well" id="container-indexes">
     <ul class="nav nav-tabs">
         <li class="active"><a href="#searchColVal" data-toggle="tab"><?php I18n::p('F_V'); ?></a></li>
-
+        <li ><a href="#searhArray" data-toggle="tab"><?php I18n::p('Array'); ?></a></li>
+        <li><a href="#searchJSON" data-toggle="tab"><?php I18n::p('JSON'); ?></a></li>
     </ul>
 
     <div id="myTabContent" class="tab-content">
-
+        <!-- Key Value Search Start -->
         <div class="tab-pane active in" id="searchColVal">
             <form id="tab1" method="post" action="index.php">
                 <table id="tbl-search-col-val">
@@ -55,6 +56,37 @@
                 <input type="hidden" name="db" value="<?php echo $this->db; ?>" />
                 <input type="hidden" name="collection" value="<?php echo $this->collection; ?>" />
                 <input type="hidden" name="search" value="1" />
+                <input type="hidden" name="type" value="fieldvalue" />
+            </form>
+        </div>
+        <!-- Key Value Search End -->
+        <div class="tab-pane fade" id="searhArray">
+            <form id="tab2" method="get" action="index.php">
+                <textarea name="query" rows="3" class="input-xlarge" style="width:1000px;">array (
+)</textarea>
+                <div>
+                    <button class="btn btn-primary"><?php I18n::p('GO'); ?></button>
+                </div>
+                <input type="hidden"  name="load" value="Collection/Record"/>
+                <input type="hidden" name="db" value="<?php echo $this->db; ?>" />
+                <input type="hidden" name="collection" value="<?php echo $this->collection; ?>" />
+                <input type="hidden" name="search" value="1" />
+                <input type="hidden" name="type" value="array" />
+            </form>
+        </div>
+        <div class="tab-pane fade" id="searchJSON">
+            <form id="tab3" method="post" action="index.php">
+                <textarea name="query" rows="3" class="input-xlarge" style="width:1000px;">{
+  
+}</textarea>
+                <div>
+                    <button class="btn btn-primary"><?php I18n::p('GO'); ?></button>
+                </div>
+                <input type="hidden"  name="load" value="Collection/Record"/>
+                <input type="hidden" name="db" value="<?php echo $this->db; ?>" />
+                <input type="hidden" name="collection" value="<?php echo $this->collection; ?>" />
+                <input type="hidden" name="search" value="1" />
+                <input type="hidden" name="type" value="json" />
             </form>
         </div>
 
@@ -86,7 +118,6 @@
                                 return false;
                             }
                             function removeTR(trID) {
-
                                 $("table#tbl-search-col-val tr#" + trID).remove();
                                 return false;
                             }
@@ -103,7 +134,6 @@
                                 return false;
                             }
                             function removeOrderBy(trID) {
-
                                 $("table#tbl-order-by tr#" + trID).remove();
                                 return false;
                             }

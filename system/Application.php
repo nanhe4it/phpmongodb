@@ -7,8 +7,8 @@ class Application{
         
     }
     public function init(){
-        
-        $load=CHttp::getParam('load');
+        $chttp=new CHttp();
+        $load=$chttp->getParam('load');
         if(!empty($load)){
             list($this->controller,$this->action)=  explode('/',$load);
         }
@@ -18,7 +18,7 @@ class Application{
         if(!isset($this->action)){
             $this->action='Index';
         }
-        $this->theme=CHttp::getParam('theme');
+        $this->theme=$chttp->getParam('theme');
         $this->theme=(empty($this->theme)?TRUE:(strtolower($this->theme)=='false'?FALSE:TRUE));
         
     }

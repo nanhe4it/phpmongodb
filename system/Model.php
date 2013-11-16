@@ -52,12 +52,24 @@ class Model {
 //    }
 
 
-    public function find($db, $collection, $query = array(), $fields = array(), $limit = false, $skip = false) {
-
-        return $this->mongo->{$db}->{$collection}->find($query, $fields)->limit($limit)->skip($skip);
+    public function find($db, $collection, $query , $fields = array(), $limit = false, $skip = false, $fromat = 'array') {
+        try {
+            if ($fromat == 'json') {
+                 $code = "return db.". $collection.".find(".$query.").limit(".$limit.").skip(".$skip.").toArray();";
+                $response=$this->mongo->{$db}->execute($code);
+                if($response['ok']==1){
+                    return $response['retval'];
+                }
+            } else {
+                return $this->mongo->{$db}->{$collection}->find($query, $fields)->limit($limit)->skip($skip);
+            }
+            return false;
+        } catch (Exception $e) {
+            exit($e->getMessage());
+        }
     }
 
-    public function insert($db, $collection, $a , $fromat = 'array', $options = array()) {
+    public function insert($db, $collection, $a, $fromat = 'array', $options = array()) {
         try {
             if ($fromat == 'json') {
                 $code = "db.getCollection('" . $collection . "').insert(" . $a . ");";
