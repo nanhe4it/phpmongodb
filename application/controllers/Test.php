@@ -98,6 +98,7 @@ class TestController extends Controller {
 
     //http://phpmongodb.loc/index.php?load=Test/execute&theme=false
     public function Execute() {
+        $x=array(1);
         $m = new MongoClient();
         $db = $m->test;
        

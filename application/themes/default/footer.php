@@ -9,10 +9,20 @@
     });
 </script>
 
+<div class="navbar">
+            <div class="navbar-inner">
+                <ul class="nav pull-right">
+                   
+                    <li > <a href="http://www.phpmongodb.org" target="_blank">&copy; 2013 PHPMongoDB.org</a></li>
+                    
 
+                </ul>
+                
+            </div>
+        </div>
 
 <div class="navbar">
-    &copy; 2013 <a href="http://www.phpmongodb.org" target="_blank">PHPMongoDB.org</a>
+    
 </div>
 <script>
     function callAjax(url) {

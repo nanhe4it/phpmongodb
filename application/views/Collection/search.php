@@ -9,7 +9,7 @@
     <div id="myTabContent" class="tab-content">
         <!-- Key Value Search Start -->
         <div class="tab-pane active in" id="searchColVal">
-            <form id="tab1" method="post" action="index.php">
+            <form id="tab1" method="get" action="index.php">
                 <table id="tbl-search-col-val">
                     <tr>
                         <th>&nbsp;</th>
@@ -75,7 +75,7 @@
             </form>
         </div>
         <div class="tab-pane fade" id="searchJSON">
-            <form id="tab3" method="post" action="index.php">
+            <form id="tab3" method="get" action="index.php">
                 <textarea name="query" rows="3" class="input-xlarge" style="width:1000px;">{
   
 }</textarea>

@@ -272,7 +272,7 @@ class CollectionController extends Controller {
             if ($response['n'] == 1 && $response['ok'] == 1) {
                 $this->message->sucess = I18n::t('R_S_D');
             }
-            $this->url = Theme::URL('Collection/Index', array('db' => $this->db, 'collection' => $this->collection));
+            $this->url = Theme::URL('Collection/Record', array('db' => $this->db, 'collection' => $this->collection));
         } else {
             $this->url = "index.php";
         }
@@ -288,10 +288,6 @@ class CollectionController extends Controller {
             switch (strtolower($this->request->getParam('type'))) {
                 case 'fieldvalue':
                     $a = array_combine($this->request->getParam('attributes'), $this->request->getParam('values'));
-//                    foreach ($a as $k=>$v){
-//                        echo gettype($v),$v;
-//                    }
-//                    die;
                     $this->insertRecord($a);
                     break;
                 case 'array':
@@ -309,7 +305,7 @@ class CollectionController extends Controller {
                     break;
             }
         }
-        $this->request->redirect(Theme::URL('Collection/Index', array('db' => $this->db, 'collection' => $this->collection)));
+        $this->request->redirect(Theme::URL('Collection/Record', array('db' => $this->db, 'collection' => $this->collection)));
     }
 
     private function insertRecord($a) {

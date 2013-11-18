@@ -14,7 +14,7 @@
         <link rel="stylesheet" type="text/css" href="<?php echo Theme::getPath(); ?>stylesheets/theme.css">
         <link rel="stylesheet" href="<?php echo Theme::getPath(); ?>lib/font-awesome/css/font-awesome.css">
 
-        <script src="<?php echo Theme::getPath(); ?>lib/jquery-1.7.2.min.js" type="text/javascript"></script>
+        <script src="<?php echo Theme::getPath(); ?>lib/jquery-1.8.1.min.js" type="text/javascript"></script>
 
         <!-- Demo page code -->
 

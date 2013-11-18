@@ -52,7 +52,7 @@ class Model {
 //    }
 
 
-    public function find($db, $collection, $query , $fields = array(), $limit = false, $skip = false, $fromat = 'array') {
+    public function find($db, $collection, $query=  array() , $fields = array(), $limit = false, $skip = false, $fromat = 'array') {
         try {
             if ($fromat == 'json') {
                  $code = "return db.". $collection.".find(".$query.").limit(".$limit.").skip(".$skip.").toArray();";
