@@ -12,8 +12,8 @@ class WidgetController extends Controller {
        return $dbList;
     }
      public function getCollectonList() {
-
-        $db = Chttp::getParam('db');
+        $chttp=new Chttp();
+        $db = $chttp->getParam('db');
         if (!empty($db)) {
             $model = new Model(); 
             $collections = $model->listCollections($db, TRUE);

@@ -43,7 +43,7 @@ class Theme {
         return self::$themeUri;
     }
 
-    public function URL($load = 'Index/Index', $queryString = array()) {
+    public static function URL($load = 'Index/Index', $queryString = array()) {
         if (!self::$homeUri) {
             self::__setThemeUri();
         }
@@ -56,14 +56,14 @@ class Theme {
         return $url;
     }
 
-    public function getHome() {
+    public static function getHome() {
         if (!isset(self::$homeUri)) {
             self::__setHomeUri();
         }
         return self::$homeUri;
     }
 
-    public function currentURL($start = FALSE) {
+    public static function currentURL($start = FALSE) {
         $url = self::$homeUri . '/index.php';
         if (!empty($_SERVER['QUERY_STRING'])) {
             $queryString = explode('&', $_SERVER['QUERY_STRING']);
@@ -83,12 +83,12 @@ class Theme {
         return $url;
     }
 
-    public function paginationURL($url, $start) {
+    public static function paginationURL($url, $start) {
         $url.=(strpos($url, '?') !== false ? '&' : '?') . 'start=' . $start;
         return $url;
     }
 
-    public function pagination($total = 0, $split = 10) {
+    public static function pagination($total = 0, $split = 10) {
         $url = self::currentURL(TRUE);
         $current = (isset($_GET['start']) ? $_GET['start'] : 0);
 

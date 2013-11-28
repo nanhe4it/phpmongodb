@@ -4,7 +4,7 @@ class I18n {
 
     protected static $language = NULL;
 
-    protected function init() {
+    protected static function init() {
         if (empty(self::$language)) {
             require_once getcwd() . '/application/language/english.php';
             self::$language = $language;

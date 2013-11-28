@@ -3,7 +3,8 @@
 <!--    <a href="#dashboard-menu" class="nav-header" data-toggle="collapse"><i class="icon-dashboard"></i>Databases</a>-->
     <?php
     $dbList = Widget::get('DBList');
-    $dbName = Chttp::getParam('db');
+    $chttp=new Chttp();
+    $dbName = $chttp->getParam('db');
     if (empty($dbName)) {
         ?>
         
