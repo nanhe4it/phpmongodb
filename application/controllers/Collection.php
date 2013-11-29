@@ -118,23 +118,7 @@ class CollectionController extends Controller {
         $this->request->redirect(Theme::URL('Collection/Indexes', array('db' => $this->db, 'collection' => $this->collection)));
     }
 
-//    protected function getQuery($fields,$operators,$values,$types,$logicalOperator){
-//        $total=count($fields);
-//        $condition=FALSE;
-//        $operator='';
-//        for($i=0;$i<$total;$i++){
-//            if(!isset($fields[$i]) || empty($fields[$i])){
-//                continue;
-//            }
-//            
-//            $condition.=$operator.' this.'.$fields[$i].$operators[$i];
-//            $condition.=is_numeric($values[$i])?$values[$i]:"'".$values[$i]."'";
-//            $operator=isset($logicalOperator[$i])?$logicalOperator[$i]:'';
-//        }
-//        //echo $condition;
-//       return $condition?array('$where' => "function() {return $condition;}"):array();
-//       
-//    }
+
     protected function getQuery($query = array()) {
         $cryptography = new Cryptography();
         for ($ind = 0; $ind < count($query); $ind+=3) {
@@ -187,10 +171,7 @@ class CollectionController extends Controller {
             $type=$this->request->getParam('type','array');
             $query = array();
             $fields = array();
-//            if($this->request->isPost() && $this->request->getParam('search',false)){
-//                 $query=  $this->getQuery($this->request->getParam('fields'), $this->request->getParam('operators'), $this->request->getParam('values'),$this->request->getParam('types'),$this->request->getParam('logical_operators'));
-//                 //$this->debug($query);
-//            }
+
             if ($this->request->getParam('search', false) && $this->request->getParam('query', false)) {
                 switch (strtolower($this->request->getParam('type'))) {
                     case 'fieldvalue':
@@ -208,11 +189,11 @@ class CollectionController extends Controller {
                 }
 
 
-                //$this->debug($query);
+                
             }
             if(!$this->isError()){
             $cursor = $this->getModel()->find($this->db, $this->collection, $query, $fields, $limit, $skip,$type);
-            //if($type=='json'){$this->debug($cursor);die;}
+            
             $ordeBy = $this->getSort($this->request->getParam('order_by', false), $this->request->getParam('orders', false));
             if ($ordeBy)
                 $cursor->sort($ordeBy);
@@ -287,7 +268,7 @@ class CollectionController extends Controller {
 
             switch (strtolower($this->request->getParam('type'))) {
                 case 'fieldvalue':
-                    $a = array_combine($this->request->getParam('attributes'), $this->request->getParam('values'));
+                    $a = array_combine($this->request->getParam('fields'), $this->request->getParam('values'));
                     $this->insertRecord($a);
                     break;
                 case 'array':

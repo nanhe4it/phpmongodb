@@ -13,7 +13,7 @@
                         <th><?php I18n::p('VALUE');?></th>
                     </tr>
                     <tr>
-                        <td><input type="text" class="input-xlarge" name="attributes[]" required="required" placeholder="Enter Key"></td>
+                        <td><input type="text" class="input-xlarge" name="fields[]" required="required" placeholder="Enter Key"></td>
                         <td><textarea  rows="2" class="input-xlarge" name="values[]" required="required" placeholder="Enter Value"></textarea></td>
                     </tr>
                 </table>
