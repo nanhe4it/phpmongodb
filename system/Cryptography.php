@@ -92,7 +92,7 @@ class Cryptography {
                     return $object->__toString();
                 }
         }
-        return $string;
+        return isset($string)?$string:FALSE;
     }
 
     function arrayToJSON($array, $tab = "") {
