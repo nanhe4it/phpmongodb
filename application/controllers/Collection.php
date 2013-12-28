@@ -532,7 +532,10 @@ class CollectionController extends Controller {
         $this->setCollection();
         $this->display('search');
     }
-
+    /**
+     * @author Nanhe Kumar <nanhe.kumar@gmail.com>
+     * @access protected
+     */
     protected function gotoDatabse() {
         $this->request->redirect(Theme::URL('Database/Index'));
     }
