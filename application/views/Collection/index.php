@@ -4,26 +4,30 @@
 <div class="row-fluid">
     <div class="block span6">
         <div class="block-heading">
-            <a href="#widget2container" data-toggle="collapse"><?php I18n::p('COLLECTION');?></a>
+            <a href="#widget2container" data-toggle="collapse"><?php I18n::p('COLLECTION'); ?></a>
         </div>
         <div id="widget2container" class="block-body collapse in">
             <table class="table list">
                 <thead>
                     <tr>
-                        <th><?php I18n::p('NAME');?></th>
-                        <th><?php I18n::p('T_C');?></th>
+                        <th><?php I18n::p('NAME'); ?></th>
+                        <th><?php I18n::p('T_C'); ?></th>
                         <th >&nbsp;</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php foreach ($this->data['collectionList'] as $collection) { ?>
                         <tr>
-                            <td><p><i class="icon-user"></i> <a href="<?php echo Theme::URL('Collection/Record', array('db' => $this->db, 'collection' => $collection['name'])); ?>"><?php echo $collection['name']; ?></a></p></td>
+                            <td><p><i class="icon-user"></i> <a  href="<?php echo Theme::URL('Collection/Record', array('db' => $this->db, 'collection' => $collection['name'])); ?>"><?php echo $collection['name']; ?></a></p></td>
 
                             <td><?php echo $collection['count']; ?></td>
                             <td>
-                                <a href="#myModal" data-edit-collection="<?php echo urlencode($collection['name']); ?>" role="button" data-toggle="modal"><i class="icon-pencil"></i></a>
-                                <a href="#myModal" data-delete-collection="<?php echo urlencode($collection['name']); ?>"role="button" data-toggle="modal"><i class="icon-remove"></i></a>
+                                <a  href="#myModal" data-edit-collection="<?php echo urlencode($collection['name']); ?>" role="button" data-toggle="modal" title="Edit" class="icon-edit">
+                                    &nbsp;
+                                </a>
+                                <a href="#myModal" data-delete-collection="<?php echo urlencode($collection['name']); ?>"role="button" data-toggle="modal" title="Remove" class="icon-remove">
+                                    &nbsp;
+                                </a>
                             </td>
                         </tr>
                     <?php } ?>
@@ -35,19 +39,19 @@
         <p class="block-heading" id="block-heading">Create Collection</p>
         <div class="block-body">
             <form id="form-create-collection" method="post" class="form-inline" action="index.php">
-                <label style="width:70px;"><?php I18n::p('NAME');?></label>
+                <label style="width:70px;"><?php I18n::p('NAME'); ?></label>
                 <input type="text" value="" id="collection_name" name="collection" class="input-xlarge" required="required"><br><br>
-                <label style="width:70px;"><?php I18n::p('IS_CAPPED');?></label>
+                <label style="width:70px;"><?php I18n::p('IS_CAPPED'); ?></label>
                 <input type="checkbox" value="1" id="collection_capped" name="capped"><br><br>
-                <label style="width:70px;"><?php I18n::p('SIZE');?></label>
+                <label style="width:70px;"><?php I18n::p('SIZE'); ?></label>
                 <input type="text" value="" id="collection_size" name="size" class="input-xlarge "><br><br>
-                <label style="width:70px;"><?php I18n::p('Max');?></label>
+                <label style="width:70px;"><?php I18n::p('Max'); ?></label>
                 <input type="text" value="" id="collection_max" name="max" class="input-xlarge"><br><br>
                 <input type="hidden" id="load-create" name="load" value="Collection/CreateCollection" />
                 <input type="hidden" name="db" value="<?php echo $this->db; ?>" />
                 <label style="width:70px;">&nbsp;</label>
 
-                <button class="btn " name="save"><i class="icon-save" ></i><?php I18n::p('CREATE');?> </button>
+                <button class="btn " name="save"><i class="icon-save" ></i><?php I18n::p('CREATE'); ?> </button>
 
             </form>
         </div>

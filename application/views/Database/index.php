@@ -21,8 +21,8 @@
                             <td><a href="<?php echo Theme::URL('Collection/Index', array('db' => $db['name'])); ?>"><?php echo $db['name']; ?></i></td>
                             <td><?php echo $db['sizeOnDisk']; ?></td>
                             <td>
-                                <a href="#myModal" data-edit-db="<?php echo addslashes($db['name']); ?>" role="button" data-toggle="modal"><i class="icon-pencil"></i></a>
-                                <a href="#myModal" data-delete-db="<?php echo addslashes($db['name']); ?>" role="button" data-toggle="modal"><i class="icon-remove"  ></i></a>
+                                <a href="#myModal" data-edit-db="<?php echo addslashes($db['name']); ?>" role="button" data-toggle="modal" class="icon-edit" title="Edite">&nbsp;</a>
+                                <a href="#myModal" data-delete-db="<?php echo addslashes($db['name']); ?>" role="button" data-toggle="modal" class="icon-remove" title="Remove">&nbsp;</a>
                             </td>
                         </tr>
                     <?php } ?>

@@ -53,7 +53,7 @@ $cryptography = new Cryptography();
                                 <option value="-1">DESC</option>
                             </select>
                         </td>
-                        <td>&nbsp;<a href="javascript:void(0)" onclick="appendTR();" class="btn-primary"><i class="icon-plus"></i></a>&nbsp;</td>
+                        <td>&nbsp;<a href="javascript:void(0)" onclick="appendTR();" class="icon-plus" title="Add">&nbsp;</a>&nbsp;</td>
                     </tr>
                 </table>
                 <table>
@@ -93,8 +93,8 @@ $cryptography = new Cryptography();
         tr = tr + '</select>';
         tr = tr + '</td>';
         tr = tr + '<td>';
-        tr = tr + '&nbsp;<a href="javascript:void(0)" onclick="appendTR();" class="btn-primary"><i class="icon-plus"></i></a>&nbsp;';
-        tr = tr + "<a href=\"javascript:void(0)\" onclick=\"removeTR('"+trID+"');\" class=\"btn-primary\"><i class=\"icon-minus\"></i></a>";
+        tr = tr + '&nbsp;<a href="javascript:void(0)" onclick="appendTR();" class="icon-plus" title="Add">&nbsp;</a>&nbsp;';
+        tr = tr + "<a href=\"javascript:void(0)\" onclick=\"removeTR('"+trID+"');\" class=\"icon-minus\" title=\"Remove\">&nbsp;</a>";
         tr = tr + '</td>';
         tr = tr + '</tr>';
         $("#tbl-create-indexes").append(tr);
