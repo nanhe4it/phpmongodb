@@ -1,5 +1,6 @@
 <?php defined('PMDDA') or die('Restricted access'); ?>
 <script src="<?php echo Theme::getPath(); ?>bootstrap/js/bootstrap.js"></script>
+<script src="<?php echo Theme::getPath(); ?>js/PHPMongoDB.js"></script>
 <script type="text/javascript">
     $("[rel=tooltip]").tooltip();
     $(function() {
@@ -13,7 +14,7 @@
             <div class="navbar-inner">
                 <ul class="nav pull-right">
                    
-                    <li > <a href="http://www.phpmongodb.org" target="_blank">&copy; 2013 PHPMongoDB.org</a></li>
+                    <li > <a href="http://www.phpmongodb.org" target="_blank">&copy; 2014 PHPMongoDB.org</a></li>
                     
 
                 </ul>

@@ -51,7 +51,7 @@
                 <input type="hidden" name="db" value="<?php echo $this->db; ?>" />
                 <label style="width:70px;">&nbsp;</label>
 
-                <button class="btn " name="save"><i class="icon-save" ></i><?php I18n::p('CREATE'); ?> </button>
+                <button class="btn btn-primary" name="save"><?php I18n::p('CREATE'); ?> </button>
 
             </form>
         </div>

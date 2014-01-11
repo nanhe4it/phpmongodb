@@ -1,6 +1,3 @@
-<?php
-$cryptography = new Cryptography();
-?>
 <?php require_once '_menu.php'; ?>
 <div class="well" id="container-indexes">
     <ul class="nav nav-tabs">
@@ -26,7 +23,7 @@ $cryptography = new Cryptography();
                     <?php foreach ($this->data as $index) { ?>
                         <tr>
                             <td><?php echo $index['v']; ?></td>
-                            <td><?php echo $cryptography->highlight($cryptography->arrayToJSON($index['key'])); ?></td>
+                            <td><?php echo $this->data['cryptography']->highlight($this->data['cryptography']->arrayToJSON($index['key'])); ?></td>
                             <td><?php echo $index['name']; ?></td>
                             <td><?php echo (isset($index['unique']) ? ($index['unique'] ? 'true' : 'false') : ''); ?></td>
                             <td><?php echo $index['ns']; ?></td>
@@ -53,13 +50,13 @@ $cryptography = new Cryptography();
                                 <option value="-1">DESC</option>
                             </select>
                         </td>
-                        <td>&nbsp;<a href="javascript:void(0)" onclick="appendTR();" class="icon-plus" title="Add">&nbsp;</a>&nbsp;</td>
+                        <td>&nbsp;<a href="javascript:void(0)" onclick="PMDIN.appendTR();" class="icon-plus" title="Add">&nbsp;</a>&nbsp;</td>
                     </tr>
                 </table>
                 <table>
                     <tr>
                         <td style="width:160px;"><?php I18n::p('UNIQUE');?></td>
-                        <td colspan="2"><input type="checkbox"  value="1" name="unique" id="index_unique"></td>
+                        <td colspan="2"><input type="checkbox"  value="1" name="unique" id="index_unique" onclick="PMDIN.isCheck(this)"></td>
                     </tr>
                     <tr id="drop_duplicates" style="display: none">
                         <td>Drop duplicates?</td>
@@ -80,41 +77,5 @@ $cryptography = new Cryptography();
 
     </div>
 </div>
-<script>
-    function appendTR() {
-        var trID='tr-indexes'+$('#tbl-create-indexes tr').length;
-        var tr = '<tr id="'+trID+'">';
-        tr = tr + '<td>&nbsp;</td>';
-        tr = tr + '<td><input type="text" class="input-xlarge" name="fields[]"></td>';
-        tr = tr + '<td>';
-        tr = tr + '<select name="orders[]" style="width:auto;">';
-        tr = tr + '<option value="1">ASC</option>';
-        tr = tr + '<option value="-1">DESC</option>';
-        tr = tr + '</select>';
-        tr = tr + '</td>';
-        tr = tr + '<td>';
-        tr = tr + '&nbsp;<a href="javascript:void(0)" onclick="appendTR();" class="icon-plus" title="Add">&nbsp;</a>&nbsp;';
-        tr = tr + "<a href=\"javascript:void(0)\" onclick=\"removeTR('"+trID+"');\" class=\"icon-minus\" title=\"Remove\">&nbsp;</a>";
-        tr = tr + '</td>';
-        tr = tr + '</tr>';
-        $("#tbl-create-indexes").append(tr);
-        return false;
-    }
-    function removeTR(trID){
-
-        $("table#tbl-create-indexes tr#"+trID).remove();
-         return false;
-    }
-    $(document).ready(function() {
-        $("#index_unique").click(function() {
-            var checked = $(this).is(':checked');
-            if (checked) {
-                $('#drop_duplicates').show();
-            } else {
-                $('#drop_duplicates').hide();
-            }
-        });
-    });
-
-</script>   
+ 
 

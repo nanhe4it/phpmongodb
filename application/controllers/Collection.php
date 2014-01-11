@@ -68,6 +68,7 @@ class CollectionController extends Controller {
         }
         $this->application->view = 'Collection';
         $data = $this->getModel()->getIndexInfo($this->db, $this->collection);
+         $data['cryptography'] = new Cryptography();
         $this->display('indexes', $data);
     }
 

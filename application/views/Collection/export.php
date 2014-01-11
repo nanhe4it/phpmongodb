@@ -68,40 +68,7 @@
 </form>    
 <script>
     $(document).ready(function() {
-        $("#custom_export").click(function() {
-            $('#block_export_rows').slideDown();
-            $('#block_export_output').slideDown();
-            $('#block_export_data_dump_options').slideDown();
-        });
+       PMDE.init();
     });
-    $(document).ready(function() {
-        $("#quick_export").click(function() {
-            $('#block_export_rows').slideUp();
-            $('#block_export_output').slideUp();
-            $('#block_export_data_dump_options').slideUp();
-        });
-    });
-    $(document).ready(function() {
-        $("#dump_some_export").click(function() {
-            $('#dump_some_row_export').show();
-        });
-    });
-    $(document).ready(function() {
-        $("#dump_all_export").click(function() {
-            $('#dump_some_row_export').hide();
-        });
-    });
-    $(document).ready(function() {
-        $("#save_export").click(function() {
-            $('#save_output_to_a_file').show();
-        });
-    });
-    $(document).ready(function() {
-        $("#text_export").click(function() {
-            $('#save_output_to_a_file').hide();
-        });
-    });
-
-
-</script>    
+ </script>    
 <?php }?>

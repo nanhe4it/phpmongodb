@@ -11,15 +11,19 @@
                     <tr>
                         <th><?php I18n::p('ATTRIBUTE');?></th>
                         <th><?php I18n::p('VALUE');?></th>
+                        <th>&nbsp;</th>
                     </tr>
                     <tr>
                         <td><input type="text" class="input-xlarge" name="fields[]" required="required" placeholder="Enter Key"></td>
                         <td><textarea  rows="2" class="input-xlarge" name="values[]" required="required" placeholder="Enter Value"></textarea></td>
+                        <td>
+                            <a href="javascript:void(0)" class="icon-plus" title="<?php I18n::p('ADD');?>"  onclick="PMDI.appendTR('insert')">&nbsp;</a>
+                        </td>
                     </tr>
+                   
                 </table>
                 <div>
-                    <button class="btn " id="add-field-value-row"><i class="icon-plus"></i><?php I18n::p('ADD');?> </button>
-                    <button class="btn " id="remove-field-value-row" style="display: none"><i class="icon-minus"></i><?php I18n::p('REMOVE');?> </button>
+                    
                     <button class="btn btn-primary"><?php I18n::p('SAVE');?></button>
                 </div>
                 <input type="hidden"  name="load" value="Collection/SaveRecord"/>

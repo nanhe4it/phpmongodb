@@ -31,7 +31,7 @@
                                 <option value="$ne">!=</option>
                             </select></td>
                         <td ><input type="text" class="input-xlarge" name="query[]" placeholder="Enter Value"></td>
-                        <td>&nbsp;<a href="javascript:void(0)" onclick="appendTR();" class="icon-plus" title="Add">&nbsp;</a>&nbsp;</td>
+                        <td>&nbsp;<a href="javascript:void(0)" onclick="PMDS.appendTR();" class="icon-plus" title="Add">&nbsp;</a>&nbsp;</td>
                     </tr>
                 </table>
                 <table id="tbl-order-by">
@@ -43,7 +43,7 @@
                     <tr>
                         <td><input type="text" class="input-xlarge" name="order_by[]"  value="_id" placeholder="Enter Attribute"></td>
                         <td><select style="width: auto;" name="orders[]"><option value="1">ASC</option><option value="-1">DESC</option></select></td>
-                        <td>&nbsp;<a href="javascript:void(0)" onclick="appendOrderBy();" class="icon-plus" title="Add" >&nbsp;</a></td>
+                        <td>&nbsp;<a href="javascript:void(0)" onclick="PMDS.appendOrderBy();" class="icon-plus" title="Add" >&nbsp;</a></td>
                     </tr>
                 </table>
 
@@ -92,50 +92,3 @@
 
     </div>
 </div>
-<script>
-                            function appendTR() {
-                                var trID = 'tr-indexes' + $('#tbl-search-col-val tr').length;
-                                var tr = '<tr id="' + trID + '">';
-                                tr = tr + '<td><select name="query[]" style="width: auto;"><option value="$and">AND</option><option value="$or">OR</option></select></td>';
-                                tr = tr + '<td><input type="text" class="input-xlarge" name="query[]"  placeholder="Enter Attribute"></td>';
-                                tr = tr + '<td>';
-                                tr = tr + '<select name="query[]" style="width: auto;">';
-                                tr = tr + '<option value="=">=</option>';
-                                tr = tr + '<option value="$gt">&gt;</option>';
-                                tr = tr + '<option value="$gte=">&gt;=</option>';
-                                tr = tr + '<option value="$lt">&lt;</option>';
-                                tr = tr + '<option value="$lte=">&lt;=</option>';
-                                tr = tr + '<option value="$ne">!=</option>';
-                                tr = tr + '</select>';
-                                tr = tr + '</td>';
-                                tr = tr + '<td><input type="text" class="input-xlarge" name="query[]" placeholder="Enter Value"></td>';
-                                tr = tr + '<td>';
-                                tr = tr + '&nbsp;<a href="javascript:void(0)" onclick="appendTR();" class="icon-plus" title="Add">&nbsp;</a>&nbsp';
-                                tr = tr + "<a href=\"javascript:void(0)\" onclick=\"removeTR('" + trID + "');\" class=\"icon-minus\" title=\"Remove\">&nbsp;</a>";
-                                tr = tr + '</td>';
-                                tr = tr + '</tr>';
-                                $("#tbl-search-col-val").append(tr);
-                                return false;
-                            }
-                            function removeTR(trID) {
-                                $("table#tbl-search-col-val tr#" + trID).remove();
-                                return false;
-                            }
-                            function appendOrderBy() {
-                                var trID = 'tr-indexes' + $('#tbl-order-by tr').length;
-                                var tr = '<tr id="' + trID + '">';
-                                tr = tr + '<td><input type="text" class="input-xlarge" name="order_by[]"  value="" placeholder="Enter Attribute"></td><td><select style="width: auto;" name="orders[]"><option value="1">ASC</option><option value="-1">DESC</option></select></td>';
-                                tr = tr + '<td>';
-                                tr = tr + '&nbsp;<a href="javascript:void(0)" onclick="appendOrderBy();" class="icon-plus" title="Add">&nbsp</a>&nbsp;';
-                                tr = tr + "<a href=\"javascript:void(0)\" onclick=\"removeOrderBy('" + trID + "');\" title=\"Remove\" class=\"icon-minus\">&nbsp;</a>";
-                                tr = tr + '</td>';
-                                tr = tr + '</tr>';
-                                $("#tbl-order-by").append(tr);
-                                return false;
-                            }
-                            function removeOrderBy(trID) {
-                                $("table#tbl-order-by tr#" + trID).remove();
-                                return false;
-                            }
-
-</script>   
