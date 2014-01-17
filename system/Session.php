@@ -2,25 +2,25 @@
 
 class Session extends Data {
 
-    public static $key = 'PMD_SESSION';
+    const KEY = 'PMD_SESSION';
 
     public function get($key, $value = null) {
-        return isset($_SESSION[$key]) ? $_SESSION[$key] : $value;
+        return isset($_SESSION[KEY]) ? $_SESSION[KEY] : $value;
     }
 
     public function set($key, $value) {
-        $_SESSION[$key] = $value;
+        $_SESSION[KEY] = $value;
     }
 
     public function __get($name) {
-        $this->data = $this->get(self::$key);
+        $this->data = $this->get(self::KEY);
         return parent::__get($name);
     }
 
     public function __set($name, $value) {
-        $this->data = $this->get(self::$key);
+        $this->data = $this->get(self::KEY);
         parent::__set($name, $value);
-        $this->set(self::$key, $this->data);
+        $this->set(self::KEY, $this->data);
     }
 
     public function start() {
