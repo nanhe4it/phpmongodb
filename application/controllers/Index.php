@@ -10,5 +10,9 @@ class IndexController extends Controller{
        
         $this->display('index',$data);
     }
+    public function SetLanguage(){
+        echo $this->request->getParam('language');
+        die;
+    }
     
 }

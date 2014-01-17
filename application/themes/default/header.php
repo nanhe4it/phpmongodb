@@ -3,7 +3,7 @@
 <html lang="en">
     <head>
         <meta charset="utf-8">
-        <title>PHPmongoDB <?php echo Theme::getPath(); ?></title>
+        <title>PHPmongoDB </title>
         <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="description" content="mongoDB">
@@ -41,7 +41,7 @@
           <script src="<?php echo Theme::getPath(); ?>lib/html5.js"></script>
         <![endif]-->
 
-        
+
     </head>
 
     <!--[if lt IE 7 ]> <body class="ie ie6"> <![endif]-->
@@ -59,16 +59,26 @@
                     <li><a href="<?php echo Theme::URL('Database/Index'); ?>" class="hidden-phone visible-tablet visible-desktop" role="button">Databases</a></li>
                     <li id="fat-menu" class="dropdown">
                         <a href="#" role="button" class="dropdown-toggle" data-toggle="dropdown">
-                            <i class="icon-user"></i> Jack Smith
+                            <i class="icon-user"></i> Language
                             <i class="icon-caret-down"></i>
                         </a>
 
+                        <!--                        <ul class="dropdown-menu">
+                                                    <li><a tabindex="-1" href="#">My Account</a></li>
+                                                    <li class="divider"></li>
+                                                    <li><a tabindex="-1"  href="#">Settings</a></li>
+                                                    <li class="divider visible-phone"></li>
+                                                    <li><a tabindex="-1" href="sign-in.html">Logout</a></li>
+                                                </ul>-->
                         <ul class="dropdown-menu">
-                            <li><a tabindex="-1" href="#">My Account</a></li>
-                            <li class="divider"></li>
-                            <li><a tabindex="-1" class="visible-phone" href="#">Settings</a></li>
-                            <li class="divider visible-phone"></li>
-                            <li><a tabindex="-1" href="sign-in.html">Logout</a></li>
+                            <?php
+                                $languageList = Widget::get('languageList');
+                                foreach($languageList as $key=>$val){
+                                    
+                                
+                            ?>
+                            <li><a tabindex="-1" href="<?php echo Theme::URL('Index/SetLanguage',array('language'=>$key)); ?>"><?php echo $val;?></a></li>
+                            <?php }?>
                         </ul>
                     </li>
 

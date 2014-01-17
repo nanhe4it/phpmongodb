@@ -23,11 +23,16 @@ class Engine {
              $this->system->getView();
          }
     }
-
+    
     public function load() {
+        self::loadConfig();
         spl_autoload_register('self::autoloadSystem');
         spl_autoload_register('self::autoloadController');
         spl_autoload_register('self::autoloadModel');
+    }
+    public static function loadConfig(){
+        $fileWithPath = getcwd() . '/config.php';
+        self::includes($fileWithPath);
     }
 
     public static function autoloadSystem($class) {

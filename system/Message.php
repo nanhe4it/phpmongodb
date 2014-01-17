@@ -2,32 +2,75 @@
 
 class Message {
 
-    private $variable = 'pmdMessage';
+    const KEY = 'PMD_MESSAGE';
+
+    protected $session;
+    protected $message = NULL;
+    protected $messageValue;
+    protected $messageKeyGet;
+    protected $messageKeySet;
+    protected $messageValueSet;
+
+    public function __construct() {
+        $this->session = new Session();
+    }
+
+    public function get($return = TRUE) {
+        if (empty($this->message)) {
+            $this->message = $this->session->{self::KEY};
+        }
+        if ($return)
+            return $this->message;
+    }
+
+    public function set($value) {
+        $this->session->{self::KEY} = $value;
+    }
 
     public function __get($name) {
-        $data = isset($_SESSION[$this->variable]) ? $_SESSION[$this->variable] : array();
-
-        if (array_key_exists($name, $data)) {
+        $this->messageKeyGet = $name;
+        $this->get(FALSE);
+        if (is_array($this->message) && array_key_exists($name, $this->message)) {
+            $this->messageValue = $this->message[$name];
             $this->__unset($name);
-            return $data[$name];
+            return $this->currentMessage;
         }
     }
 
     public function __set($name, $value) {
-        $data = isset($_SESSION[$this->variable]) ? $_SESSION[$this->variable] : array();
-        $data[$name] = $value;
-        $_SESSION[$this->variable] = $data;
+        $this->messageKeySet = $name;
+        $this->messageValueSet = $value;
+        $this->get(FALSE);
+        $this->message[$name] = $value;
+        $this->set($this->message);
     }
 
     public function __isset($name) {
-        $data = isset($_SESSION[$this->variable]) ? $_SESSION[$this->variable] : array();
-        return isset($data[$name]);
+        $this->get(FALSE);
+        return isset($this->message[$name]);
     }
 
     public function __unset($name) {
-        $data = isset($_SESSION[$this->variable]) ? $_SESSION[$this->variable] : array();
-        unset($data[$name]);
-        $_SESSION[$this->variable] = $data;
+        $this->get(FALSE);
+        if (is_array($this->message)) {
+            unset($this->message[$name]);
+            $this->set($this->message);
+        }
+    }
+
+    public function __call($name, $arguments) {
+        $action = substr($name, 0, 3);
+        if ($action == 'get') {
+            if (isset($name[3])){
+                $property = strtolower($name[3]) . substr($name, 4);
+                if(property_exists($this,$property)){
+                    return $this->{$property};
+                }
+            }
+        }
+        $trace = debug_backtrace();
+        trigger_error('Undefined property via method: ' . $name . ' in ' . $trace[0]['file'] . ' on line ' . $trace[0]['line'], E_USER_NOTICE);
+        return null;
     }
 
 }

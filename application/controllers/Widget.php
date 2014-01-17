@@ -27,5 +27,8 @@ class WidgetController extends Controller {
             return FALSE;
         }
     }
+    public function getLanguageList(){
+        return Config::$language;
+    }
 }
 ?>

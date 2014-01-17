@@ -2,12 +2,16 @@
 
 class Theme {
 
-    private static $themePath = '/application/themes/default/';
+    private static $themePath = '/application/themes/';
     private static $themeUri;
     private static $homeUri;
+    
+    public static function getThemePath(){
+        return self::$themePath.Config::$theme.'/';
+    }
 
     public static function absolutePath() {
-        return getcwd() . '/' . self::$themePath;
+        return getcwd() . '/' . self::getThemePath();
     }
 
     public static function relativePath() {
@@ -19,7 +23,7 @@ class Theme {
             self::__setHomeUri();
         }
 
-        self::$themeUri = self::$homeUri . self::$themePath;
+        self::$themeUri = self::$homeUri . self::getThemePath();
     }
 
     public static function __setHomeUri() {
