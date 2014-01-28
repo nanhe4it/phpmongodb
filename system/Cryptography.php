@@ -327,7 +327,7 @@ class Cryptography {
         return $query;
     }
 
-    protected function debug($a) {
+    public function debug($a) {
         echo "<pre>";
         print_r($a);
         echo "<pre>";

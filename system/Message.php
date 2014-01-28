@@ -13,6 +13,7 @@ class Message {
 
     public function __construct() {
         $this->session = new Session();
+        $this->session->start();
     }
 
     public function get($return = TRUE) {
@@ -33,7 +34,7 @@ class Message {
         if (is_array($this->message) && array_key_exists($name, $this->message)) {
             $this->messageValue = $this->message[$name];
             $this->__unset($name);
-            return $this->currentMessage;
+            return $this->messageValue;
         }
     }
 
@@ -46,8 +47,12 @@ class Message {
     }
 
     public function __isset($name) {
-        $this->get(FALSE);
-        return isset($this->message[$name]);
+        if(isset($this->session->{self::KEY})){
+            $this->get(FALSE);
+            return isset($this->message[$name]);
+        }else{
+            return false;
+        }
     }
 
     public function __unset($name) {

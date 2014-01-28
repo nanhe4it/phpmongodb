@@ -5,11 +5,11 @@ class Session extends Data {
     const KEY = 'PMD_SESSION';
 
     public function get($key, $value = null) {
-        return isset($_SESSION[KEY]) ? $_SESSION[KEY] : $value;
+        return isset($_SESSION[$key]) ? $_SESSION[$key] : $value;
     }
 
     public function set($key, $value) {
-        $_SESSION[KEY] = $value;
+        $_SESSION[$key] = $value;
     }
 
     public function __get($name) {
@@ -26,7 +26,11 @@ class Session extends Data {
     public function start() {
         session_start();
     }
-
+    public function __isset($name) {
+        
+        $this->data = $this->get(self::KEY);
+        return parent::__isset($name);
+    }
     /**
      * Ends the current session and store session data.
      */

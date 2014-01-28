@@ -20,7 +20,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach ($this->data as $index) { ?>
+                    <?php foreach ($this->data['indexes'] as $index) { ?>
                         <tr>
                             <td><?php echo $index['v']; ?></td>
                             <td><?php echo $this->data['cryptography']->highlight($this->data['cryptography']->arrayToJSON($index['key'])); ?></td>

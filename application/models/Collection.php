@@ -9,7 +9,8 @@ class Collection extends Model {
 
     public function createCollection($db, $collection, $capped = false, $size = 0, $max = 0) {
         try {
-            $this->mongo->{$db}->createCollection($collection, $capped, $size, $max);
+            $options=array('capped' => $capped,'size' =>$size,'max' =>$max);
+            $this->mongo->{$db}->createCollection($collection,$options);
             if (!$capped) {
                 $this->mongo->{$db}->selectCollection($collection)->ensureIndex(array("_id" => 1));
             }
@@ -71,7 +72,7 @@ class Collection extends Model {
 
     protected function getQueryForId($id, $idType = 'object', $fromat = 'array') {
         if ($fromat == 'json') {
-           
+
             if ($idType == 'object') {
                 return '{"_id" : ObjectId("' . $id . '")}';
             } else {
@@ -86,7 +87,7 @@ class Collection extends Model {
         }
     }
 
-    public function removeById($db, $collection,$id,$idType = 'object') {
+    public function removeById($db, $collection, $id, $idType = 'object') {
         try {
             $query = $this->getQueryForId($id, $idType);
             return $this->mongo->{$db}->{$collection}->remove($query, array("justOne" => true));
@@ -106,12 +107,12 @@ class Collection extends Model {
 
     public function updateById($db, $collection, $id, $data, $fromat = 'array', $idType = 'object') {
         try {
-             $query = $this->getQueryForId($id, $idType,$fromat);
+            $query = $this->getQueryForId($id, $idType, $fromat);
             if ($fromat == 'json') {
                 $code = "db.getCollection('" . $collection . "').update(" . $query . "," . $data . ");";
                 return $this->mongo->{$db}->execute($code);
             } else {
-               
+
                 return $this->mongo->{$db}->{$collection}->update($query, $data);
             }
         } catch (Exception $e) {
