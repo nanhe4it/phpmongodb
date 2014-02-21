@@ -2,6 +2,18 @@
  * @author Nanhe Kumar <nanhe.kumar@gmail.com>
  * 
  */
+function callAjax(url) {
+        url = url + '&theme=false'
+        $(document).ready(function() {
+            
+                $.get(url, function(data, status) {
+                   if(status=='success'){
+                     $( "#middle-content" ).html(data);  
+                   }
+                });
+           
+        })
+    }
 //insert
 var PMDI = {
     appendTR: function() {

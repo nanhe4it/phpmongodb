@@ -1,7 +1,6 @@
 
 body {
   background: #eee;
-  /*background-image: url(http://subtlepatterns.com/patterns/furley_bg.png);*/
   background-position: initial initial;
   background-repeat: initial initial;
   background-position: initial initial;
@@ -767,11 +766,31 @@ table.table.list tr:first-child td {
     width: 16px; 
     height: 16px;
     display:inline-block !important;  
-     opacity: .4;
+    opacity: .4;
 }
-
-.icon-edit:hover,.icon-remove:hover,.icon-plus:hover,.icon-minus:hover {
+.icon-database{
+    background:url("../images/icon/icon-database.png")  no-repeat left top;
+    width: 16px; 
+    height: 16px;
+    display:inline-block !important;  
+    opacity: .4;
+}
+.icon-collection{
+    background:url("../images/icon/icon-collection.png")  no-repeat left top;
+    width: 16px; 
+    height: 16px;
+    display:inline-block !important;  
+    opacity: .4;
+}
+.icon-edit:hover,.icon-remove:hover,.icon-plus:hover,.icon-minus:hover,.icon-database:hover {
     opacity: 1;
+}
+.content-gap {
+  min-width: 400px;
+  position: relative;
+  min-height: 600px;
+  background: #fff;
+ 
 }
 /*.btn-primary{
     background:url("../images/icon/icon-remove.png")  no-repeat left top;

@@ -1,8 +1,22 @@
 <?php
-
+/**
+ * @package PHPMongoDB
+ */
 $language = array(
-    //Database
+    //Login
+    'LOGIN'=>'Login',
+    'AUTH_FAIL'=>'Authentication failed. Please check your username and password.',
+    'PASSWORD'=>'Password',
+    'USERNAME'=>'Username',
+    //Menu
+    'LOGOUT'=>'Logout',
     'DB'=>'Databases',
+    'LAN'=>' Language',
+    'STATUS'=>'Status',
+    //Index
+    'LAN_NOT_AVA'=>'Langauage not available',
+    //Database
+    
     'D_R_S' => 'Database rename successfully',
     'I_D_N' => 'Invalid database name',
     'D_C' => '%s database created.',
@@ -17,6 +31,7 @@ $language = array(
     'C_R' => 'Collection removed.',
     'E_C_N'=>'Enter Collectin Name',
     'SEARCH'=>'Search',
+    'CAE_COL'=>'Create Collection',
     //application/views/Index/index.php
     'W_S'=>'Web server',
     'PHP_V'=>'PHP version',

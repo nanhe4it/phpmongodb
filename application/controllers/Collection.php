@@ -1,5 +1,9 @@
 <?php
-
+/**
+ * @package PHPmongoDB
+ * @version 1.0.0
+ * @link http://www.phpmongodb.org
+ */
 defined('PMDDA') or die('Restricted access');
 /*
  * Controller

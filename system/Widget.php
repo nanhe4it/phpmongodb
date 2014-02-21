@@ -1,5 +1,10 @@
 <?php
+/**
+ * @package PHPmongoDB
+ * @version 1.0.0
+ */
 defined('PMDDA') or die('Restricted access');
+
 class Widget {
 
     protected static $controller = 'WidgetController';

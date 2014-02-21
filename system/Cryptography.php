@@ -1,4 +1,9 @@
 <?php
+/**
+ * @package PHPmongoDB
+ * @version 1.0.0
+ */
+defined('PMDDA') or die('Restricted access');
 
 class Cryptography {
 
@@ -327,10 +332,24 @@ class Cryptography {
         return $query;
     }
 
-    public function debug($a) {
+   
+    public function mixedToJson($data=NULL,$highlight=FALSE){
+        if(is_array($data)){
+            $json= $this->arrayToJSON($data);
+        }elseif (is_object($data)) {
+            $json= $this->objectToJSON($data);
+        } else {
+            $json= $data;
+            
+        }
+        if($highlight )
+            $json=$this->highlight ($json);
+        return $json;
+        
+    }
+     public function debug($a) {
         echo "<pre>";
         print_r($a);
         echo "<pre>";
     }
-
 }

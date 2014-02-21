@@ -1,28 +1,44 @@
 <?php
+/**
+ * @package PHPmongoDB
+ * @version 1.0.0
+ */
+defined('PMDDA') or die('Restricted access');
 
 class PHPMongoDB {
 
     protected static $instance = null;
     protected $mongo;
-
-    public static function getInstance() {
+    /**
+     * @param string $server [optional]
+     * @param array $options [optional]
+     * @return mixed (Object of MongoClient|Mongo
+     */
+    public static function getInstance($server='', array $options = array()) {
         if (is_null(self::$instance)) {
-            self::$instance = new self;
+            self::$instance = new self($server, $options);
         }
 
         return self::$instance;
     }
+    /**
+     * 
+     * @return mixed (Object of MongoClient|Mongo
+     */
     public function getConnection(){
         return $this->mongo;
     }
-
-    public function __construct() {
-        $server = '127.0.0.1:27017';
-        $options = array('username' => '', 'password' => '', 'db' => '');
+    /**
+     * 
+     * @param string $server  [optional]
+     * @param array $options [optional]
+     */
+    private function __construct($server='', array $options = array()) {
+        
         if (class_exists("MongoClient")) {
-            $this->mongo = new MongoClient();
+            $this->mongo = new MongoClient($server, $options) or die('nanhe');
         } else {
-            $this->mongo = new Mongo();
+            $this->mongo =new Mongo($server, $options);
         }
     }
 

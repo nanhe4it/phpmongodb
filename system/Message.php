@@ -1,5 +1,9 @@
 <?php
-
+/**
+ * @package PHPmongoDB
+ * @version 1.0.0
+ */
+defined('PMDDA') or die('Restricted access');
 class Message {
 
     const KEY = 'PMD_MESSAGE';
@@ -12,8 +16,10 @@ class Message {
     protected $messageValueSet;
 
     public function __construct() {
-        $this->session = new Session();
-        $this->session->start();
+        $this->session=Application::getInstance('Session');
+        if(!isset($this->session->{self::KEY})){
+            $this->session->{self::KEY}=array();
+        }
     }
 
     public function get($return = TRUE) {

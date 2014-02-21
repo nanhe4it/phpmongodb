@@ -11,7 +11,7 @@
             <ul class="nav nav-tabs">
                 <li id="li-json"class="active"><a href="javascript:void(0)" data-list-record="json"><?php I18n::p('JSON');?></a></li>
                 <li id="li-array"><a href="javascript:void(0)" data-list-record="array"><?php I18n::p('Array');?></a></li>
-                <li id="li-document"><a href="javascript:void(0)" data-list-record="document"><?php I18n::p('FIND');?></a></li>
+                <li id="li-document"><a href="javascript:void(0)" data-list-record="document"><?php I18n::p('MongoCursor');?></a></li>
             </ul>
             <?php
             $showTab = false;

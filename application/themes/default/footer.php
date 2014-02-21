@@ -14,7 +14,7 @@
             <div class="navbar-inner">
                 <ul class="nav pull-right">
                    
-                    <li > <a href="http://www.phpmongodb.org" target="_blank">&copy; 2014 PHPMongoDB.org</a></li>
+                    <li > <a href="http://www.phpmongodb.org" target="_blank">&copy; 2014 PHPmongoDB.org</a></li>
                     
 
                 </ul>

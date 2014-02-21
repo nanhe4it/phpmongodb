@@ -13,6 +13,7 @@
 
         <link rel="stylesheet" type="text/css" href="<?php echo Theme::getPath(); ?>css/style.css">
 
+        <link rel="icon" href="<?php echo Theme::getPath(); ?>images/favicon.ico" type="image/x-icon" />
 
         <script src="<?php echo Theme::getPath(); ?>js/jquery-1.8.1.min.js" type="text/javascript"></script>
 
@@ -56,20 +57,18 @@
             <div class="navbar-inner">
                 <ul class="nav pull-right">
 
-                    <li><a href="<?php echo Theme::URL('Database/Index'); ?>" class="hidden-phone visible-tablet visible-desktop" role="button">Databases</a></li>
+                    <li><a href="<?php echo Theme::URL('Database/Index'); ?>" ><?php echo I18n::t('DB');?></a></li>
+                    <li><a href="<?php echo Theme::URL('Index/Status'); ?>" ><?php echo I18n::t('STATUS');?></a></li>
+                    <?php if($isLogedIn){ ?>
+                    <li><a href="<?php echo Theme::URL('Login/Logout'); ?>"  ><?php echo I18n::t('LOGOUT');?></a></li>
+                    <?php }?>
                     <li id="fat-menu" class="dropdown">
                         <a href="#" role="button" class="dropdown-toggle" data-toggle="dropdown">
-                            <i class="icon-user"></i> Language
+                            <i class="icon-user"></i><?php echo I18n::t('LAN');?>
                             <i class="icon-caret-down"></i>
                         </a>
 
-                        <!--                        <ul class="dropdown-menu">
-                                                    <li><a tabindex="-1" href="#">My Account</a></li>
-                                                    <li class="divider"></li>
-                                                    <li><a tabindex="-1"  href="#">Settings</a></li>
-                                                    <li class="divider visible-phone"></li>
-                                                    <li><a tabindex="-1" href="sign-in.html">Logout</a></li>
-                                                </ul>-->
+                        
                         <ul class="dropdown-menu">
                             <?php
                                 $languageList = Widget::get('languageList');
@@ -83,6 +82,6 @@
                     </li>
 
                 </ul>
-                <a class="brand" href="<?php echo Theme::getHome(); ?>"><span class="first">PHP</span> <span class="second">mongoDB</span></a>
+                <a class="brand" href="<?php echo Theme::getHome(); ?>"><span class="second">{ </span><span class="first">PHP</span> <span class="second">mongoDB }</span></a>
             </div>
         </div>

@@ -89,7 +89,9 @@ class CHttp {
         if ($terminate)
             exit();
     }
-
+    public function serverSoftware(){
+        return $_SERVER['SERVER_SOFTWARE'];
+    }
 }
 
 ?>

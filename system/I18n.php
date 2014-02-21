@@ -1,12 +1,20 @@
 <?php
+/**
+ * @package PHPmongoDB
+ * @version 1.0.0
+ */
+defined('PMDDA') or die('Restricted access');
 
 class I18n {
+    const DEFAULT_LANGUAGE='english';
 
     protected static $language = NULL;
 
     protected static function init() {
-        if (empty(self::$language)) {
-            require_once getcwd() . '/application/language/english.php';
+        if (!is_array(self::$language)) {
+            $session=Application::getInstance('Session');
+            $language= isset($session->language)?$session->language:self::DEFAULT_LANGUAGE ;
+            require_once getcwd() . '/application/language/'.$language.'.php';
             self::$language = $language;
         }
     }

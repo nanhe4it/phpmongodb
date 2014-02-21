@@ -5,7 +5,8 @@ class Model {
     protected $mongo;
 
     public function __construct() {
-        $this->mongo = PHPMongoDB::getInstance()->getConnection();
+        $connection = Config::$connection;
+        $this->mongo = PHPMongoDB::getInstance($connection['server'], $connection['options'])->getConnection();
     }
 
     public function listDatabases() {
@@ -52,12 +53,12 @@ class Model {
 //    }
 
 
-    public function find($db, $collection, $query=  array() , $fields = array(), $limit = false, $skip = false, $fromat = 'array') {
+    public function find($db, $collection, $query = array(), $fields = array(), $limit = false, $skip = false, $fromat = 'array') {
         try {
             if ($fromat == 'json') {
-                 $code = "return db.". $collection.".find(".$query.").limit(".$limit.").skip(".$skip.").toArray();";
-                $response=$this->mongo->{$db}->execute($code);
-                if($response['ok']==1){
+                $code = "return db." . $collection . ".find(" . $query . ").limit(" . $limit . ").skip(" . $skip . ").toArray();";
+                $response = $this->mongo->{$db}->execute($code);
+                if ($response['ok'] == 1) {
                     return $response['retval'];
                 }
             } else {
@@ -80,6 +81,11 @@ class Model {
         } catch (Exception $e) {
             exit($e->getMessage());
         }
+    }
+
+    public function serverStatus() {
+        $response = $this->mongo->admin->command(array('serverStatus' => 1,));
+        return $response;
     }
 
 }

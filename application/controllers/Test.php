@@ -134,5 +134,10 @@ class TestController extends Controller {
         print_r($a);
         echo "</pre>";
     }
+    public function I18n(){
+       I18n::p('nanhe');
+       echo "<bre>";
+       I18n::p('NAME');
+    }
 
 }

@@ -26,11 +26,13 @@ class Session extends Data {
     public function start() {
         session_start();
     }
+
     public function __isset($name) {
-        
+
         $this->data = $this->get(self::KEY);
         return parent::__isset($name);
     }
+
     /**
      * Ends the current session and store session data.
      */
@@ -49,6 +51,13 @@ class Session extends Data {
         }
     }
 
+    public function isLogedIn() {
+        return isset($this->isLogedIn);
+    }
+    public function setDefaultKey($value=  array()){
+        if(!isset($_SESSION[self::KEY]))
+            $this->set(self::KEY, $value);
+    }
 }
 
 ?>
