@@ -5,6 +5,7 @@
  * @version 1.0.0
  * @package PHPMongoDB
  */
+
 class Config {
 
     public static $theme = 'default';
