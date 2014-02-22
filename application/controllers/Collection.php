@@ -217,6 +217,7 @@ class CollectionController extends Controller {
     }
 
     public function EditRecord() {
+        $this->isReadonly();
         $this->setDB();
         $this->setCollection();
         $id = $this->request->getParam('id');

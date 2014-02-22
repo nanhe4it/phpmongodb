@@ -339,7 +339,9 @@ class Cryptography {
             $json= $this->arrayToJSON($data);
         }elseif (is_object($data)) {
             $json= $this->objectToJSON($data);
-        } else {
+        }else if(is_bool($data)){ 
+            $json=$data?'true':'false';
+        }else {
             $json= $data;
             
         }

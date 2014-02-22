@@ -18,7 +18,7 @@
                         <th>unique</th>
                         <th>ns</th>
                         <th>background</th>
-                        <th><?php I18n::p('ACTION');?></th>
+<!--                        <th><?php //I18n::p('ACTION');?></th>-->
                     </tr>
                 </thead>
                 <tbody>
