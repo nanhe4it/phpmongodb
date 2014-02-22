@@ -55,6 +55,7 @@ class CollectionController extends Controller {
     }
 
     public function Insert() {
+        $this->isReadonly();
         $this->setDB();
         $this->setCollection();
         if (empty($this->db) || empty($this->collection)) {
@@ -77,6 +78,7 @@ class CollectionController extends Controller {
     }
 
     public function DeleteIndexes() {
+        $this->isReadonly();
         $this->setDB();
         $this->setCollection();
         $name = trim($this->request->getParam('name'));
@@ -96,6 +98,7 @@ class CollectionController extends Controller {
     }
 
     public function CreateIndexes() {
+        $this->isReadonly();
         $this->setDB();
         $this->setCollection();
         $fields = $this->request->getParam('fields');
@@ -249,6 +252,7 @@ class CollectionController extends Controller {
     }
 
     public function DeleteRecord() {
+        $this->isReadonly();
         $this->setDB();
         $this->setCollection();
         $id = $this->request->getParam('id');
@@ -405,6 +409,7 @@ class CollectionController extends Controller {
     }
 
     public function Remove() {
+        $this->isReadonly();
         $this->setDB();
         $this->setCollection();
         if ($this->validation($this->db, $this->collection)) {
@@ -507,6 +512,7 @@ class CollectionController extends Controller {
     }
 
     public function Import() {
+        $this->isReadonly();
         $this->setDB();
         $this->setCollection();
         if ($this->request->isPost()) {

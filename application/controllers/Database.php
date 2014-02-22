@@ -28,11 +28,12 @@ class DatabaseController extends Controller {
     }
 
     public function Create() {
-        
+        $this->isReadonly();
         $this->display('create');
     }
 
     public function Update() {
+        $this->isReadonly();
         $db=urldecode($this->request->getParam('db'));
         $oldDb=urldecode($this->request->getParam('old_db'));
         if (!empty($db) || !empty($oldDb)) {
@@ -45,7 +46,7 @@ class DatabaseController extends Controller {
     }
 
     public function Save() {
-        
+        $this->isReadonly();
         $db=urldecode($this->request->getParam('db'));
         if (!empty($db)) {
             $this->getModel()->createDB($db);
@@ -57,6 +58,7 @@ class DatabaseController extends Controller {
     }
 
     public function Drop() {
+        $this->isReadonly();
         $db = urldecode($this->request->getParam('db'));
         if (!empty($db)) {
             $response = $this->getModel()->dropDatabase($db);

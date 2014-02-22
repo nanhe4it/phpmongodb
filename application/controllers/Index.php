@@ -16,6 +16,7 @@ class IndexController extends Controller{
         $this->display('index',$data);
     }
     public function SetLanguage(){
+        $this->isReadonly();
         $language= $this->request->getParam('language');
         $languages=Config::$language;
         //$this->debug($languages);

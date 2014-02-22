@@ -3,6 +3,8 @@
  * @package PHPMongoDB
  */
 $language = array(
+    //Common
+    'I_A'=>'Invalid Action',
     //Login
     'LOGIN'=>'Login',
     'AUTH_FAIL'=>'Authentication failed. Please check your username and password.',
@@ -32,6 +34,8 @@ $language = array(
     'E_C_N'=>'Enter Collectin Name',
     'SEARCH'=>'Search',
     'CAE_COL'=>'Create Collection',
+    'ATTRIBUTE'=>'Attribute',
+    'VALUE'=>'Value',
     //application/views/Index/index.php
     'W_S'=>'Web server',
     'PHP_V'=>'PHP version',
