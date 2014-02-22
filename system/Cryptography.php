@@ -41,7 +41,8 @@ class Cryptography {
 
     public function highlight($string) {
         $string = highlight_string("<?php " . $string, true);
-        $string = str_replace('<span style="color: #0000BB">&lt;?php&nbsp;</span>', '', $string);
+        $find=array('<span style="color: #0000BB">&lt;?php&nbsp;</span>','&lt;?php&nbsp;');
+        $string = str_replace($find, '', $string);
         return $string;
     }
 

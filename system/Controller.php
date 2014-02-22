@@ -61,6 +61,12 @@ class Controller {
     public function getModel() {
         return new Model();
     }
+    public function isReadonly(){
+        if(Application::isReadonly()){
+            $this->message->error = I18n::t('I_A');
+            $this->request->redirect(Theme::URL('Index/Index'));
+        }
+    }
 
     protected function debug($array) {
         echo "<pre>";
