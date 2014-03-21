@@ -25,7 +25,7 @@ class LoginController extends Controller {
                     $seesion->isLogedIn = TRUE;
                     $seesion->server=$server;
                     $seesion->options=$options;
-                    $this->request->redirect(Theme::URL('Collection/Index'));
+                    $this->request->redirect(Theme::URL('Index/Index'));
                 } else {
                     $this->message->error = $mongo->getExceptionMessage();
                 }
@@ -35,7 +35,7 @@ class LoginController extends Controller {
                 $seesion->isLogedIn = TRUE;
                 $seesion->server=$server;
                 $seesion->options=array();
-                $this->request->redirect(Theme::URL('Collection/Index'));
+                $this->request->redirect(Theme::URL('Index/Index'));
             } else {
                 $this->message->error = I18n::t('AUTH_FAIL');
             }
