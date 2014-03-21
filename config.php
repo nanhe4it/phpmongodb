@@ -13,7 +13,15 @@ class Config {
         'english' => 'English',
         'german' => 'German',
     );
+    public static $server=array(
+        'name' => "Localhost",
+        'server'=>false,
+        'host' => "127.0.0.1",
+        'port'=>"27017",
+        'timeout'=>0,
+    );
     public static $authentication = array(
+        'authentication'=>true,
         'user' => 'admin',
         'password' => 'admin'
     );

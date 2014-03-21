@@ -7,8 +7,14 @@
                 <input name="username" type="text" class="span12">
                 <label><?php I18n::p('PASSWORD'); ?></label>
                 <input name="password" type="password" class="span12">
+                <?php
+                if (Config::$authentication['authentication']) {
+                    ?>
+                    <label><?php I18n::p('Database'); ?></label>
+                    <input name="db" type="text" class="span12">
+                <?php } ?>
                 <button class="btn btn-primary pull-right"><?php I18n::p('LOGIN'); ?></button>
-                
+
                 <div class="clearfix"></div>
                 <input type="hidden"  name="load" value="Login/Index"/>
             </form>

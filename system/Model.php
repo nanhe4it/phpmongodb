@@ -5,8 +5,9 @@ class Model {
     protected $mongo;
 
     public function __construct() {
-        $connection = Config::$connection;
-        $this->mongo = PHPMongoDB::getInstance($connection['server'], $connection['options'])->getConnection();
+        
+        $session=Application::getInstance('Session');
+        $this->mongo = PHPMongoDB::getInstance($session->server,$session->options)->getConnection();
     }
 
     public function listDatabases() {
