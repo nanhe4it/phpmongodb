@@ -8,7 +8,7 @@
     if (empty($dbName)) {
         ?>
         
-        <ul  class="nav nav-list collapse in">
+        <ul  class="nav nav-list collapse in bodymargin">
             <?php
             foreach ($dbList['databases'] as $db) {
                 ?>

@@ -22,8 +22,8 @@
                             <td><?php echo $db['sizeOnDisk']; ?></td>
                             <?php if(!Application::isReadonly()) {?>
                             <td>
-                                <a href="#myModal" data-edit-db="<?php echo addslashes($db['name']); ?>" role="button" data-toggle="modal" class="icon-edit" title="Rename">&nbsp;</a>
-                                <a href="#myModal" data-delete-db="<?php echo addslashes($db['name']); ?>" role="button" data-toggle="modal" class="icon-remove" title="Remove">&nbsp;</a>
+                                <a href="#myModal" data-edit-db="<?php echo $db['name']; ?>" role="button" data-toggle="modal" class="icon-edit" title="Edit">&nbsp;</a>
+                                <a href="#myModal" data-delete-db="<?php echo $db['name']; ?>" role="button" data-toggle="modal" class="icon-remove" title="Remove">&nbsp;</a>
                             </td>
                             <?php }?>
                         </tr>

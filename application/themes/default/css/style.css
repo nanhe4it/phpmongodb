@@ -798,3 +798,11 @@ table.table.list tr:first-child td {
     height: 16px;
     display:inline-block !important;  
 }*/
+.navbar{
+    position: fixed !important;
+   margin-top: -40px;
+    width: 100%;
+}
+.bodymargin{
+    margin-top: 40px;
+}

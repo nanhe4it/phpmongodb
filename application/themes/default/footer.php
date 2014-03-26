@@ -10,7 +10,7 @@
     });
 </script>
 
-<div class="navbar">
+<div class="footer row-fluid">
             <div class="navbar-inner">
                 <ul class="nav pull-right">
                    
@@ -22,9 +22,7 @@
             </div>
         </div>
 
-<div class="navbar">
-    
-</div>
+
 <script>
     function callAjax(url) {
         url = url + '&theme=false'
@@ -38,6 +36,13 @@
            
         })
     }
+    $(function() {
+        
+       if($( ".sidebar-nav" ).height()>$( ".content" ).height()){
+           $( ".content" ).css('height',$( ".sidebar-nav" ).height())
+       }
+       
+});
 </script>    
 </body>
 </html>

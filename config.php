@@ -9,6 +9,7 @@
 class Config {
 
     public static $theme = 'default';
+    public static $autocomplete=false;
     public static $language = array(
         'english' => 'English',
         'german' => 'German',
@@ -26,7 +27,7 @@ class Config {
         'password' => 'admin'
     );
     public static $authorization = array(
-        'readonly'=>true,
+        'readonly'=>false,
     );
 
     /**

@@ -2,6 +2,14 @@
 
 class CHttp {
 
+    protected $XSS=TRUE;
+    
+    public function onXSS(){
+        $this->XSS=TRUE;
+    }
+    public function offXSS(){
+        $this->XSS=FALSE;
+    }
     /**
 
      * @return string request type, such as GET, POST, HEAD.
@@ -39,7 +47,11 @@ class CHttp {
 
      */
     public function getParam($name, $value = null) {
-        return isset($_GET[$name]) ? $_GET[$name] : (isset($_POST[$name]) ? $_POST[$name] : $value);
+        $param= isset($_GET[$name]) ? $_GET[$name] : (isset($_POST[$name]) ? $_POST[$name] : $value);
+        if($this->XSS){
+            $param=strip_tags($param);
+        }
+        return $param;
     }
 
     /**
